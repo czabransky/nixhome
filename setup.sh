@@ -12,6 +12,3 @@ echo $USERNAME
 sudo sed -i 's/required/sufficient/g' /etc/pam.d/chsh
 sudo sh -c 'printf "%s\n" /home/'"$USERNAME"'/.nix-profile/bin/fish >> /etc/shells'
 sudo chsh -s /home/$USERNAME/.nix-profile/bin/fish $USERNAME
-
-# Delete the default fish configuration
-rm /home/$USERNAME/.config/fish/config.fish
