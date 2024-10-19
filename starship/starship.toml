@@ -4,7 +4,7 @@ format = '$all$directory$character'
 command_timeout = 1000
 
 [git_branch]
-format =  '[$symbol$branch(:$remote_branch)]($style)'
+format =  '[$symbol$branch(:$remote_branch)]($style) '
 
 [palettes.catppuccin_frappe]
 rosewater = "#f2d5cf"
