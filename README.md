@@ -50,16 +50,8 @@ Launching neovim (aliased to `n`) will automatically install its plugins using t
 
 Here are a few notable keybindts to help you get started.
 
-- Note: The <leader> key is mapped to <SPACE>.
+- Note: The `<leader>` key is mapped to `<SPACE>`
 - Pressing the <leader> key will open the `whichkey` display after a moment.
-
-| Keys | Action | |
-|---|---|---|
-| `<leader>t` | Toggle | Opens Toggle submenu |
-| `<leader>s` | Search | Opens Search submenu |
-| `<leader>w` | Workspace | Opens Workspace/Windows submenu |
-
-
 - `<leader>tt` will open the `nvimtree` explorer. With the exporer open, `g?` will show available keybinds. 
 - `<leader>sf` will open the `telescope` file search. Type the name of the file you want to open.
 - `<leader>st` will open the `telescope.builtin` menu, where you can find tons of helpful info.
