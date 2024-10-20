@@ -10,9 +10,10 @@ return {
 			auto_install = true,
 			ensure_installed = {
 				'lua',
-				'nix',
 				'markdown',
 				'markdown_inline',
+				'nix',
+				'typescript',
 				'vim',
 				'vimdoc',
 				'xml',

@@ -3,8 +3,9 @@
 	 version = '*',
 	 config = function()
 		 require("mini.animate").setup({
-			 cursor = { timing = function(_, n) return 100 / n end, },
-			 scroll = { timing = function(_, n) return 100 / n end, },
+			 cursor = { enable = false, timing = function(_, n) return 100 / n end, },
+			 scroll = { enable = false, timing = function(_, n) return 100 / n end, },
 		 })
+		 require("mini.notify").setup()
 	 end
  }

@@ -10,16 +10,19 @@
 			pkgs.fish
 			pkgs.starship
 			pkgs.curl
+			pkgs.unzip
 			pkgs.gcc
 			pkgs.git
 			pkgs.lazygit
 			pkgs.ripgrep
 			pkgs.fzf
 			pkgs.fd
+			pkgs.jq
 			pkgs.bat
 			pkgs.eza
 			pkgs.zoxide
-			pkgs.jq
+			pkgs.nodejs_22
+			pkgs.dotnetCorePackages.sdk_8_0_4xx
 			pkgs.tmux
 			pkgs.neovim
 	];

@@ -35,7 +35,7 @@ set undodir=~/.vim/undodir
 set undofile
 
 " Windows
-nmap <leader>w" :vsplit<CR>
+nmap <leader>w' :vsplit<CR>
 nmap <leader>w/ :split<CR>
 nmap <CR> :write<CR>
 nnoremap <leader>w, :vertical resize -10<CR>
@@ -67,4 +67,5 @@ nnoremap <leader>S :%s//g<Left><Left>
 xnoremap <leader>S :s/\%V/g<Left><Left>
 
 " Plugin Globals
+" Quickscope on these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']

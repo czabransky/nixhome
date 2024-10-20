@@ -62,3 +62,6 @@ Here are a few notable keybindts to help you get started.
 
 `<leader>tt` will open the `nvimtree` explorer. With the exporer open, `g?` will show available keybinds. 
 `<leader>sf` will open the `telescope` file search. Type the name of the file you want to open.
+`<leader>st` will open the `telescope.builtin` menu, where you can find tons of helpful info.
+`<leader>sc` will open the `commands` menu, which lists available commands in a fuzzy finder.
+`<leader>sh` will open the `help` search menu, where you can search on all things neovim.

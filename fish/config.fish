@@ -1,3 +1,6 @@
+# Disable fish greeting
+set -U fish_greeting
+
 # Ensure nix packages are available in $PATH
 fish_add_path --path $HOME/.nix-profile/bin
 set -qU XDG_CONFIG_HOME; or set XDG_CONFIG_HOME $HOME/.config
