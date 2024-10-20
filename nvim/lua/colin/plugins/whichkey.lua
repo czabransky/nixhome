@@ -22,7 +22,7 @@ return {
 			{ "<leader>t",  group = "Toggle",                         nowait = true,                    remap = false },
 --			{ "<leader>tb", "<cmd>DBUIToggle<CR>",                    desc = "Toggle Dadbod UI",        nowait = true, remap = false },
 --			{ "<leader>td", "<cmd>lua require('dapui').toggle()<CR>", desc = "Toggle DAP UI",           nowait = true, remap = false },
---			{ "<leader>tg", "<cmd>Glow<CR>",                          desc = "Toggle Glow",             nowait = true, remap = false },
+			{ "<leader>tg", "<cmd>Glow<CR>",                          desc = "Toggle Glow",             nowait = true, remap = false },
 --			{ "<leader>tm", "<cmd>MarkdownPreview<CR>",               desc = "Toggle Markdown Preview", nowait = true, remap = false },
 			{ "<leader>w",  group = "Workspace",                      nowait = true,                    remap = false },
 		})

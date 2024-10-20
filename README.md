@@ -1,8 +1,8 @@
 # What is this Project?
 
-This is a [nix](https://nixos.org/) and [nix home-manager](https://github.com/nix-community/home-manager) driven dotfiles configuration for linux-based systems. With only a few commands your linux system will install a number of commonly used tools all while configuring them with my preferred settings!  
+This is a [nix](https://nixos.org/) and [nix home-manager](https://github.com/nix-community/home-manager) driven dotfiles configuration for linux-based systems. With only a few commands your linux system will install a number of commonly used tools all while configuring them with my preferred settings.  
 
-Feel free to choose whatever terminal applciation you like - this configuration is using the tokyonight theme!
+Feel free to choose whatever terminal applciation you like - this configuration is using the `tokyonight` theme.
 
 # Nix Installation
 
@@ -39,3 +39,26 @@ git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm ;
 With tmux running: 
 - install plugins: `ctrl+a + I`
 - reload: `ctrl+a + R`
+
+
+# Neovim
+
+Launching neovim (aliased to `n`) will automatically install its plugins using the [Lazy Plugin Manager](https://github.com/folke/lazy.nvim).
+- Run `:checkhealth` to validate your configuration.
+
+## Keybinds
+
+Here are a few notable keybindts to help you get started.
+
+- Note: The <leader> key is mapped to <SPACE>.
+- Pressing the <leader> key will open the `whichkey` display after a moment.
+
+| Keys | Action | |
+|---|---|---|
+| <leader>t | Toggle | Opens Toggle submenu |
+| <leader>s | Search | Opens Search submenu |
+| <leader>w | Workspace | Opens Workspace/Windows submenu |
+
+
+`<leader>tt` will open the `nvimtree` explorer. With the exporer open, `g?` will show available keybinds. 
+`<leader>sf` will open the `telescope` file search. Type the name of the file you want to open.

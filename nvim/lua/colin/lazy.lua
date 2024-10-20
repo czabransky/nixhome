@@ -36,6 +36,7 @@ require('lazy').setup({
 	},
 
 	require('colin.plugins.alpha'),
+	require('colin.plugins.glow'),
 	require('colin.plugins.mini'),
 	require('colin.plugins.theme').tokyonight(),
 	require('colin.plugins.tree').nvimtree(),
