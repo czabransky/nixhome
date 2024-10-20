@@ -26,7 +26,7 @@
 # Home Manager is pretty good at managing dotfiles. 
 # These files will be symlinked in the user /home/ directory.
 	home.file = {
-		".vimrc".source = ~/dotfiles/vimrc;
+		".vimrc".source = ~/dotfiles/vim/vimrc;
 		".config/fish" = {
 			source = ~/dotfiles/fish;
 			recursive = true;
