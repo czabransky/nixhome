@@ -48,7 +48,7 @@ Launching neovim (aliased to `n`) will automatically install its plugins using t
 
 ## Keybinds
 
-Here are a few notable keybindts to help you get started.
+Here are a few notable keybinds to help you get started.
 
 - Note: The `<leader>` key is mapped to `<SPACE>`
 - Pressing the <leader> key will open the `whichkey` display after a moment.
