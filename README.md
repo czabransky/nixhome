@@ -24,6 +24,7 @@ home-manager --impure switch
 ```
 
 # Tmux Plugins
+
 ```sh
 # For tmux plugins to install automatically, we need to install the plugin manager first
 mkdir -p ~/.config/tmux/plugins ;
