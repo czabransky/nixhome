@@ -6,7 +6,6 @@ set -qU XDG_CACHE_HOME; or set XXDG_CACHE_HOME $HOME/.cache
 
 # Initialize shell packages
 starship init fish | source
-fzf init fish | source
 zoxide init fish | source
 
 # Configure default editors

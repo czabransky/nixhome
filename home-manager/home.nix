@@ -30,8 +30,8 @@
 			source = ~/dotfiles/fish;
 			recursive = true;
 		};
-		# ".config/fish".source = dotfiles/fish;
 		".config/starship.toml".source = ~/dotfiles/starship/starship.toml;
+		".tmux.conf".source = ~/dotfiles/tmux/tmux.conf;
 	};
 
 # Home Manager can configure individual programs so long as a wrapper exists.
