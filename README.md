@@ -1,3 +1,9 @@
+# What is this Project?
+
+This is a [nix](https://nixos.org/) and [nix home-manager](https://github.com/nix-community/home-manager) driven dotfiles configuration for linux-based systems. With only a few commands your linux system will install a number of commonly used tools all while configuring them with my preferred settings!  
+
+Feel free to choose whatever terminal applciation you like - this configuration is using the tokyonight theme!
+
 # Nix Installation
 
 ```sh

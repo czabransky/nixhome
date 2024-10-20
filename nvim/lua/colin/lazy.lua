@@ -1,0 +1,46 @@
+-- [[ Install `lazy.nvim` plugin manager ]]
+--    https://github.com/folke/lazy.nvim
+--    `:help lazy.nvim.txt` for more info
+local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system {
+		'git',
+		'clone',
+		'--filter=blob:none',
+		'https://github.com/folke/lazy.nvim.git',
+		'--branch=stable', -- latest stable release
+		lazypath,
+	}
+end
+vim.opt.rtp:prepend(lazypath) -- noqa
+
+require('lazy').setup({
+	checker = {
+		enabled = true,
+		notify = true,
+	},
+	performance = {
+		rtp = {
+			disabled_plugins = {
+				"gzip",
+				"netrwPlugin",
+				"tarPlugin",
+				"tohtml",
+				"tutor",
+				"zipPlugin",
+			},
+		},
+	},
+	ui = {
+		border = "single",
+	},
+
+	require('colin.plugins.alpha'),
+	require('colin.plugins.mini'),
+	require('colin.plugins.theme').tokyonight(),
+	require('colin.plugins.tree').nvimtree(),
+	require('colin.plugins.telescope'),
+	require('colin.plugins.treesitter'),
+	require('colin.plugins.vim-tmux-navigator'),
+	require('colin.plugins.whichkey'),
+})

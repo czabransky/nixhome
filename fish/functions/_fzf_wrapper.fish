@@ -14,7 +14,7 @@ function _fzf_wrapper --description "Prepares some environment variables before 
         # height=90% leaves space to see the current command and some scrollback, maintaining context of work
         # preview-window=wrap wraps long lines in the preview window, making reading easier
         # marker=* makes the multi-select marker more distinguishable from the pointer (since both default to >)
-        set --export FZF_DEFAULT_OPTS '--cycle --layout=reverse --border --height=90% --preview-window=wrap --marker="*" --color=bg+:#414559,bg:#303446,spinner:#f2d5cf,hl:#e78284 --color=fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf --color=marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284'
+        set --export FZF_DEFAULT_OPTS '--cycle --layout=reverse --border --height=90% --preview-window=wrap --marker="*" --color=bg+:#414559,bg:#1d1f29,spinner:#f2d5cf,hl:#e78284 --color=fg:#c6d0f5,header:#e78284,info:#ca9ee6,pointer:#f2d5cf --color=marker:#f2d5cf,fg+:#c6d0f5,prompt:#ca9ee6,hl+:#e78284'
     end
 
     fzf $argv

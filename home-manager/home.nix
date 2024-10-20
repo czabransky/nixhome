@@ -10,6 +10,7 @@
 			pkgs.fish
 			pkgs.starship
 			pkgs.curl
+			pkgs.gcc
 			pkgs.git
 			pkgs.lazygit
 			pkgs.ripgrep
@@ -33,22 +34,26 @@
 		};
 		".config/starship.toml".source = ~/dotfiles/starship/starship.toml;
 		".config/tmux/tmux.conf".source = ~/dotfiles/tmux/tmux.conf;
+		".config/nvim" = {
+			source = ~/dotfiles/nvim;
+			recursive = true;
+		};
 	};
 
 # Home Manager can configure individual programs so long as a wrapper exists.
 # Wrappers can be found here: https://nix-community.github.io/home-manager/options.xhtml
 	programs.home-manager.enable = true;
 	programs.bat.enable = true;
-	programs.bat.config.theme = "catppuccin";
+	programs.bat.config.theme = "tokyonight";
 	programs.bat.themes = {
-		catppuccin = {
+		tokyonight = {
 			src = pkgs.fetchFromGitHub {
-				owner = "catppuccin";
-				repo = "bat"; 
-				rev = "d2bbee4f7e7d5bac63c054e4d8eca57954b31471";
-				sha256 = "sha256-x1yqPCWuoBSx/cI94eA+AWwhiSA42cLNUOFJl7qjhmw=";
+				owner = "enkia";
+				repo = "enki-theme";
+				rev = "0b629142733a27ba3a6a7d4eac04f81744bc714f";
+				sha256 = "sha256-Q+sac7xBdLhjfCjmlvfQwGS6KUzt+2fu+crG4NdNr4w=";
 			};
-			file = "themes/Catppuccin Frappe.tmTheme";
+			file = "scheme/Enki-Tokyo-Night.tmTheme";
 		};
 	};
 
