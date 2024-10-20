@@ -32,7 +32,7 @@ home-manager --impure switch
 # Tmux Plugins
 
 ```sh
-# For tmux plugins to install automatically, we need to install the plugin manager first
+# for tmux plugins to install automatically, install the plugin manager first
 mkdir -p ~/.config/tmux/plugins ;
 git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm ;
 ```
