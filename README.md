@@ -4,7 +4,8 @@ This is a [nix](https://nixos.org/) and [nix home-manager](https://github.com/ni
 
 Feel free to choose whatever terminal applciation you like - this configuration is using the `tokyonight` theme.
 
-# Nix Installation
+# Installation
+## Nix
 
 ```sh
 # install nix with flakes enabled
@@ -29,7 +30,7 @@ home-manager --impure switch
 /bin/bash ~/dotfiles/setup.sh <your-user-name>
 ```
 
-# Tmux Plugins
+## Tmux Plugins
 
 ```sh
 # for tmux plugins to install automatically, install the plugin manager first
@@ -41,17 +42,17 @@ With tmux running:
 - reload: `ctrl+a + R`
 
 
-# Neovim
+## Neovim
 
 Launching neovim (aliased to `n`) will automatically install its plugins using the [Lazy Plugin Manager](https://github.com/folke/lazy.nvim).
 - Run `:checkhealth` to validate your configuration.
 
-## Keybinds
+### Keybinds
 
 Here are a few notable keybinds to help you get started.
 
 - Note: The `<leader>` key is mapped to `<SPACE>`
-- Pressing the <leader> key will open the `whichkey` display after a moment.
+- Pressing the `<leader>` key will open the `whichkey` display after a moment.
 - `<leader>tt` will open the `nvimtree` explorer. With the exporer open, `g?` will show available keybinds. 
 - `<leader>sf` will open the `telescope` file search. Type the name of the file you want to open.
 - `<leader>st` will open the `telescope.builtin` menu, where you can find tons of helpful info.
