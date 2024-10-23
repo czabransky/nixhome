@@ -13,7 +13,7 @@ return {
 				'markdown',
 				'markdown_inline',
 				'nix',
-				'typescript',
+				'tsx',
 				'vim',
 				'vimdoc',
 				'xml',

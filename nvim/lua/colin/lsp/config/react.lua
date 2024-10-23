@@ -1,10 +1,10 @@
 local lspconfig = require('lspconfig')
 local configs = require('lspconfig/configs')
--- local setup = require('colin.lsp.lsp-setup')
+local setup = require('colin.lsp.lsp-setup')
 local attach = require('colin.lsp.lsp-attach')
 
 lspconfig.ts_ls.setup({
-	-- capabilities = setup.capabilities_with_snippets,
+	capabilities = setup.capabilities_with_snippets,
 	filetypes = {
 		'js',
 		'ts',

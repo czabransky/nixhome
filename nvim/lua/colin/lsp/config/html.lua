@@ -1,6 +1,6 @@
 local lspconfig = require('lspconfig')
 local configs = require('lspconfig/configs')
--- local setup = require('colin.lsp.lsp-setup')
+local setup = require('colin.lsp.lsp-setup')
 local attach = require('colin.lsp.lsp-attach')
 local webfiles = {
 	'html',
@@ -20,13 +20,13 @@ local webfiles = {
 }
 
 lspconfig.cssls.setup({
-	-- capabilities = setup.capabilities_with_snippets,
+	capabilities = setup.capabilities_with_snippets,
 	filetypes = webfiles,
 	on_attach = attach.on_attach,
 })
 
 lspconfig.html.setup({
-	-- capabilities = setup.capabilities,
+	capabilities = setup.capabilities,
 	on_attach = attach.on_attach,
 })
 
@@ -44,7 +44,7 @@ if not lspconfig.emmet_ls then
 end
 
 lspconfig.emmet_ls.setup({
-	-- capabilities = setup.capabilities_with_snippets,
+	capabilities = setup.capabilities_with_snippets,
 	filetypes = webfiles,
 	init_options = {
 		html = {
