@@ -24,6 +24,7 @@
 			pkgs.nodejs_22
 			pkgs.dotnetCorePackages.sdk_8_0_4xx
 			pkgs.tmux
+			pkgs.glow
 			pkgs.neovim
 	];
 
