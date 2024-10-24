@@ -2,10 +2,11 @@
 
  Windows Setup
 	 1. Install Scoop
-	 2. Install Scoop packages:  (found in
 
 		Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 		Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+
+	 2. Install Scoop Packages:
 		
 		scoop install ripgrep ;
 		scoop install fd ;
@@ -17,6 +18,9 @@
 		scoop install mingw ;
 		scoop install neovim ;
 		
+		scoop bucket add nerd-fonts ;
+		scoop install RobotoMono-NF ;
+
 		scoop bucket add extras ;
 		scoop install wezterm ;
 
