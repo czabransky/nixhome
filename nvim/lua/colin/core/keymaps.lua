@@ -48,3 +48,14 @@ vim.keymap.set('n', '<leader>cn', ':cnext<CR>zz', { desc = 'Navigate to [N]ext Q
 vim.keymap.set('n', '<leader>cp', ':cprevious<CR>zz', { desc = 'Navigate to [P]revious Quickfix Item' })
 vim.keymap.set('n', '<leader>co', ':copen<CR>', { desc = '[O]pen the Quickfix List' })
 vim.keymap.set('n', '<leader>cc', ':cclose<CR>', { desc = '[C]lose the Quickfix List' })
+
+-- VS Code
+if vim.g.vscode then
+	local vscode = require('vscode')
+	vim.keymap.set({ "n", "x" }, "<leader>cr", function()
+		vscode.with_insert(function()
+			vscode.action("editor.action.refactor")
+		end)
+	end)
+end
+
