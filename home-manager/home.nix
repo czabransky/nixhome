@@ -31,15 +31,15 @@
 # Home Manager is pretty good at managing dotfiles. 
 # These files will be symlinked in the user /home/ directory.
 	home.file = {
-		".vimrc".source = ~/dotfiles/vim/vimrc;
+		".vimrc".source = ~/nixhome/vim/vimrc;
 		".config/fish" = {
-			source = ~/dotfiles/fish;
+			source = ~/nixhome/fish;
 			recursive = true;
 		};
-		".config/starship.toml".source = ~/dotfiles/starship/starship.toml;
-		".config/tmux/tmux.conf".source = ~/dotfiles/tmux/tmux.conf;
+		".config/starship.toml".source = ~/nixhome/starship/starship.toml;
+		".config/tmux/tmux.conf".source = ~/nixhome/tmux/tmux.conf;
 		".config/nvim" = {
-			source = ~/dotfiles/nvim;
+			source = ~/nixhome/nvim;
 			recursive = true;
 		};
 	};

@@ -10,7 +10,7 @@ echo $USERNAME
 
 
 # Symlink home-manger to the config directory
-ln -s ~/dotfiles/home-manager ~/.config/home-manager
+ln -s ~/nixhome/home-manager ~/.config/home-manager
 
 # Set the default shell to fish
 echo "changing shell authentication to 'sufficient' in pam.d/chsh"
