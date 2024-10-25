@@ -38,5 +38,13 @@
 cp $HOME/nixhome/powershell/Microsoft.Powershell_profile.ps1 $HOME/Documents/WindowsPowerShell/ ;
 cp $HOME/nixhome/powershell/Microsoft.Powershell_profile.ps1 $HOME/Documents/PowerShell/ ;
 
+if (![System.IO.File]::Exists("$HOME/Documents/WindowsPowerShell/custom.ps1")) {
+	cp $HOME/nixhome/powershell/custom.ps1 $HOME/Documents/WindowsPowerShell/ ;
+}
+
+if (![System.IO.File]::Exists("$HOME/Documents/PowerShell/custom.ps1")) {
+	cp $HOME/nixhome/powershell/custom.ps1 $HOME/Documents/PowerShell/ ;
+}
+
 # Copy wezterm to $HOME directory
 cp $HOME/nixhome/wezterm/wezterm.lua $HOME/.wezterm.lua ;

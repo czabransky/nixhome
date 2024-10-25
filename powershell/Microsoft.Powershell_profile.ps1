@@ -1,4 +1,3 @@
-
 $Env:EDITOR = "nvim"
 $Env:BAT_THEME = "Nord"
 
@@ -93,4 +92,5 @@ Set-PSReadLineKeyHandler -Chord Ctrl+r -ScriptBlock {
     [Microsoft.PowerShell.PSConsoleReadLine]::Insert("" + $cmd)
 }
 
-Import-Module posh-git
+. $PSScriptRoot\custom.ps1
+
