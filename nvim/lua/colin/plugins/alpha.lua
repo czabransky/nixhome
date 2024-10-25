@@ -26,6 +26,7 @@ return {
 			dashboard.button("e", "  > new file", ":ene <BAR> startinsert <CR>"),
 			dashboard.button("f", "󰍉  > find file", ":Telescope find_files<CR>"),
 			dashboard.button("r", "  > recent", ":Telescope oldfiles<CR>"),
+			dashboard.button("g", "󰛢  > grapple", ":Grapple toggle_tags<CR>"),
 			dashboard.button("q", "󰈆  > quit", ":qa<CR>"),
 		}
 
