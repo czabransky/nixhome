@@ -5,7 +5,7 @@ This is a [nix](https://nixos.org/) and [nix home-manager](https://github.com/ni
 Feel free to choose whatever terminal applciation you like - this configuration is using the `tokyonight` theme.
 
 # Installation
-## Nix
+## Linux
 
 ```sh
 # install nix with flakes enabled
@@ -30,7 +30,7 @@ home-manager --impure switch
 /bin/bash ~/nixhome/setup.sh <your-user-name>
 ```
 
-## Tmux Plugins
+### Tmux Plugins
 
 ```sh
 # for tmux plugins to install automatically, install the plugin manager first
@@ -41,13 +41,18 @@ With tmux running:
 - install plugins: `ctrl+a + I`
 - reload: `ctrl+a + R`
 
+## Windows
+- Install Scoop
+- Install Scoop Packages
+- You can find all the scoop scripts in `setup.ps1`, just copy and paste into your terminal.
+- Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 
-## Neovim
+# Neovim
 
 Launching neovim (aliased to `n`) will automatically install its plugins using the [Lazy Plugin Manager](https://github.com/folke/lazy.nvim).
 - Run `:checkhealth` to validate your configuration.
 
-### Keybinds
+## Keybinds
 
 Here are a few notable keybinds to help you get started.
 
