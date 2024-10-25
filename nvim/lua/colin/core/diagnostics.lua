@@ -8,8 +8,8 @@ local function send_diagnostics_to_quickfix()
 	for _, diagnostic in ipairs(diagnostics) do
 		table.insert(qflist, {
 			bufnr = bufnr,
-			lnum = diagnostic.lnum,
-			col = diagnostic.col,
+			lnum = diagnostic.lnum + 1,
+			col = diagnostic.col + 1,
 			text = diagnostic.message,
 		})
 	end
