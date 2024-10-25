@@ -92,5 +92,6 @@ Set-PSReadLineKeyHandler -Chord Ctrl+r -ScriptBlock {
     [Microsoft.PowerShell.PSConsoleReadLine]::Insert("" + $cmd)
 }
 
+# Source user-specific configurations
 . $PSScriptRoot\custom.ps1
 

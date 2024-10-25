@@ -48,3 +48,6 @@ if (![System.IO.File]::Exists("$HOME/Documents/PowerShell/custom.ps1")) {
 
 # Copy wezterm to $HOME directory
 cp $HOME/nixhome/wezterm/wezterm.lua $HOME/.wezterm.lua ;
+
+rm -Recurse $HOME/.config/nvim
+cp -Recurse $HOME/nixhome/nvim $HOME/.config/nvim

@@ -1,7 +1,7 @@
-local wezterm = require 'wezterm'
+local wezterm = require("wezterm")
 return {
-	default_prog = { 'pwsh.exe', '-NoLogo' },
+	default_prog = { "pwsh.exe", "-NoLogo" },
 	enable_tab_bar = false,
-	font = wezterm.font { family = 'RobotoMono Nerd Font' },
-	color_scheme = 'tokyonight'
+	font = wezterm.font({ family = "RobotoMono Nerd Font" }),
+	color_scheme = "tokyonight",
 }
