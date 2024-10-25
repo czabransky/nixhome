@@ -45,10 +45,11 @@ nnoremap <leader>' <C-^>
 " Best Remaps of All Time
 nnoremap gg ggzz
 nnoremap G Gzz
-nnoremap <C-u> <C-u>z z
+nnoremap <C-u> <C-u>zz
 nnoremap <C-d> <C-d>zz
 nnoremap n nzzzv
 nnoremap N Nzzzv
+nnoremap _ _ze
 nmap Q gq
 imap jj <Esc>
 imap jk <Esc>
