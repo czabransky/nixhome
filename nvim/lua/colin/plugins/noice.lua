@@ -1,10 +1,10 @@
 return {
-	'folke/noice.nvim',
+	"folke/noice.nvim",
 	dependencies = {
-		{ 'MunifTanjim/nui.nvim' },
-		{ 'rcarriga/nvim-notify' },
+		{ "MunifTanjim/nui.nvim" },
+		{ "rcarriga/nvim-notify" },
 	},
-	event = 'VeryLazy',
+	event = "VeryLazy",
 	opts = {},
 	config = function()
 		require("noice").setup({
@@ -15,7 +15,7 @@ return {
 					["vim.lsp.util.stylize_markdown"] = true,
 					["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
 				},
-				message = { enable = false, },
+				message = { enable = false },
 			},
 			-- you can enable a preset for easier configuration
 			presets = {
@@ -25,7 +25,7 @@ return {
 				inc_rename = false, -- enables an input dialog for inc-rename.nvim
 				lsp_doc_border = true, -- add a border to hover docs and signature help
 			},
-			messages = { enabled = false, },
+			messages = { enabled = false },
 			views = {
 				mini = {
 					win_options = {
@@ -45,5 +45,5 @@ return {
 				return "<c-f>"
 			end
 		end, { silent = true, expr = true })
-	end
+	end,
 }

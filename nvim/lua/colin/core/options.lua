@@ -6,8 +6,8 @@ end
 
 local function opt_overrides()
 	local options = {
-		clipboard = 'unnamed,unnamedplus',
-		completeopt = 'menuone,noselect',
+		clipboard = "unnamed,unnamedplus",
+		completeopt = "menuone,noselect",
 		mouse = "a",
 		termguicolors = true,
 		signcolumn = "yes",

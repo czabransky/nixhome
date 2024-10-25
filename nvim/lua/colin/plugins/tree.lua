@@ -9,17 +9,17 @@ end
 
 function M.nvimtree()
 	return {
-		'nvim-tree/nvim-tree.lua',
+		"nvim-tree/nvim-tree.lua",
 		dependencies = {
-			{ 'nvim-tree/nvim-web-devicons' },
+			{ "nvim-tree/nvim-web-devicons" },
 		},
 		config = function()
-			require('nvim-tree').setup({
+			require("nvim-tree").setup({
 				git = {
 					ignore = true, -- git files available in telescope
 				},
 				view = {
-					side = 'right',
+					side = "right",
 					float = {
 						-- Set enable to true if prefer a floating file explorer.
 						enable = true,
@@ -31,7 +31,7 @@ function M.nvimtree()
 				},
 				renderer = {
 					icons = {
-						git_placement = 'after',
+						git_placement = "after",
 						web_devicons = {
 							folder = {
 								enable = true,
@@ -43,25 +43,25 @@ function M.nvimtree()
 					},
 				},
 			})
-			vim.keymap.set('n', '<leader>tt',
-				function() return require('nvim-tree.api').tree.toggle({ find_file = true }) end,
-				{ desc = 'Toggle Tree' })
+			vim.keymap.set("n", "<leader>tt", function()
+				return require("nvim-tree.api").tree.toggle({ find_file = true })
+			end, { desc = "Toggle Tree" })
 			setup_netrw(0)
-		end
+		end,
 	}
 end
 
 function M.neotree()
 	return {
-		'nvim-neo-tree/neo-tree.nvim',
-		version = 'v3.x',
+		"nvim-neo-tree/neo-tree.nvim",
+		version = "v3.x",
 		requires = {
-			{ 'nvim-lua/plenary.nvim' },
-			{ 'nvim-tree/nvim-web-devicons' },
-			{ 'MunifTanjim/nui.nvim' },
+			{ "nvim-lua/plenary.nvim" },
+			{ "nvim-tree/nvim-web-devicons" },
+			{ "MunifTanjim/nui.nvim" },
 		},
 		config = function()
-			require('neo-tree').setup({
+			require("neo-tree").setup({
 				default_component_configs = {
 					container = {
 						enable_character_fade = true,
@@ -69,9 +69,9 @@ function M.neotree()
 				},
 				enable_diagnostics = true,
 				enable_git_status = true,
-				popup_border_style = 'rounded',
+				popup_border_style = "rounded",
 			})
-			vim.keymap.set('n', '<leader>tt', '<cmd>Neotree<CR>', { desc = 'Toggle Tree' })
+			vim.keymap.set("n", "<leader>tt", "<cmd>Neotree<CR>", { desc = "Toggle Tree" })
 			setup_netrw(1)
 		end,
 	}
@@ -79,22 +79,24 @@ end
 
 function M.oil()
 	return {
-		'stevearc/oil.nvim',
+		"stevearc/oil.nvim",
 		opts = {},
 		dependencies = {
-			{ 'nvim-tree/nvim-web-devicons' },
+			{ "nvim-tree/nvim-web-devicons" },
 		},
 		config = function()
-			require('oil').setup({
+			require("oil").setup({
 				win_options = {
-					signcolumn = 'yes',
+					signcolumn = "yes",
 				},
 			})
-			vim.keymap.set('n', '<leader>tt', function() return require('oil').toggle_float() end,
-				{ desc = 'Toggle Tree' })
-			vim.keymap.set('n', '<leader>te', function() return require('oil').toggle_float() end,
-				{ desc = 'Oil Explorer' })
-		end
+			vim.keymap.set("n", "<leader>tt", function()
+				return require("oil").toggle_float()
+			end, { desc = "Toggle Tree" })
+			vim.keymap.set("n", "<leader>te", function()
+				return require("oil").toggle_float()
+			end, { desc = "Oil Explorer" })
+		end,
 	}
 end
 

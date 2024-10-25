@@ -7,7 +7,7 @@ return {
 				lsp_format = "fallback",
 			},
 			formatters_by_ft = {
-				lua = { "stylua", lsp_format = "fallback"  },
+				lua = { "stylua", lsp_format = "fallback" },
 				python = { "isort", "black" },
 				rust = { "rustfmt", lsp_format = "fallback" },
 				javascript = { "prettierd", "prettier" },
@@ -15,6 +15,5 @@ return {
 				typescriptreact = { "prettierd", "prettier" },
 			},
 		})
-
-	end
+	end,
 }

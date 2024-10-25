@@ -50,16 +50,15 @@ local function show_macro_recording()
 	end
 end
 
-
 return {
-	'nvim-lualine/lualine.nvim',
+	"nvim-lualine/lualine.nvim",
 	config = function()
-		local lazy_status = require('lazy.status')
-		require('lualine').setup {
+		local lazy_status = require("lazy.status")
+		require("lualine").setup({
 			options = {
-				theme = 'auto',
+				theme = "auto",
 				icons_enabled = true,
-				component_separators = ' ',
+				component_separators = " ",
 				section_separators = { left = "", right = "" },
 			},
 			sections = {
@@ -80,7 +79,10 @@ return {
 					},
 				},
 				lualine_c = {
-					{ "diagnostics",    sources = { "nvim_diagnostic" } }, function() return "%=" end,
+					{ "diagnostics", sources = { "nvim_diagnostic" } },
+					function()
+						return "%="
+					end,
 					{
 						"filename",
 						file_status = true,
@@ -98,8 +100,8 @@ return {
 						color = { fg = "#333333", bg = "#eeeeee" },
 						separator = { left = "", right = "" },
 					},
-					{ "searchcount", },
-					{ "selectioncount", },
+					{ "searchcount" },
+					{ "selectioncount" },
 					{
 						show_macro_recording,
 						color = { fg = "#333333", bg = "#ff6666" },
@@ -110,13 +112,14 @@ return {
 					{
 						lazy_status.updates,
 						cond = lazy_status.has_updates,
-						color = { fg = '#ff9e64' },
+						color = { fg = "#ff9e64" },
 					},
-					{ "filetype", icon_only = true } },
+					{ "filetype", icon_only = true },
+				},
 				-- luadine_y = {},
 				-- lualine_z = {},
 			},
-		}
+		})
 
 		local lualine = require("lualine")
 		vim.api.nvim_create_autocmd("RecordingEnter", {

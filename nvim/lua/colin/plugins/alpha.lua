@@ -1,8 +1,8 @@
 return {
-	'goolord/alpha-nvim',
+	"goolord/alpha-nvim",
 	dependencies = {
-		{ 'nvim-tree/nvim-web-devicons' },
-		{ 'nvim-lua/plenary.nvim' },
+		{ "nvim-tree/nvim-web-devicons" },
+		{ "nvim-lua/plenary.nvim" },
 	},
 	config = function()
 		local alpha = require("alpha")
@@ -35,5 +35,5 @@ return {
 
 		-- Disable folding on alpha buffer
 		vim.cmd([[ autocmd FileType alpha setlocal nofoldenable ]])
-	end
+	end,
 }
