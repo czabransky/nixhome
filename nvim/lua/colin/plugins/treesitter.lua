@@ -13,6 +13,7 @@ return {
 				"markdown",
 				"markdown_inline",
 				"nix",
+				"c_sharp",
 				"tsx",
 				"vim",
 				"vimdoc",

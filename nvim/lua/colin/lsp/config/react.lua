@@ -1,5 +1,4 @@
 local lspconfig = require("lspconfig")
-local configs = require("lspconfig/configs")
 local setup = require("colin.lsp.lsp-setup")
 local attach = require("colin.lsp.lsp-attach")
 
