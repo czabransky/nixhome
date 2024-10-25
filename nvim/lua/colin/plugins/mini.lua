@@ -15,6 +15,12 @@ return {
 					return 100 / n
 				end,
 			},
+			resize = {
+				enable = true,
+				timing = function(_, n)
+					return 100 / n
+				end,
+			},
 		})
 		require("mini.notify").setup()
 	end,
