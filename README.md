@@ -28,7 +28,7 @@ Run home-manager to install packages and symlink the remaining configuration fil
 ```sh
 home-manager --impure switch
 ```
-Run setup.sh to add fish as your default shell.
+Run `setup.sh` to add fish as your default shell.
 ```sh
 /bin/bash ~/nixhome/setup.sh $USER
 ```
