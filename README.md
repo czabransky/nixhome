@@ -19,8 +19,8 @@ nix shell nixpkgs#git --command nix flake clone github:czabransky/nixhome --dest
 nix run home-manager/master -- init --switch ;
 rm -rf ~/.config/home-manager ;
 ln -s ~/nixhome/home-manager ~/.config/home-manager ;
-sed -i 's/colin/$USER/g' ~/nixhome/home-manager/flake.nix ;
-sed -i 's/colin/$USER/g' ~/nixhome/home-manager/home.nix ;
+sed -i 's/colin/'"$USER"'/g' ~/nixhome/home-manager/flake.nix ;
+sed -i 's/colin/'"$USER"'/g' ~/nixhome/home-manager/home.nix ;
 
 # run home-manager to install packages and symlink the remaining configuration files
 home-manager --impure switch
