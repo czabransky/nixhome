@@ -47,18 +47,18 @@ With tmux running:
 ## Windows
 
 > [!TIP] 
-> If you want to update powershell to version 7+ run: `winget install --id Microsoft.PowerShell --source winget`
+> If you want to update powershell to version 7+: `winget install --id Microsoft.PowerShell --source winget`
 
-1. Install Git
+Install Git
 ```pwsh 
 winget install --id Git.Git
 ```
-2. Install Scoop
+Install Scoop
 ```pwsh
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 ```
-3. Install Scoop Packages:
+Install Scoop Packages:
 ```pwsh
 scoop install lazygit ;
 scoop install ripgrep ;
@@ -75,7 +75,7 @@ scoop bucket add extras ;
 scoop install wezterm ;
 ```
 
-4. Run `setup.ps1` script to configure powershell, wezterm, and neovim.
+Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 
 
 # Neovim
