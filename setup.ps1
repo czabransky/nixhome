@@ -1,15 +1,11 @@
 # Copy into Powershell 5 and 6+ locations
-[System.IO.Directory]::CreateDirectory($HOME + '/Documents/WindowsPowerShell')
-[System.IO.Directory]::CreateDirectory($HOME + '/Documents/PowerShell')
-cp $HOME/nixhome/powershell/Microsoft.Powershell_profile.ps1 $HOME/Documents/WindowsPowerShell/ ;
-cp $HOME/nixhome/powershell/Microsoft.Powershell_profile.ps1 $HOME/Documents/PowerShell/ ;
+$psroot = [System.IO.Path]::GetDirectoryName("$profile")
 
-if (![System.IO.File]::Exists("$HOME/Documents/WindowsPowerShell/custom.ps1")) {
-	cp $HOME/nixhome/powershell/custom.ps1 $HOME/Documents/WindowsPowerShell/ ;
-}
+[System.IO.Directory]::CreateDirectory($psroot)
+cp $HOME/nixhome/powershell/Microsoft.Powershell_profile.ps1 $profile
 
-if (![System.IO.File]::Exists("$HOME/Documents/PowerShell/custom.ps1")) {
-	cp $HOME/nixhome/powershell/custom.ps1 $HOME/Documents/PowerShell/ ;
+if (![System.IO.File]::Exists("$psroot/custom.ps1")) {
+	cp $HOME/nixhome/powershell/custom.ps1 $psroot
 }
 
 # Copy wezterm to $HOME directory

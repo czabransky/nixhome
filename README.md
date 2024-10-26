@@ -42,11 +42,9 @@ With tmux running:
 - reload: `ctrl+a + R`
 
 ## Windows
-> [!NOTE]
->	OneDrive users beware, your powershell $profile points to OneDrive/Documents.
->   You may need to modify the script below or manually copy the powershell profile to the correct location.
->   Personally, I uninstalled OneDrive and modified keys in:
->  `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders`
+
+> [!TIP] 
+> If you want to update powershell to version 7+ run: `winget install --id Microsoft.PowerShell --source winget`
 
 1. Install Git
 ```pwsh 
@@ -76,10 +74,6 @@ scoop install wezterm ;
 
 4. Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 
-> [!TIP] 
-> Update Powershell to 7+
-> - Check powershell version: `$PSVersionTable`
-> - `winget install --id Microsoft.PowerShell --source winget`
 
 # Neovim
 
