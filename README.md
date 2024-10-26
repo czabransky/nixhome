@@ -78,7 +78,6 @@ scoop bucket add extras ;
 scoop install wezterm ;
 ```
 
-```
 4. Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 
 > [!TIP] Update Powershell to 7+  
