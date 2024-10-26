@@ -1,4 +1,5 @@
 function zd --description "Remove the selected entry from zoxide"
-	$dir = zoxide query --list $argv | fzf --ansi --border --reverse
+	set -l dir ( zoxide query --list | fzf --ansi --border --reverse )
 	zoxide remove $dir
+	echo "$dir removed from zoxide"
 end
