@@ -1,5 +1,6 @@
 $Env:EDITOR = "nvim"
 $Env:BAT_THEME = "Nord"
+$Env:XDG_CONFIG_HOME = "$HOME/.config"
 
 Set-Location $HOME
 

@@ -42,10 +42,49 @@ With tmux running:
 - reload: `ctrl+a + R`
 
 ## Windows
-- Install Scoop
-- Install Scoop Packages
-- You can find all the scoop scripts in `setup.ps1`, just copy and paste into your terminal.
-- Run `setup.ps1` script to configure powershell, wezterm, and neovim.
+> [!NOTE]
+>	OneDrive users beware, your powershell $profile points to OneDrive/Documents.
+>   You may need to modify the script below or manually copy the powershell profile to the correct location.
+>   Personally, I uninstalled OneDrive and modified keys in:
+>   HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders
+
+1. Install Git
+```pwsh 
+   winget install --id Git.Git
+```
+2. Install Scoop
+```pwsh
+   Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+   Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+```
+3. Install Scoop Packages:
+```pwsh
+   scoop install lazygit ;
+   scoop install ripgrep ;
+   scoop install fd ;
+   scoop install fzf ;
+   scoop install bat ;
+   scoop install zoxide ;
+   scoop install glow ;
+   
+   scoop install mingw ;
+   scoop install neovim ;
+   
+   scoop bucket add nerd-fonts ;
+   scoop install RobotoMono-NF ;
+
+   scoop bucket add extras ;
+   scoop install wezterm ;
+```
+
+Optional: Update Powershell to 7+  
+    Check powershell version: $PSVersionTable  
+    Update powershell with winget:  
+```pwsh
+    winget search Microsoft.PowerShell
+    winget install --id Microsoft.PowerShell --source winget
+```
+4. Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 
 # Neovim
 

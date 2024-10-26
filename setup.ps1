@@ -1,13 +1,24 @@
 <#
 
  Windows Setup
-	 1. Install Scoop
+
+	Note:	OneDrive users beware, your powershell $profile points to OneDrive/Documents.
+			You may need to modify the script below or manually copy the powershell profile to the correct location.
+			Personally, I uninstalled OneDrive and modified keys in:
+				HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders
+
+	 1. Install Git
+		
+		winget install --id Git.Git
+
+	 2. Install Scoop
 
 		Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 		Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 
-	 2. Install Scoop Packages:
+	 3. Install Scoop Packages:
 		
+		scoop install lazygit ;
 		scoop install ripgrep ;
 		scoop install fd ;
 		scoop install fzf ;
@@ -49,5 +60,10 @@ if (![System.IO.File]::Exists("$HOME/Documents/PowerShell/custom.ps1")) {
 # Copy wezterm to $HOME directory
 cp $HOME/nixhome/wezterm/wezterm.lua $HOME/.wezterm.lua ;
 
+# Configure Neovim
+cp $HOME/nixhome/vim/vimrc $HOME/.vimrc ;
 rm -Recurse $HOME/.config/nvim
 cp -Recurse $HOME/nixhome/nvim $HOME/.config/nvim
+
+# Source the profile to update the current shell
+. $profile
