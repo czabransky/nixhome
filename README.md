@@ -46,7 +46,7 @@ With tmux running:
 >	OneDrive users beware, your powershell $profile points to OneDrive/Documents.
 >   You may need to modify the script below or manually copy the powershell profile to the correct location.
 >   Personally, I uninstalled OneDrive and modified keys in:
->   `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders`
+>  `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders`
 
 1. Install Git
 ```pwsh 
@@ -66,14 +66,10 @@ scoop install fzf ;
 scoop install bat ;
 scoop install zoxide ;
 scoop install glow ;
-
-
 scoop install mingw ;
 scoop install neovim ;
-
 scoop bucket add nerd-fonts ;
 scoop install RobotoMono-NF ;
-
 scoop bucket add extras ;
 scoop install wezterm ;
 ```
@@ -83,10 +79,7 @@ scoop install wezterm ;
 > [!TIP] 
 > Update Powershell to 7+
 > - Check powershell version: `$PSVersionTable`
-```pwsh
-winget search Microsoft.PowerShell
-winget install --id Microsoft.PowerShell --source winget
-```
+> - `winget install --id Microsoft.PowerShell --source winget`
 
 # Neovim
 
