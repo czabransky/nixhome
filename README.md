@@ -80,10 +80,10 @@ scoop install wezterm ;
 
 4. Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 
-> [!TIP] Update Powershell to 7+  
+> [!TIP] 
+> Update Powershell to 7+
+> - Check powershell version: `$PSVersionTable`
 ```pwsh
-# Check powershell version: $PSVersionTable  
-# Update powershell with winget:  
 winget search Microsoft.PowerShell
 winget install --id Microsoft.PowerShell --source winget
 ```
