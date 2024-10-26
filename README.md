@@ -6,26 +6,30 @@ Feel free to choose whatever terminal applciation you like - this configuration 
 
 # Installation
 ## Linux
-
+Install nix with flakes enabled.
 ```sh
-# install nix with flakes enabled
 sh <(curl -L https://nixos.org/nix/install) --no-daemon ;
 mkdir -p ~/.config/nix ;
 echo 'experimental-features = nix-command flakes' >> ~/.config/nix/nix.conf ;
-
-# restart your shell so the nix command is available
-# nix shell is used to run git whether it's installed on the host or not
+```
+Restart your shell so the nix command is available. The nix shell is used to run git whether it's installed on the host or not.
+```sh
 nix shell nixpkgs#git --command nix flake clone github:czabransky/nixhome --dest ~/nixhome ;
 nix run home-manager/master -- init --switch ;
+```
+Configure home-manager symlink to git repository, and rename your nix profile to the current user.
+```sh
 rm -rf ~/.config/home-manager ;
 ln -s ~/nixhome/home-manager ~/.config/home-manager ;
 sed -i 's/colin/'"$USER"'/g' ~/nixhome/home-manager/flake.nix ;
 sed -i 's/colin/'"$USER"'/g' ~/nixhome/home-manager/home.nix ;
-
-# run home-manager to install packages and symlink the remaining configuration files
+```
+Run home-manager to install packages and symlink the remaining configuration files.
+```sh
 home-manager --impure switch
-
-# run the setup.sh to add fish as your default shell
+```
+Run setup.sh to add fish as your default shell.
+```sh
 /bin/bash ~/nixhome/setup.sh $USER
 ```
 
