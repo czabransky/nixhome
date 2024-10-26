@@ -49,9 +49,10 @@ With tmux running:
 > [!TIP] 
 > If you want to update powershell to version 7+: `winget install --id Microsoft.PowerShell --source winget`
 
-Install Git
+Install Git and download this repository.
 ```pwsh 
-winget install --id Git.Git
+winget install --id Git.Git ;
+git clone https://github.com/czabransky/nixhome.git $HOME/nixhome
 ```
 Install Scoop
 ```pwsh
