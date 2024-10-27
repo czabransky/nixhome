@@ -61,19 +61,12 @@ Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 ```
 Install Scoop Packages:
 ```pwsh
-scoop install lazygit ;
-scoop install ripgrep ;
-scoop install fd ;
-scoop install fzf ;
-scoop install bat ;
-scoop install zoxide ;
-scoop install glow ;
-scoop install mingw ;
-scoop install neovim ;
-scoop bucket add nerd-fonts ;
-scoop install RobotoMono-NF ;
-scoop bucket add extras ;
-scoop install wezterm ;
+scoop bucket add nerd-fonts
+scoop bucket add extras
+scoop install RobotoMono-NF
+scoop install ripgrep file fd fzf bat zoxide mingw
+scoop install lazygit glow yazi neovim
+scoop install wezterm
 ```
 
 Run `setup.ps1` script to configure powershell, wezterm, and neovim.
