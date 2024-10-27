@@ -21,11 +21,13 @@
 			pkgs.bat
 			pkgs.eza
 			pkgs.zoxide
-			pkgs.nodejs_22
-			pkgs.dotnetCorePackages.sdk_8_0_4xx
+			pkgs.file
+			pkgs.yazi
 			pkgs.tmux
 			pkgs.glow
 			pkgs.neovim
+			pkgs.nodejs_22
+			pkgs.dotnetCorePackages.sdk_8_0_4xx
 	];
 
 # Home Manager is pretty good at managing dotfiles. 

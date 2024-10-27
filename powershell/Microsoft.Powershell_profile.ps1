@@ -37,6 +37,17 @@ function zd {
 	echo "$dir removed from zoxide"
 }
 
+# Yazi shell wrapper that provides the ability to change the current working directory when exiting Yazi.
+function y {
+    $tmp = [System.IO.Path]::GetTempFileName()
+    yazi $args --cwd-file="$tmp"
+    $cwd = Get-Content -Path $tmp
+    if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path) {
+        Set-Location -LiteralPath $cwd
+    }
+    Remove-Item -Path $tmp
+}
+
 # Audit a file in git to see its change history. Alternative UI: gitk $file
 function gitaudit {
 	param (
