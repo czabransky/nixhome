@@ -15,6 +15,3 @@ zoxide init fish | source
 # Configure default editors
 set -gx EDITOR nvim
 set -gx VISUAL code
-
-# Change default starting directory
-cd $HOME

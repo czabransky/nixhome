@@ -11,6 +11,7 @@
 			pkgs.starship
 			pkgs.curl
 			pkgs.unzip
+			pkgs.xclip
 			pkgs.gcc
 			pkgs.git
 			pkgs.lazygit
@@ -39,6 +40,10 @@
 			recursive = true;
 		};
 		".config/starship.toml".source = ~/nixhome/starship/starship.toml;
+		".config/yazi" = {
+			source = ~/nixhome/yazi;
+			recursive = true;
+		};
 		".config/tmux/tmux.conf".source = ~/nixhome/tmux/tmux.conf;
 		".config/nvim" = {
 			source = ~/nixhome/nvim;
