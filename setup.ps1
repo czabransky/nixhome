@@ -8,13 +8,19 @@ if (![System.IO.File]::Exists("$psroot/custom.ps1")) {
 	cp $HOME/nixhome/powershell/custom.ps1 $psroot
 }
 
-# Copy wezterm to $HOME directory
+
+# Configure Yazi
+rm -Recurse $HOME/.config/yazi
+cp -Recurse $HOME/nixhome/yazi $HOME/.config/yazi
+
+# Configure Wezterm
 cp $HOME/nixhome/wezterm/wezterm.lua $HOME/.wezterm.lua ;
 
 # Configure Neovim
 cp $HOME/nixhome/vim/vimrc $HOME/.vimrc ;
 rm -Recurse $HOME/.config/nvim
 cp -Recurse $HOME/nixhome/nvim $HOME/.config/nvim
+
 
 # Source the profile to update the current shell
 . $profile
