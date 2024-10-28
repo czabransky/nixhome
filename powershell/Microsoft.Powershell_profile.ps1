@@ -3,8 +3,6 @@ $Env:YAZI_CONFIG_HOME = "$HOME/.config/yazi"
 $Env:EDITOR = "nvim"
 $Env:BAT_THEME = "Nord"
 
-Set-Location $HOME
-
 Set-Alias -Name lg -Value lazygit
 Set-Alias -Name g -Value glow
 Set-Alias -Name n -Value nvim
