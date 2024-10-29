@@ -1,4 +1,4 @@
-general:
+eneral:
   # Whether to automatically focus windows underneath the cursor.
   focus_follows_cursor: false
 
@@ -13,7 +13,7 @@ general:
   show_floating_on_top: false
 
   # Amount to move floating windows by (eg. when using `alt+<hjkl>` on a floating window)
-  floating_window_move_amount: "5%"
+  floating_window_move_amount: "2%"
 
   # Whether to center new floating windows.
   center_new_floating_windows: true

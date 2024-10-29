@@ -51,18 +51,22 @@ return {
 					enable = true,
 					set_jumps = true,
 					goto_next_start = {
+						["]a"] = "@parameter.outer",
 						["]m"] = "@function.outer",
 						["]]"] = "@class.outer",
 					},
 					goto_next_end = {
+						["]A"] = "@parameter.outer",
 						["]M"] = "@function.outer",
 						["]["] = "@class.outer",
 					},
 					goto_previous_start = {
+						["[a"] = "@parameter.outer",
 						["[m"] = "@function.outer",
 						["[["] = "@class.outer",
 					},
 					goto_previous_end = {
+						["[A"] = "@parameter.outer",
 						["[M"] = "@function.outer",
 						["[]"] = "@class.outer",
 					},

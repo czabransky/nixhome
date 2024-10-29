@@ -59,7 +59,7 @@ nmap <leader>y "+y
 vmap <leader>y "+y
 nmap <leader>Y "+Y
 vmap <leader>Y "+Y
-nmap gp '[v']
+nmap gp `[v`]
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 
