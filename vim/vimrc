@@ -13,7 +13,7 @@ set nowrap
 set number
 set mouse=a
 set relativenumber
-set scrolloff=8
+set scrolloff=4
 set shiftwidth=4
 set showmode
 set smartcase
