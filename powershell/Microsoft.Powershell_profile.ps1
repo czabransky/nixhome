@@ -1,5 +1,6 @@
 $Env:XDG_CONFIG_HOME = "$HOME/.config"
 $Env:YAZI_CONFIG_HOME = "$HOME/.config/yazi"
+$Env:GLAZEWM_CONFIG_PATH = "$HOME/.config/glazewm/config.yaml"
 $Env:EDITOR = "nvim"
 $Env:BAT_THEME = "Nord"
 

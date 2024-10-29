@@ -8,6 +8,10 @@ if (![System.IO.File]::Exists("$psroot/custom.ps1")) {
 	cp $HOME/nixhome/powershell/custom.ps1 $psroot
 }
 
+# Configure GlazeWM
+rm -Recurse $HOME/.config/glazewm
+cp -Recurse $HOME/nixhome/glazewm $HOME/.config/glazewm
+
 
 # Configure Yazi
 rm -Recurse $HOME/.config/yazi
@@ -20,7 +24,6 @@ cp $HOME/nixhome/wezterm/wezterm.lua $HOME/.wezterm.lua ;
 cp $HOME/nixhome/vim/vimrc $HOME/.vimrc ;
 rm -Recurse $HOME/.config/nvim
 cp -Recurse $HOME/nixhome/nvim $HOME/.config/nvim
-
 
 # Source the profile to update the current shell
 . $profile

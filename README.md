@@ -66,7 +66,7 @@ scoop bucket add extras
 scoop install RobotoMono-NF
 scoop install ripgrep file fd fzf bat zoxide mingw
 scoop install lazygit glow yazi neovim
-scoop install wezterm
+scoop install wezterm glazewm
 scoop install vscode
 ```
 
