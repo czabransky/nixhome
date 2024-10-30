@@ -11,3 +11,4 @@
 --]]
 
 require("colin")
+require("debug")
