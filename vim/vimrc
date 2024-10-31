@@ -68,5 +68,7 @@ nnoremap <leader>S :%s//g<Left><Left>
 xnoremap <leader>S :s/\%V/g<Left><Left>
 
 " Plugin Globals
-" Quickscope on these keys:
-let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+" Required for tpope/vim-commentary
+filetype plugin indent on
+autocmd FileType cs setlocal commentstring=//\ %s
+autocmd FileType csharp setlocal commentstring=//\ %s

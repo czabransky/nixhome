@@ -8,5 +8,10 @@ lspconfig.omnisharp.setup({
 		"cs",
 		"csharp",
 	},
+	settings = {
+		RoslynExtensionsOptions = {
+			EnableAnalyzersSupport = true,
+		},
+	},
 	on_attach = attach.on_attach,
 })
