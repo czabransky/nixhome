@@ -67,6 +67,10 @@ vnoremap K :m '<-2<CR>gv=gv
 nnoremap <leader>S :%s//g<Left><Left>
 xnoremap <leader>S :s/\%V/g<Left><Left>
 
+" Exiting all buffers should be easy
+nmap ZZ :wqa<CR>
+
+
 " Plugin Globals
 " Required for tpope/vim-commentary
 filetype plugin indent on

@@ -54,6 +54,7 @@ require("lazy").setup({
 	require("colin.plugins.telescope"),
 	require("colin.plugins.treesitter"),
 	require("colin.plugins.vim-commentary"),
+	require("colin.plugins.vim-obsession"),
 	require("colin.plugins.vim-surround"),
 	require("colin.plugins.vim-tmux-navigator"),
 	require("colin.plugins.whichkey"),
