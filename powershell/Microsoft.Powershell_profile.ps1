@@ -7,6 +7,7 @@ $Env:BAT_THEME = "Nord"
 Set-Alias -Name lg -Value lazygit
 Set-Alias -Name g -Value glow
 Set-Alias -Name n -Value nvim
+Set-Alias -Name ns -Value nvimsession
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 # Use fd by default to query directories
@@ -46,6 +47,11 @@ function y {
         Set-Location -LiteralPath $cwd
     }
     Remove-Item -Path $tmp
+}
+
+# Launch nvim using the default local session
+function nvimsession {
+	nvim -S .\Session.vim
 }
 
 # Audit a file in git to see its change history. Alternative UI: gitk $file
