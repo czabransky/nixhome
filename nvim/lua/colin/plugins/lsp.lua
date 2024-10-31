@@ -19,29 +19,29 @@ return {
 
 		-- [[ LSP Attach to Buffer ]]
 		-- Must define a unique buffer name so multiple buffers can attach at the same time
-		local augroups = {}
-		local get_augroup = function(client)
-			if not augroups[client.id] then
-				local name = "UserLspAttach" .. client.name
-				local id = vim.api.nvim_create_augroup(name, { clear = true })
-				augroups[client.id] = id
-			end
-			return augroups[client.id]
-		end
+		-- local augroups = {}
+		-- local get_augroup = function(client)
+		-- 	if not augroups[client.id] then
+		-- 		local name = "UserLspAttach" .. client.name
+		-- 		local id = vim.api.nvim_create_augroup(name, { clear = true })
+		-- 		augroups[client.id] = id
+		-- 	end
+		-- 	return augroups[client.id]
+		-- end
 
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
 			callback = function(args)
 				local client_id = args.data.client_id
 				local client = vim.lsp.get_client_by_id(client_id)
-				local bufnr = args.buf
+				-- local bufnr = args.buf
 				if not client.server_capabilities.documentFormattingProvider then
 					return
 				end
 				vim.api.nvim_create_autocmd("BufWritePre", {
 					pattern = "*",
-					callback = function(args)
-						require("conform").format({ bufnr = args.buf })
+					callback = function(ev)
+						require("conform").format({ bufnr = ev.buf })
 					end,
 				})
 				-- vim.api.nvim_create_autocmd('BufWritePre', {
