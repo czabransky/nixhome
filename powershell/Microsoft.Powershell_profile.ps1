@@ -65,6 +65,11 @@ function gitaudit {
 		--bind ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up
 }
 
+# Launch firefox to Lofi beats!
+function lofi {
+	firefox -new-tab "https://www.youtube.com/watch?v=jfKfPfyJRdk"
+}
+
 # Add standard shell key combo for clearing current buffer
 Set-PSReadLineKeyHandler -Chord Ctrl+u -ScriptBlock {
     [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
