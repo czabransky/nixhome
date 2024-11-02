@@ -66,11 +66,13 @@ scoop bucket add extras
 scoop install RobotoMono-NF
 scoop install ripgrep file fd fzf bat zoxide mingw
 scoop install lazygit glow yazi neovim
-scoop install wezterm glazewm
+scoop install wezterm zebar powertoys
 scoop install vscode
+winget install glazewm
 ```
 
-Run `setup.ps1` script to configure powershell, wezterm, and neovim.
+Run `setup.ps1` script to configure powershell, wezterm, and neovim.  
+
 
 
 # Neovim
