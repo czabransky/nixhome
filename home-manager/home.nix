@@ -46,7 +46,7 @@
 		};
 		".config/tmux/tmux.conf".source = ~/nixhome/tmux/tmux.conf;
 		".config/nvim" = {
-			source = ~/nixhome/nvim;
+			source = ~/nixhome/lazyvim;
 			recursive = true;
 		};
 	};
