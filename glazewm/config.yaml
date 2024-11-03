@@ -34,7 +34,7 @@ general:
 
   cursor_jump:
     # Whether to automatically move the cursor on the specified trigger.
-    enabled: true
+    enabled: false
 
     # Trigger for cursor jump:
     # - 'monitor_focus': Jump when focus changes between monitors.
@@ -50,10 +50,10 @@ gaps:
 
   # Gap between windows and the screen edge.
   outer_gap:
-    top: '45px'
-    right: '5px'
-    bottom: '5px'
-    left: '5px'
+    top: '50px'
+    right: '8px'
+    bottom: '8px'
+    left: '8px'
 
 window_effects:
   focused_window:
@@ -86,42 +86,6 @@ window_effects:
     corner_style:
       enabled: false
       style: 'square'
-
-# bar:
-#   height: "30px"
-#   position: "top"
-#   opacity: 1.0
-#   background: "#20242cc4"
-#   foreground: "#ffffff"
-#   font_family: "RobotoMono Nerd Font"
-#   font_size: "13px"
-#   padding: "4px 6px"
-#   offset_x: "0"
-#   offset_y: "0"
-#   border_radius: "0"
-#   components_left:
-#     - type: "workspaces"
-#       focused_workspace_background: "#ffffff33"
-#       displayed_workspace_background: "#00000033"
-#       default_workspace_background: "transparent"
-#   components_center:
-#     - type: "window title"
-#   components_right:
-#     - type: "system tray"
-#     - type: "tiling direction"
-#       label_horizontal: "⮂"
-#       label_vertical: "⮁"
-#       background: "#ffffff33"
-#       margin: "0 4px"
-#       padding: "0 8px"
-#     - type: "binding mode"
-#       background: "#ffffff33"
-#       margin: "0 4px 0 0"
-#       padding: "0 8px"
-#     - type: "clock"
-#       # Documentation on formatting date/time string:
-#       # https://learn.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
-#       time_formatting: "hh:mm tt  ddd MMM d"
 
 window_behavior:
   # New windows are created in this state whenever possible.
