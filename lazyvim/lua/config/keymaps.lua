@@ -2,23 +2,23 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 
 -- Press Enter to write the current buffer
-vim.keymap.set("n", "<CR>", ":write<CR>", { silent = true, remap = true })
+vim.keymap.set("n", "<CR>", ":write<CR>", { desc = "which_key_ignore", silent = true, remap = true })
 
 --  Cursorline should follow navigation
-vim.keymap.set("n", "gg", "ggzz", { silent = true, remap = false })
-vim.keymap.set("n", "G", "Gzz", { silent = true, remap = false })
-vim.keymap.set("n", "<C-u>", "<C-u>zz", { silent = true, remap = false })
-vim.keymap.set("n", "<C-d>", "<C-d>zz", { silent = true, remap = false })
+vim.keymap.set("n", "gg", "ggzz", { desc = "which_key_ignore", silent = true, remap = false })
+vim.keymap.set("n", "G", "Gzz", { desc = "which_key_ignore", silent = true, remap = false })
+vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "which_key_ignore", silent = true, remap = false })
+vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "which_key_ignore", silent = true, remap = false })
 
 --Copying/Pasting to/from the system register
-vim.keymap.set("n", "Y", "y$", { silent = true, remap = false })
-vim.keymap.set({ "n", "v" }, "<leader>y", '"+y', { silent = true, remap = true })
-vim.keymap.set({ "n", "v" }, "<leader>Y", '"+Y', { silent = true, remap = true })
-vim.keymap.set("n", "gp", "`[v`]", { silent = true, remap = true })
-vim.keymap.set("n", "<leader>p", '"_dP', { silent = true, remap = false })
+vim.keymap.set("n", "Y", "y$", { desc = "which_key_ignore", silent = true, remap = false })
+vim.keymap.set({ "n", "v" }, "<leader>y", '"+y', { desc = "which_key_ignore", silent = true, remap = true })
+vim.keymap.set({ "n", "v" }, "<leader>Y", '"+Y', { desc = "which_key_ignore", silent = true, remap = true })
+vim.keymap.set("n", "gp", "`[v`]", { desc = "which_key_ignore", silent = true, remap = true })
+vim.keymap.set("n", "<leader>p", '"_dP', { desc = "which_key_ignore", silent = true, remap = false })
 
 -- Exiting Neovim should be easy
-vim.keymap.set("n", "ZZ", ":wqa<CR>", { silent = true, remap = true })
+vim.keymap.set("n", "ZZ", ":wqa<CR>", { desc = "which_key_ignore", silent = true, remap = true })
 
 -- Cancel highligts or close open popups with Escape
 vim.keymap.set("n", "<esc>", function()
@@ -28,7 +28,7 @@ vim.keymap.set("n", "<esc>", function()
     end
   end
   vim.cmd(":noh")
-end, { silent = true, desc = "Remove Search Highlighting, Dismiss Popups" })
+end, { desc = "which_key_ignore", silent = true })
 
 -- VS Code Mappings
 if vim.g.vscode then
@@ -37,7 +37,7 @@ if vim.g.vscode then
     vscode.with_insert(function()
       vscode.action("editor.action.refactor")
     end)
-  end)
+  end, { desc = "which_key_ignore" })
 end
 
 -- VS Code and Visual Studio Maps
