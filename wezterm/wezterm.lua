@@ -1,6 +1,8 @@
 local wezterm = require("wezterm")
 return {
-	color_scheme = "Tokyo Night Moon",
+	-- color_scheme = "tokyonight_storm",
+	-- color_scheme = "tokyonight_moon",
+	color_scheme = "tokyonight_night",
 	default_prog = { "pwsh.exe", "-NoLogo" },
 	enable_tab_bar = false,
 	font = wezterm.font({ family = "RobotoMono Nerd Font" }),
