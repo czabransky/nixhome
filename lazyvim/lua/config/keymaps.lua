@@ -15,7 +15,7 @@ vim.keymap.set("n", "Y", "y$", { desc = "which_key_ignore", silent = true, remap
 vim.keymap.set({ "n", "v" }, "<leader>y", '"+y', { desc = "which_key_ignore", silent = true, remap = true })
 vim.keymap.set({ "n", "v" }, "<leader>Y", '"+Y', { desc = "which_key_ignore", silent = true, remap = true })
 vim.keymap.set("n", "gp", "`[v`]", { desc = "which_key_ignore", silent = true, remap = true })
-vim.keymap.set("n", "<leader>p", '"_dP', { desc = "which_key_ignore", silent = true, remap = false })
+vim.keymap.set("x", "<leader>p", '"_dP', { desc = "which_key_ignore", silent = true, remap = false })
 
 -- Navigate panes using Ctrl+Arrows (overrides LazyVim resize pane keybinds)
 vim.keymap.set({ "n", "v", "i" }, "<C-Left>", "<C-w>h", { desc = "which_key_ignore", silent = true, remap = true })
