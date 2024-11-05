@@ -17,8 +17,11 @@ vim.keymap.set({ "n", "v" }, "<leader>Y", '"+Y', { desc = "which_key_ignore", si
 vim.keymap.set("n", "gp", "`[v`]", { desc = "which_key_ignore", silent = true, remap = true })
 vim.keymap.set("n", "<leader>p", '"_dP', { desc = "which_key_ignore", silent = true, remap = false })
 
--- Exiting Neovim should be easy
-vim.keymap.set("n", "ZZ", ":wqa<CR>", { desc = "which_key_ignore", silent = true, remap = true })
+-- Navigate panes using Ctrl+Arrows (overrides LazyVim resize pane keybinds)
+vim.keymap.set({ "n", "v", "i" }, "<C-Left>", "<C-w>h", { desc = "which_key_ignore", silent = true, remap = true })
+vim.keymap.set({ "n", "v", "i" }, "<C-Right>", "<C-w>l", { desc = "which_key_ignore", silent = true, remap = true })
+vim.keymap.set({ "n", "v", "i" }, "<C-Up>", "<C-w>k", { desc = "which_key_ignore", silent = true, remap = true })
+vim.keymap.set({ "n", "v", "i" }, "<C-Down>", "<C-w>j", { desc = "which_key_ignore", silent = true, remap = true })
 
 -- Cancel highligts or close open popups with Escape
 vim.keymap.set("n", "<esc>", function()
@@ -29,6 +32,9 @@ vim.keymap.set("n", "<esc>", function()
   end
   vim.cmd(":noh")
 end, { desc = "which_key_ignore", silent = true })
+
+-- Exiting Neovim should be easy
+vim.keymap.set("n", "ZZ", ":wqa<CR>", { desc = "which_key_ignore", silent = true, remap = true })
 
 -- VS Code Mappings
 if vim.g.vscode then
@@ -47,6 +53,7 @@ local function open_in_vscode()
   local row, col = unpack(cursor)
   vim.cmd("!code --goto " .. vim.fn.expand("%") .. ":" .. row .. ":" .. col .. " --reuse-window")
 end
-vim.keymap.set("n", "<leader>vc", open_in_vscode, { desc = "Open Current File in Visual Studio Code" })
+
 -- As of 10/25/2024, you cannot combine /edit with /command, e.g., `devenv /edit % /command "GotoLn 50"`
 vim.keymap.set("n", "<leader>vs", ":!devenv /edit %<CR>", { desc = "Open Current File in Visual Studio" })
+vim.keymap.set("n", "<leader>vc", open_in_vscode, { desc = "Open Current File in Visual Studio Code" })
