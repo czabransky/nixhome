@@ -1,4 +1,5 @@
 local wezterm = require("wezterm")
+local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
 return {
 	-- color_scheme = "tokyonight_storm",
 	-- color_scheme = "tokyonight_moon",
@@ -11,6 +12,11 @@ return {
 	-- follow tmux/nvim keybinds
 	leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 },
 	keys = {
+		{
+			key = "o",
+			mods = "LEADER",
+			action = workspace_switcher.switch_workspace(),
+		},
 		{
 			key = "|",
 			mods = "LEADER|SHIFT",

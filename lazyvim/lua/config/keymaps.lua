@@ -18,10 +18,10 @@ vim.keymap.set("n", "gp", "`[v`]", { desc = "which_key_ignore", silent = true, r
 vim.keymap.set("x", "<leader>p", '"_dP', { desc = "which_key_ignore", silent = true, remap = false })
 
 -- Navigate panes using Ctrl+Arrows (overrides LazyVim resize pane keybinds)
-vim.keymap.set({ "n", "v", "i" }, "<C-Left>", "<C-w>h", { desc = "which_key_ignore", silent = true, remap = true })
-vim.keymap.set({ "n", "v", "i" }, "<C-Right>", "<C-w>l", { desc = "which_key_ignore", silent = true, remap = true })
-vim.keymap.set({ "n", "v", "i" }, "<C-Up>", "<C-w>k", { desc = "which_key_ignore", silent = true, remap = true })
-vim.keymap.set({ "n", "v", "i" }, "<C-Down>", "<C-w>j", { desc = "which_key_ignore", silent = true, remap = true })
+vim.keymap.set({ "n", "v", "i" }, "<leader><Left>", "<C-w>h", { desc = "which_key_ignore", silent = true, remap = true })
+vim.keymap.set({ "n", "v", "i" }, "<leader><Right>", "<C-w>l", { desc = "which_key_ignore", silent = true, remap = true })
+vim.keymap.set({ "n", "v", "i" }, "<leader><Up>", "<C-w>k", { desc = "which_key_ignore", silent = true, remap = true })
+vim.keymap.set({ "n", "v", "i" }, "<leader><Down>", "<C-w>j", { desc = "which_key_ignore", silent = true, remap = true })
 
 -- Cancel highligts or close open popups with Escape
 vim.keymap.set("n", "<esc>", function()
