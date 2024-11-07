@@ -33,5 +33,12 @@ return {
 			mods = "LEADER|CTRL",
 			action = wezterm.action.SendKey({ key = "a", mods = "CTRL" }),
 		},
+		{
+			key = "w",
+			mods = "LEADER",
+			action = wezterm.action.ShowLauncherArgs({
+				flags = "FUZZY|WORKSPACES",
+			}),
+		},
 	},
 }

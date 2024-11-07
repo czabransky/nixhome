@@ -263,7 +263,7 @@ keybindings:
   - commands: ["move-workspace --direction left"]
     bindings: ["alt+shift+a"]
   - commands: ["move-workspace --direction right"]
-    bindings: ["alt+shift*s"]
+    bindings: ["alt+shift+s"]
   # - command: "move workspace up"
   #   binding: "alt+d"
   # - command: "move workspace down"

@@ -19,6 +19,7 @@
 			pkgs.fzf
 			pkgs.fd
 			pkgs.jq
+			pkgs.yq
 			pkgs.bat
 			pkgs.eza
 			pkgs.zoxide
