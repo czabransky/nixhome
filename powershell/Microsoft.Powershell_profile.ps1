@@ -111,7 +111,7 @@ Set-PSReadLineKeyHandler -Chord Alt+c -ScriptBlock {
 # Ctrl+r to show a command history
 Set-PSReadLineKeyHandler -Chord Ctrl+r -ScriptBlock {
     [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
-	$cmd = cat (Get-PSReadlineOption).HistorySavePath | fzf --ansi --border --reverse
+	$cmd = cat (Get-PSReadlineOption).HistorySavePath | fzf --ansi --border --reverse --tac
     [Microsoft.PowerShell.PSConsoleReadLine]::Insert("" + $cmd)
 }
 

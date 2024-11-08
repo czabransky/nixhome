@@ -7,28 +7,28 @@
 # The home.packages option allows you to install Nix packages.
 # https://search.nixos.org/packages
 	home.packages = [
-			pkgs.fish
-			pkgs.starship
-			pkgs.curl
-			pkgs.unzip
-			pkgs.xclip
-			pkgs.gcc
-			pkgs.git
-			pkgs.lazygit
-			pkgs.ripgrep
-			pkgs.fzf
-			pkgs.fd
-			pkgs.jq
-			pkgs.bat
-			pkgs.eza
-			pkgs.zoxide
-			pkgs.file
-			pkgs.yazi
-			pkgs.tmux
-			pkgs.glow
-			pkgs.neovim
-			pkgs.nodejs_22
-			pkgs.dotnetCorePackages.sdk_8_0_4xx
+        pkgs.fish
+        pkgs.starship
+        pkgs.curl
+        pkgs.unzip
+        pkgs.xclip
+        pkgs.gcc
+        pkgs.git
+        pkgs.lazygit
+        pkgs.ripgrep
+        pkgs.fzf
+        pkgs.fd
+        pkgs.jq
+        pkgs.bat
+        pkgs.eza
+        pkgs.zoxide
+        pkgs.file
+        pkgs.yazi
+        pkgs.tmux
+        pkgs.glow
+        pkgs.neovim
+        pkgs.nodejs_22
+        pkgs.dotnetCorePackages.sdk_8_0_4xx
 	];
 
 # Home Manager is pretty good at managing dotfiles. 
