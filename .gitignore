@@ -4,3 +4,6 @@ history.txt
 # Vim sessions
 Session.vim
 
+# Environment Files
+.env
+
