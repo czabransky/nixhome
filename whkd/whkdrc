@@ -28,13 +28,13 @@ alt + shift + right     : komorebic move right
 alt + shift + return    : komorebic promote
 
 # Stack windows
-# alt + left              : komorebic stack left
-# alt + down              : komorebic stack down
-# alt + up                : komorebic stack up
-# alt + right             : komorebic stack right
-# alt + oem_1             : komorebic unstack # oem_1 is ;
-# alt + oem_4             : komorebic cycle-stack previous # oem_4 is [
-# alt + oem_6             : komorebic cycle-stack next # oem_6 is ]
+alt + a                 : komorebic stack left
+alt + r                 : komorebic stack down
+alt + s                 : komorebic stack up
+alt + t                 : komorebic stack right
+alt + oem_1             : komorebic unstack # oem_1 is ;
+alt + oem_4             : komorebic cycle-stack previous # oem_4 is [
+alt + oem_6             : komorebic cycle-stack next # oem_6 is ]
 
 # Resize
 alt + oem_plus          : komorebic resize-axis horizontal increase
@@ -43,16 +43,16 @@ alt + shift + oem_plus  : komorebic resize-axis vertical increase
 alt + shift + oem_minus : komorebic resize-axis vertical decrease
 
 # Manipulate windows
-alt + t                 : komorebic toggle-float
-alt + shift + f         : komorebic toggle-monocle
+alt + x                 : komorebic toggle-float
+alt + shift + x         : komorebic toggle-monocle
 
 # Window manager options
 alt + shift + r         : komorebic retile
 alt + p                 : komorebic toggle-pause
 
 # Layouts
-alt + x                 : komorebic flip-layout horizontal
-alt + y                 : komorebic flip-layout vertical
+alt + h                 : komorebic flip-layout horizontal
+alt + v                 : komorebic flip-layout vertical
 
 # Workspaces
 alt + 1                 : komorebic focus-workspace 0

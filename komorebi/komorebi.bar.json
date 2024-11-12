@@ -10,20 +10,18 @@
         }
     },
     "font_family": "JetBrains Mono",
+    "font_size": 18,
     "theme": {
         "palette": "Base16",
-        "name": "TokyoNightMoon",
-        "accent": "Base0D"
+        "name": "TokyoNightStorm",
+        "accent": "Base0C"
     },
     "left_widgets": [
         {
             "Komorebi": {
                 "workspaces": {
                     "enable": true,
-                    "hide_empty_workspaces": false
-                },
-                "layout": {
-                    "enable": true
+                    "hide_empty_workspaces": true
                 },
                 "focused_window": {
                     "enable": true,
@@ -34,12 +32,7 @@
     ],
     "right_widgets": [
         {
-            "Media": {
-                "enable": true
-            }
-        },
-        {
-            "Storage": {
+            "Cpu": {
                 "enable": true
             }
         },
@@ -51,8 +44,8 @@
         {
             "Network": {
                 "enable": true,
-                "show_total_data_transmitted": true,
-                "show_network_activity": true
+                "show_total_data_transmitted": false,
+                "show_network_activity": false
             }
         },
         {
@@ -64,7 +57,7 @@
         {
             "Time": {
                 "enable": true,
-                "format": "TwentyFourHour"
+                "format": "TwelveHour"
             }
         },
         {
