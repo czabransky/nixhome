@@ -8,10 +8,17 @@ if (![System.IO.File]::Exists("$psroot/custom.ps1")) {
 	cp $HOME/nixhome/powershell/custom.ps1 $psroot
 }
 
+# Configure komorebi
+rm -Recurse $HOME/.config/komorebi
+cp -Recurse $HOME/nixhome/komorebi $HOME/.config/komorebi
+
+# Configure whkd
+rm -Recurse $HOME/.config/whkd
+cp -Recurse $HOME/nixhome/whkd $HOME/.config/whkd
+
 # Configure GlazeWM
 rm -Recurse $HOME/.config/glazewm
 cp -Recurse $HOME/nixhome/glazewm $HOME/.config/glazewm
-
 
 # Configure Yazi
 rm -Recurse $HOME/.config/yazi

@@ -1,6 +1,6 @@
 # What is this Project?
 
-This is a [nix](https://nixos.org/) and [nix home-manager](https://github.com/nix-community/home-manager) driven dotfiles configuration for linux-based systems. With only a few commands your linux system will install a number of commonly used tools all while configuring them with my preferred settings.  
+This is a [nix](https://nixos.org/) and [nix home-manager](https://github.com/nix-community/home-manager) driven dotfiles configuration for linux-based systems. With only a few commands your linux system will install a number of commonly used tools all while configuring them with my preferred settings.
 
 Feel free to choose whatever terminal applciation you like - this configuration is using the `tokyonight` theme.
 
@@ -84,12 +84,20 @@ scoop bucket add extras
 scoop install RobotoMono-NF
 scoop install ripgrep file fd fzf bat zoxide mingw
 scoop install lazygit glow yazi neovim
-scoop install wezterm zebar powertoys
+scoop install wezterm powertoys
 scoop install vscode
-winget install glazewm
 ```
 
-Run `setup.ps1` script to configure powershell, wezterm, and neovim.  
+Choose a Tiling Window Manager. Either `komorebi` with `whkd`, or `glazewm` with `zebar`.
+
+```pwsh
+scoop install komorebi whkd
+
+winget install glazewm
+scoop install zebar
+```
+
+Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 
 # Neovim
 

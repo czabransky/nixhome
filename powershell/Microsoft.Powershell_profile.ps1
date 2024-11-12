@@ -1,14 +1,16 @@
+$Env:BAT_THEME = "Nord"
+$Env:EDITOR = "nvim"
+$Env:GLAZEWM_CONFIG_PATH = "$HOME/.config/glazewm/config.yaml"
+$Env:KOMOREBI_CONFIG_HOME = "$HOME/.config/komorebi"
+$Env:WHKD_CONFIG_HOME = "$HOME/.config/whkd"
 $Env:XDG_CONFIG_HOME = "$HOME/.config"
 $Env:YAZI_CONFIG_HOME = "$HOME/.config/yazi"
-$Env:GLAZEWM_CONFIG_PATH = "$HOME/.config/glazewm/config.yaml"
-$Env:EDITOR = "nvim"
-$Env:BAT_THEME = "Nord"
 
-Set-Alias -Name lg -Value lazygit
+Invoke-Expression (& { (zoxide init powershell | Out-String) })
 Set-Alias -Name g -Value glow
+Set-Alias -Name lg -Value lazygit
 Set-Alias -Name n -Value nvim
 Set-Alias -Name ns -Value nvimsession
-Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
 # Use fd by default to query directories
 # This function will not work well when trying to pass a path argument, e.g,
