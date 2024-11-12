@@ -1,7 +1,7 @@
 {
     "$schema": "https://raw.githubusercontent.com/LGUG2Z/komorebi/v0.1.30/schema.bar.json",
     "monitor": {
-        "index": 0,
+        "index": 1,
         "work_area_offset": {
             "left": 0,
             "top": 40,
@@ -10,7 +10,7 @@
         }
     },
     "font_family": "JetBrains Mono",
-    "font_size": 18,
+    "font_size": 16,
     "theme": {
         "palette": "Base16",
         "name": "TokyoNightStorm",
@@ -42,6 +42,11 @@
             }
         },
         {
+            "Battery": {
+                "enable": true
+            }
+        },
+        {
             "Network": {
                 "enable": true,
                 "show_total_data_transmitted": false,
@@ -58,11 +63,6 @@
             "Time": {
                 "enable": true,
                 "format": "TwelveHour"
-            }
-        },
-        {
-            "Battery": {
-                "enable": true
             }
         }
     ]

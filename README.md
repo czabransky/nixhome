@@ -88,7 +88,7 @@ scoop install wezterm powertoys
 scoop install vscode
 ```
 
-Choose a Tiling Window Manager. Either `komorebi` with `whkd`, or `glazewm` with `zebar`.
+Choose a Tiling Window Manager. Either `komorebi`/`whkd`, or `glazewm`/`zebar`.
 
 ```pwsh
 scoop install komorebi whkd
