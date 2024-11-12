@@ -14,6 +14,13 @@
         "unfocused_border": "Base03",
         "bar_accent": "Base0D"
     },
+    "border_colours": {
+        "single": {
+            "r": 158,
+            "g": 206,
+            "b": 106
+        }
+    },
     "stackbar": {
         "height": 40,
         "mode": "OnStack",
