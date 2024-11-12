@@ -99,6 +99,16 @@ scoop install zebar
 
 Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 
+### Launching the Tiling Window Manager
+
+#### Komorebi
+
+- `komorebic start --whkd --bar`
+
+#### GlazeWM
+
+- `glazewm.exe start --config="$HOME\.config\glazewm\config.yaml"`
+
 # Neovim
 
 Launching neovim (aliased to `n`) will automatically install its plugins using the [Lazy Plugin Manager](https://github.com/folke/lazy.nvim).
