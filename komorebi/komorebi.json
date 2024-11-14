@@ -1,35 +1,57 @@
 {
     "$schema": "https://raw.githubusercontent.com/LGUG2Z/komorebi/v0.1.30/schema.json",
-    "app_specific_configuration_path": "$Env:USERPROFILE/applications.json",
+    "app_specific_configuration_path": "$Env:USERPROFILE/.config/komorebi/applications.json",
     "window_hiding_behaviour": "Cloak",
     "cross_monitor_move_behaviour": "Insert",
     "default_workspace_padding": 8,
     "default_container_padding": 8,
+    "theme": {
+        "palette": "Base16",
+        "name": "TokyoNightStorm",
+        "unfocused_border": "Base03",
+        "bar_accent": "Base0D",
+        "single_border": "Base0B",
+        "stack_border": "Base0B",
+        "stackbar_focused_text": "Base0B"
+    },
     "border": true,
     "border_width": 6,
     "border_offset": -1,
-    "theme": {
-        "palette": "Base16",
-        "name": "Ashes",
-        "unfocused_border": "Base03",
-        "bar_accent": "Base0D"
-    },
     "border_colours": {
         "single": {
+            "r": 158,
+            "g": 206,
+            "b": 106
+        },
+        "stack": {
             "r": 158,
             "g": 206,
             "b": 106
         }
     },
     "stackbar": {
-        "height": 40,
-        "mode": "OnStack",
+        "label": "Process",
+        "height": 30,
+        "mode": "Never",
         "tabs": {
-            "width": 300
+            "width": 150
         }
     },
     "monitors": [
         {
+            "work_area_offset": {
+                "left": 0,
+                "top": 45,
+                "right": 0,
+                "bottom": 40
+            },
+            "window_based_work_area_offset_limit": 1,
+            "window_based_work_area_offset": {
+                "bottom": 0,
+                "top": 0,
+                "left": 200,
+                "right": 400
+            },
             "workspaces": [
                 {
                     "name": "I",

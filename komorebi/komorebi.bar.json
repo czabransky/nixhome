@@ -1,70 +1,74 @@
 {
-  "$schema": "https://raw.githubusercontent.com/LGUG2Z/komorebi/v0.1.30/schema.bar.json",
-  "monitor": {
-    "index": 1,
-    "work_area_offset": {
-      "left": 0,
-      "top": 40,
-      "right": 0,
-      "bottom": 40
-    }
-  },
-  "font_family": "JetBrains Mono",
-  "font_size": 16,
-  "theme": {
-    "palette": "Base16",
-    "name": "TokyoNightStorm",
-    "accent": "Base0C"
-  },
-  "left_widgets": [
-    {
-      "Komorebi": {
-        "workspaces": {
-          "enable": true,
-          "hide_empty_workspaces": true
+    "$schema": "https://raw.githubusercontent.com/LGUG2Z/komorebi/v0.1.30/schema.bar.json",
+    "monitor": {
+        "index": 0,
+        "work_area_offset": {
+            "left": 0,
+            "top": 40,
+            "right": 0,
+            "bottom": 40
         }
-      }
     },
-    {
-      "Media": {
-        "enable": true
-      }
-    }
-  ],
-  "right_widgets": [
-    {
-      "Cpu": {
-        "enable": true
-      }
+    "font_family": "JetBrains Mono",
+    "font_size": 16,
+    "theme": {
+        "palette": "Base16",
+        "name": "TokyoNightStorm",
+        "accent": "Base0B"
     },
-    {
-      "Memory": {
-        "enable": true
-      }
-    },
-    {
-      "Network": {
-        "enable": true,
-        "show_total_data_transmitted": false,
-        "show_network_activity": false
-      }
-    },
-    {
-      "Battery": {
-        "enable": true
-      }
-    },
-    {
-      "Date": {
-        "enable": true,
-        "format": "DayDateMonthYear"
-      }
-    },
-    {
-      "Time": {
-        "enable": true,
-        "format": "TwelveHour"
-      }
-    }
-  ]
+    "left_widgets": [
+        {
+            "Komorebi": {
+                "workspaces": {
+                    "enable": true,
+                    "hide_empty_workspaces": true
+                },
+                "focused_window": {
+                    "enable": true,
+                    "show_icon": true
+                }
+            }
+        },
+        {
+            "Media": {
+                "enable": false
+            }
+        }
+    ],
+    "right_widgets": [
+        {
+            "Cpu": {
+                "enable": true
+            }
+        },
+        {
+            "Memory": {
+                "enable": true
+            }
+        },
+        {
+            "Network": {
+                "enable": true,
+                "show_total_data_transmitted": false,
+                "show_network_activity": false
+            }
+        },
+        {
+            "Battery": {
+                "enable": true
+            }
+        },
+        {
+            "Date": {
+                "enable": true,
+                "format": "DayDateMonthYear"
+            }
+        },
+        {
+            "Time": {
+                "enable": true,
+                "format": "TwelveHour"
+            }
+        }
+    ]
 }
