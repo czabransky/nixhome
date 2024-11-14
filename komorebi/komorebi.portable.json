@@ -27,9 +27,23 @@
         }
     },
     "bar_configurations": [
-        "$Env:USERPROFILE/.config/komorebi/komorebi.bar.json"
+        "$Env:USERPROFILE/.config/komorebi/komorebi.bar.portable.json"
     ],
     "monitors": [
+        {
+            "workspaces": [
+                {
+                    "name": "I",
+                    "layout": "BSP"
+                }
+            ],
+            "work_area_offset": {
+                "left": 0,
+                "top": 0,
+                "right": 0,
+                "bottom": 0
+            }
+        },
         {
             "work_area_offset": {
                 "left": 0,

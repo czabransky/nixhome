@@ -2,6 +2,7 @@ return {
   "neovim/nvim-lspconfig",
   opts = {
     servers = {
+      bashls = {},
       ruff = {
         settings = {
           args = {
@@ -9,7 +10,11 @@ return {
           },
         },
       },
-      bashls = {},
+      eslint = {
+        settings = {
+          packageManager = "yarn",
+        },
+      },
     },
   },
 }
