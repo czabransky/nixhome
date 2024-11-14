@@ -95,7 +95,10 @@ Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 
 ```pwsh
 scoop install komorebi whkd
+# Default
 komorebic start --whkd --bar
+# Configuration when Primary Monitor is not Index 0
+komorebic start --whkd --bar -c "$Env:USERPROFILE/.config/komorebi/komorebi.portable.json"
 ```
 
 # Neovim
