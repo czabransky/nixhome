@@ -60,7 +60,7 @@ With tmux running:
 ## Windows
 
 > [!TIP]
-> If you want to update powershell to version 7+: `winget install --id Microsoft.PowerShell --source winget`
+> If you want to update powershell to version 7+: `winget install --id Microsoft.PowerShell --source winget`, but you will need to configure wezterm to use `pwsh`. Also, if you choose to install `Komorebi`, it is currently configured to use `pwsh` as well.
 
 Install Git and download this repository.
 
@@ -76,7 +76,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 ```
 
-Install Scoop Packages:
+Install Scoop Packages
 
 ```pwsh
 scoop bucket add nerd-fonts
@@ -91,7 +91,7 @@ Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 
 ### Tiling Window Manager
 
-#### Komorebi
+#### [Komorebi](https://lgug2z.github.io/komorebi/index.html)
 
 ```pwsh
 scoop install komorebi whkd
