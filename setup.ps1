@@ -17,10 +17,6 @@ cp $HOME/nixhome/komorebi/applications.json $HOME
 rm -Recurse $HOME/.config/whkd
 cp -Recurse $HOME/nixhome/whkd $HOME/.config/whkd
 
-# Configure GlazeWM
-rm -Recurse $HOME/.config/glazewm
-cp -Recurse $HOME/nixhome/glazewm $HOME/.config/glazewm
-
 # Configure Yazi
 rm -Recurse $HOME/.config/yazi
 cp -Recurse $HOME/nixhome/yazi $HOME/.config/yazi

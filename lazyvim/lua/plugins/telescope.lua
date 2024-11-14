@@ -2,11 +2,11 @@ return {
   "nvim-telescope/telescope.nvim",
   opts = {
     defaults = {
-      layout_strategy = "horizontal",
+      layout_strategy = "vertical",
       layout_config = {
         prompt_position = "top",
-        horizontal = { mirror = false },
-        vertical = { mirror = false },
+        vertical = { mirror = true },
+        width = 0.9,
       },
       sorting_strategy = "ascending",
     },
