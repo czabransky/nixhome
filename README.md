@@ -84,30 +84,19 @@ scoop bucket add extras
 scoop install RobotoMono-NF
 scoop install ripgrep file fd fzf bat zoxide mingw
 scoop install lazygit glow yazi neovim
-scoop install wezterm powertoys
-scoop install vscode
-```
-
-Choose a Tiling Window Manager. Either `komorebi`/`whkd`, or `glazewm`/`zebar`.
-
-```pwsh
-scoop install komorebi whkd
-
-winget install glazewm
-scoop install zebar
+scoop install wezterm 
 ```
 
 Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 
-### Launching the Tiling Window Manager
+### Tiling Window Manager
 
 #### Komorebi
 
-- `komorebic start --whkd --bar`
-
-#### GlazeWM
-
-- `glazewm.exe start --config="$HOME\.config\glazewm\config.yaml"`
+```pwsh
+scoop install komorebi whkd
+komorebic start --whkd --bar
+```
 
 # Neovim
 
