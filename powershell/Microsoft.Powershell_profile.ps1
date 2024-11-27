@@ -51,11 +51,6 @@ function y {
     Remove-Item -Path $tmp
 }
 
-# Launch nvim using the default local session
-function nvimsession {
-	nvim -S .\Session.vim
-}
-
 # Audit a file in git to see its change history. Alternative UI: gitk $file
 function gitaudit {
 	param (
@@ -65,6 +60,16 @@ function gitaudit {
 		--preview "git log -p -1 {} $f | bat -n --color=always" `
 		--preview-window=right,70% `
 		--bind ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up
+}
+
+# Restart Komorebi
+function komorebi-restart {
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$ConfigPath
+    )
+    taskkill /im komo* /f
+    komorebic start --whkd --bar --config $ConfigPath
 }
 
 # Launch firefox to Lofi beats!

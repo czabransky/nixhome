@@ -93,5 +93,17 @@
                 }
             ]
         }
+    ],
+    "ignore_rules": [
+        {
+            "id": "WindowsFormsParkingWindow",
+            "kind": "Title",
+            "matching_strategy": "Equals"
+        },
+        {
+            "id": "Search everywhere",
+            "kind": "Title",
+            "matching_strategy": "Equals"
+        }
     ]
 }

@@ -1,3 +1,7 @@
+param (
+    [Switch]$SkipKomorebi
+)
+
 # Copy into Powershell 5 and 6+ locations
 $psroot = [System.IO.Path]::GetDirectoryName("$profile")
 
@@ -9,9 +13,11 @@ if (![System.IO.File]::Exists("$psroot/custom.ps1")) {
 }
 
 # Configure komorebi
-rm -Recurse $HOME/.config/komorebi
-cp -Recurse $HOME/nixhome/komorebi $HOME/.config/komorebi
-cp $HOME/nixhome/komorebi/applications.json $HOME
+if ($SkipKomorebi) {
+    rm -Recurse $HOME/.config/komorebi
+    cp -Recurse $HOME/nixhome/komorebi $HOME/.config/komorebi
+    cp $HOME/nixhome/komorebi/applications.json $HOME
+}
 
 # Configure whkd
 rm -Recurse $HOME/.config/whkd
