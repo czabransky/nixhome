@@ -1,6 +1,5 @@
 $Env:BAT_THEME = "Nord"
 $Env:EDITOR = "nvim"
-$Env:GLAZEWM_CONFIG_PATH = "$HOME/.config/glazewm/config.yaml"
 $Env:KOMOREBI_CONFIG_HOME = "$HOME/.config/komorebi"
 $Env:WHKD_CONFIG_HOME = "$HOME/.config/whkd"
 $Env:XDG_CONFIG_HOME = "$HOME/.config"
@@ -17,53 +16,68 @@ Set-Alias -Name ns -Value nvimsession
 # l $HOME/Documents
 # This is because Windows likes to tab-complete paths using backslashes \ which fd does not interpret well.
 # `ls` works fine for listing a different directory than your current directory.
-function l {
-	fd -tf -td -H -d1 --exclude 'ntuser*' --exclude 'NTUSER*'
+function l
+{
+    fd -tf -td -H -d1 --exclude 'ntuser*' --exclude 'NTUSER*'
 }
 
 # Select an entry from zoxide using fzf
-function zz {
-	param (
-		$f
-	)
-	$dir = zoxide query --list $f | fzf --ansi --border --reverse
-	z $dir
+function zz
+{
+    param (
+        $f
+    )
+    $dir = zoxide query --list $f | fzf --ansi --border --reverse
+    z $dir
 }
 
 # Remove the selected entry from zoxide
-function zd {
-	param (
-		$f
-	)
-	$dir = zoxide query --list $f | fzf --ansi --border --reverse
-	zoxide remove $dir
-	echo "$dir removed from zoxide"
+function zd
+{
+    param (
+        $f
+    )
+    $dir = zoxide query --list $f | fzf --ansi --border --reverse
+    zoxide remove $dir
+    Write-Output "$dir removed from zoxide"
 }
 
 # Yazi shell wrapper that provides the ability to change the current working directory when exiting Yazi.
-function y {
+function y
+{
     $tmp = [System.IO.Path]::GetTempFileName()
     yazi $args --cwd-file="$tmp"
     $cwd = Get-Content -Path $tmp
-    if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path) {
+    if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path)
+    {
         Set-Location -LiteralPath $cwd
     }
     Remove-Item -Path $tmp
 }
 
+# Open the git remote url in Chrome
+function gitbrowse
+{
+    url=$(git config --get remote.origin.url)
+    Start-Process chrome $url
+}
+
 # Audit a file in git to see its change history. Alternative UI: gitk $file
-function gitaudit {
-	param (
-		$f
-	)
-	git log --pretty=format:%H -- $f | fzf --ansi --border --reverse `
-		--preview "git log -p -1 {} $f | bat -n --color=always" `
-		--preview-window=right,70% `
-		--bind ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up
+function gitaudit
+{
+    param (
+        $f
+    )
+    git log --pretty=format:%H -- $f | fzf --ansi --border --reverse `
+        --preview "git log -p -1 {} $f | bat -n --color=always" `
+        --preview-window=right,70% `
+        --bind ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up
+
 }
 
 # Restart Komorebi
-function komorebi-restart {
+function komorebi-restart
+{
     param (
         [Parameter(Mandatory=$true)]
         [string]$ConfigPath
@@ -73,8 +87,9 @@ function komorebi-restart {
 }
 
 # Launch firefox to Lofi beats!
-function lofi {
-	firefox -new-tab "https://www.youtube.com/watch?v=jfKfPfyJRdk"
+function lofi
+{
+    firefox -new-tab "https://www.youtube.com/watch?v=jfKfPfyJRdk"
 }
 
 # Add standard shell key combo for clearing current buffer
@@ -91,34 +106,35 @@ Set-PSReadLineKeyHandler -Chord Ctrl+p -ScriptBlock {
 
 # Ctrl+z to expand zoxide paths and add them to your current command
 Set-PSReadLineKeyHandler -Chord Ctrl+z -ScriptBlock {
-	$result = ( zoxide query --list | fzf --ansi --border --reverse --preview 'fd {}')
+    $result = ( zoxide query --list | fzf --ansi --border --reverse --preview 'fd {}')
     [Microsoft.PowerShell.PSConsoleReadLine]::Insert("" + $result)
 }
 
 # Ctrl+f to expand file names into your current command
 Set-PSReadLineKeyHandler -Chord Ctrl+f -ScriptBlock {
-	$result = ( fd -t f -H | fzf --ansi --border --reverse `
-		--preview 'bat -n --color=always --line-range :500 {}' `
-		--preview-window=right,60% `
-		--bind ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up
-	)
+    $result = ( fd -t f -H | fzf --ansi --border --reverse `
+            --preview 'bat -n --color=always --line-range :500 {}' `
+            --preview-window=right,60% `
+            --bind ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up
+    )
     [Microsoft.PowerShell.PSConsoleReadLine]::Insert("" + $result)
 }
 
 # Alt+c to expand directory names to your current command
 Set-PSReadLineKeyHandler -Chord Alt+c -ScriptBlock {
-	$result = ( fd -t d -H | fzf --ansi --border --reverse `
-		--preview 'fd -t f . {}' `
-		--preview-window=right,60% `
-		--bind ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up
-	)
+    $result = ( fd -t d -H | fzf --ansi --border --reverse `
+            --walker-skip .git,node_modules,target `
+            --preview 'fd -t f . {}' `
+            --preview-window=right,60% `
+            --bind ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up
+    )
     [Microsoft.PowerShell.PSConsoleReadLine]::Insert("" + $result)
 }
 
 # Ctrl+r to show a command history
 Set-PSReadLineKeyHandler -Chord Ctrl+r -ScriptBlock {
     [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
-	$cmd = cat (Get-PSReadlineOption).HistorySavePath | fzf --ansi --border --reverse --tac
+    $cmd = Get-Content (Get-PSReadlineOption).HistorySavePath | fzf --ansi --border --reverse --tac
     [Microsoft.PowerShell.PSConsoleReadLine]::Insert("" + $cmd)
 }
 
