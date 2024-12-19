@@ -8,6 +8,7 @@ return {
 	enable_tab_bar = false,
 	font = wezterm.font({ family = "RobotoMono Nerd Font" }),
 	window_decorations = "NONE | RESIZE",
+	max_fps = 144,
 
 	-- follow tmux/nvim keybinds
 	leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 },

@@ -55,8 +55,8 @@
             "window_based_work_area_offset": {
                 "bottom": 0,
                 "top": 0,
-                "left": 100,
-                "right": 200
+                "left": 50,
+                "right": 100
             },
             "workspaces": [
                 {
@@ -101,7 +101,27 @@
             "matching_strategy": "Equals"
         },
         {
+            "id": "Search",
+            "kind": "Title",
+            "matching_strategy": "Equals"
+        },
+        {
             "id": "Search everywhere",
+            "kind": "Title",
+            "matching_strategy": "Equals"
+        },
+        {
+            "id": "IIS Express Sys Tray",
+            "kind": "Title",
+            "matching_strategy": "Equals"
+        },
+        {
+            "id": "WCF Service Host",
+            "kind": "Title",
+            "matching_strategy": "Equals"
+        },
+        {
+            "id": "Connect to Server",
             "kind": "Title",
             "matching_strategy": "Equals"
         }
