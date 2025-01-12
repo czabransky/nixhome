@@ -1,11 +1,14 @@
 {
-    "$schema": "https://raw.githubusercontent.com/LGUG2Z/komorebi/v0.1.30/schema.json",
+    "$schema": "https://raw.githubusercontent.com/LGUG2Z/komorebi/v0.1.33/schema.json",
     "app_specific_configuration_path": "$Env:USERPROFILE/.config/komorebi/applications.json",
+    "window_hiding_behaviour": "Cloak",
     "cross_monitor_move_behaviour": "Insert",
     "default_container_padding": 8,
     "default_workspace_padding": 8,
     "mouse_follows_focus": false,
-    "window_hiding_behaviour": "Cloak",
+    "border": true,
+    "border_width": 6,
+    "border_offset": -1,
     "theme": {
         "palette": "Base16",
         "name": "TokyoNightStorm",
@@ -15,9 +18,6 @@
         "stack_border": "Base0B",
         "stackbar_focused_text": "Base0B"
     },
-    "border": true,
-    "border_width": 6,
-    "border_offset": -1,
     "stackbar": {
         "label": "Process",
         "height": 30,
