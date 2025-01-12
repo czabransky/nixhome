@@ -79,5 +79,27 @@
                 }
             ]
         }
+    ],
+    "ignore_rules": [
+        {
+            "id": "WindowsFormsParkingWindow",
+            "kind": "Title",
+            "matching_strategy": "Equals"
+        },
+        {
+            "id": "Search everywhere",
+            "kind": "Title",
+            "matching_strategy": "Equals"
+        },
+        {
+            "id": "Overwatch",
+            "kind": "Title",
+            "matching_strategy": "Equals"
+        },
+        {
+            "id": "FINAL FANTASY XIV",
+            "kind": "Title",
+            "matching_strategy": "Equals"
+        }
     ]
 }
