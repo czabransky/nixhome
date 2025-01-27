@@ -103,6 +103,26 @@ function lofi
     firefox -new-tab "https://www.youtube.com/watch?v=jfKfPfyJRdk"
 }
 
+function Get-DefaultBrowser {
+    # Get the default browser's ProgId from the registry
+    $progId = (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice').ProgId
+
+    # Get the command associated with the ProgId using the full registry path
+    $browserPath = (Get-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\$progId\shell\open\command").'(Default)'
+
+    # Extract the browser executable path (handling paths with spaces)
+    # Use regex to match the quoted path
+    if ($browserPath -match '"(.*?)"') {
+        $defaultBrowser = $matches[1]
+    } else {
+        # Fallback: If no quotes are found, split and take the first part
+        $defaultBrowser = ($browserPath -split ' ')[0]
+    }
+
+    # Return the default browser path
+    return $defaultBrowser
+}
+
 # Add standard shell key combo for clearing current buffer
 Set-PSReadLineKeyHandler -Chord Ctrl+u -ScriptBlock {
     [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
@@ -140,7 +160,9 @@ Set-PSReadLineKeyHandler -Chord Alt+f -ScriptBlock {
     if ($result -match '(https?://[^\s]+)')
     {
         $uri = $matches[1]
-        $process = Start-Process chrome $uri -PassThru
+        $defaultBrowser = Get-DefaultBrowser
+        echo 'browser: ' + $defaultBrowser
+        $process = Start-Process -FilePath "$defaultBrowser" -ArgumentList $uri -PassThru
         $hwnd = $process.MainWindowHandle
         [User32]::SetForegroundWindow($hwnd)
     }
