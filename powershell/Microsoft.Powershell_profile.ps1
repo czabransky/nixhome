@@ -160,9 +160,7 @@ Set-PSReadLineKeyHandler -Chord Alt+f -ScriptBlock {
     if ($result -match '(https?://[^\s]+)')
     {
         $uri = $matches[1]
-        $defaultBrowser = Get-DefaultBrowser
-        echo 'browser: ' + $defaultBrowser
-        $process = Start-Process -FilePath "$defaultBrowser" -ArgumentList $uri -PassThru
+        $process = Start-Process -FilePath $(Get-DefaultBrowser) -ArgumentList $uri -PassThru
         $hwnd = $process.MainWindowHandle
         [User32]::SetForegroundWindow($hwnd)
     }
