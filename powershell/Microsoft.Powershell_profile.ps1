@@ -4,6 +4,7 @@ $Env:KOMOREBI_CONFIG_HOME = "$HOME/.config/komorebi"
 $Env:WHKD_CONFIG_HOME = "$HOME/.config/whkd"
 $Env:XDG_CONFIG_HOME = "$HOME/.config"
 $Env:YAZI_CONFIG_HOME = "$HOME/.config/yazi"
+$Env:NOTES_HOME = "$HOME/.config/notes"
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 Set-Alias -Name g -Value glow
@@ -74,6 +75,17 @@ function gitaudit
 
 }
 
+function nlinks
+{
+    n "$Env:NOTES_HOME/Links.md"
+}
+
+function links
+{
+    glow -w 200 "$Env:NOTES_HOME/Links.md"
+}
+
+
 # Restart Komorebi
 function komorebi-restart
 {
@@ -119,6 +131,21 @@ Set-PSReadLineKeyHandler -Chord Ctrl+f -ScriptBlock {
     [Microsoft.PowerShell.PSConsoleReadLine]::Insert("" + $result)
 }
 
+# Alt+f to expand links and add them to your current command
+Set-PSReadLineKeyHandler -Chord Alt+f -ScriptBlock {
+    $result = ( links | fzf `
+            --ansi --border --reverse `
+            --bind ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up
+    )
+    if ($result -match '(https?://[^\s]+)')
+    {
+        $uri = $matches[1]
+        $process = Start-Process chrome $uri -PassThru
+        $hwnd = $process.MainWindowHandle
+        [User32]::SetForegroundWindow($hwnd)
+    }
+}
+
 # Alt+c to expand directory names to your current command
 Set-PSReadLineKeyHandler -Chord Alt+c -ScriptBlock {
     $result = ( fd -t d -H | fzf --ansi --border --reverse `
@@ -136,6 +163,17 @@ Set-PSReadLineKeyHandler -Chord Ctrl+r -ScriptBlock {
     $cmd = Get-Content (Get-PSReadlineOption).HistorySavePath | fzf --ansi --border --reverse --tac
     [Microsoft.PowerShell.PSConsoleReadLine]::Insert("" + $cmd)
 }
+
+# Define the SetForegroundWindow function from user32.dll
+Add-Type @"
+using System;
+using System.Runtime.InteropServices;
+public class User32 {
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool SetForegroundWindow(IntPtr hWnd);
+}
+"@
 
 # Source user-specific configurations
 . $PSScriptRoot\custom.ps1
