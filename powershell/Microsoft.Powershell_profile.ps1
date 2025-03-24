@@ -103,7 +103,8 @@ function lofi
     firefox -new-tab "https://www.youtube.com/watch?v=jfKfPfyJRdk"
 }
 
-function Get-DefaultBrowser {
+function Get-DefaultBrowser
+{
     # Get the default browser's ProgId from the registry
     $progId = (Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice').ProgId
 
@@ -112,15 +113,29 @@ function Get-DefaultBrowser {
 
     # Extract the browser executable path (handling paths with spaces)
     # Use regex to match the quoted path
-    if ($browserPath -match '"(.*?)"') {
+    if ($browserPath -match '"(.*?)"')
+    {
         $defaultBrowser = $matches[1]
-    } else {
+    } else
+    {
         # Fallback: If no quotes are found, split and take the first part
         $defaultBrowser = ($browserPath -split ' ')[0]
     }
 
     # Return the default browser path
     return $defaultBrowser
+}
+
+function OpenUrl
+{
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$Url
+    )
+
+    $process = Start-Process -FilePath $(Get-DefaultBrowser) -ArgumentList $Url -PassThru
+    $hwnd = $process.MainWindowHandle
+    [User32]::SetForegroundWindow($hwnd)
 }
 
 # Add standard shell key combo for clearing current buffer
@@ -153,16 +168,14 @@ Set-PSReadLineKeyHandler -Chord Ctrl+f -ScriptBlock {
 
 # Alt+f to expand links and add them to your current command
 Set-PSReadLineKeyHandler -Chord Alt+f -ScriptBlock {
-    $result = ( links | fzf `
+    $result = ( links | rg '(https?://[^\s]+)' | fzf `
             --ansi --border --reverse `
             --bind ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up
     )
     if ($result -match '(https?://[^\s]+)')
     {
         $uri = $matches[1]
-        $process = Start-Process -FilePath $(Get-DefaultBrowser) -ArgumentList $uri -PassThru
-        $hwnd = $process.MainWindowHandle
-        [User32]::SetForegroundWindow($hwnd)
+        OpenUrl -Url $uri
     }
 }
 
