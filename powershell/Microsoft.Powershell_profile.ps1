@@ -59,7 +59,7 @@ function y
 # Open the git remote url in Chrome
 function gitbrowse
 {
-    Start-Process chrome $(git config --get remote.origin.url)
+    OpenUrl -Url $(git config --get remote.origin.url)
 }
 
 # Audit a file in git to see its change history. Alternative UI: gitk $file

@@ -36,7 +36,7 @@ cp $HOME/nixhome/wezterm/wezterm.lua $HOME/.wezterm.lua ;
 # Configure Neovim
 cp $HOME/nixhome/vim/vimrc $HOME/.vimrc ;
 rm -Recurse $HOME/.config/nvim
-cp -Recurse $HOME/nixhome/nvim $HOME/.config/nvim
+cp -Recurse $HOME/nixhome/lazyvim $HOME/.config/nvim
 
 # Source the profile to update the current shell
 . $profile
