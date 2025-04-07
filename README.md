@@ -93,7 +93,7 @@ Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 
 #### [Komorebi](https://lgug2z.github.io/komorebi/index.html)
 
->!> [!WARNING]
+> [!WARNING]
 > Komorebi requires a commercial license for use at work.
 
 ```pwsh
