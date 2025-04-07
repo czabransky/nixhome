@@ -183,7 +183,7 @@ Set-PSReadLineKeyHandler -Chord Alt+f -ScriptBlock {
 Set-PSReadLineKeyHandler -Chord Alt+c -ScriptBlock {
     $result = ( fd -t d -H | fzf --ansi --border --reverse `
             --walker-skip .git,node_modules,target `
-            --preview 'fd -t f . {}' `
+            --preview 'eza --tree --level=1 --all --git --icons=always --color=always {}' `
             --preview-window=right,60% `
             --bind ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up
     )

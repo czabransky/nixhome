@@ -82,7 +82,7 @@ Install Scoop Packages
 scoop bucket add nerd-fonts
 scoop bucket add extras
 scoop install RobotoMono-NF
-scoop install ripgrep file fd fzf bat zoxide mingw
+scoop install ripgrep file fd eza fzf bat zoxide mingw
 scoop install lazygit glow yazi neovim
 scoop install wezterm 
 ```
@@ -92,6 +92,9 @@ Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 ### Tiling Window Manager
 
 #### [Komorebi](https://lgug2z.github.io/komorebi/index.html)
+
+>!> [!WARNING]
+> Komorebi requires a commercial license for use at work.
 
 ```pwsh
 scoop install komorebi whkd
