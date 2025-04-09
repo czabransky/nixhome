@@ -1,13 +1,36 @@
 local wezterm = require("wezterm")
+local mux = wezterm.mux
+
 return {
+
 	-- color_scheme = "tokyonight_storm",
 	-- color_scheme = "tokyonight_moon",
 	color_scheme = "tokyonight_night",
+	-- color_scheme = "Catppuccin Frappe",
 	default_prog = { "pwsh.exe", "-NoLogo" },
 	enable_tab_bar = true,
 	font = wezterm.font({ family = "RobotoMono Nerd Font" }),
 	window_decorations = "NONE | RESIZE",
 	max_fps = 144,
+
+	wezterm.on("gui-startup", function(_)
+		local tab, pane, window = mux.spawn_window({
+			workspace = "coding",
+			args = { "pwsh.exe", "-NoLogo" },
+		})
+		tab:set_title("coding")
+		window:gui_window():maximize()
+
+		tab, pane, window = mux.spawn_window({
+			workspace = "background",
+			cwd = wezterm.home_dir .. "/.config/notes/docusaurus",
+			args = { "pwsh.exe", "-NoLogo" },
+		})
+		tab:set_title("markdown")
+		pane:send_text("npx docusaurus start\r\n")
+
+		mux.set_active_workspace("coding")
+	end),
 
 	-- follow tmux/nvim keybinds
 	leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 },

@@ -181,7 +181,12 @@ Set-PSReadLineKeyHandler -Chord Alt+f -ScriptBlock {
 
 # Alt+c to expand directory names to your current command
 Set-PSReadLineKeyHandler -Chord Alt+c -ScriptBlock {
-    $result = ( fd -t d -H | fzf --ansi --border --reverse `
+    $result = ( 
+        fd -t d -H `
+            --exclude '.git' `
+            --exclude node_modules `
+            --exclude target `
+        | fzf --ansi --border --reverse `
             --walker-skip .git,node_modules,target `
             --preview 'eza --tree --level=1 --all --git --icons=always --color=always {}' `
             --preview-window=right,60% `

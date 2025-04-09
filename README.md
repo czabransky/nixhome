@@ -84,6 +84,7 @@ scoop bucket add extras
 scoop install RobotoMono-NF
 scoop install ripgrep file fd eza fzf bat zoxide mingw
 scoop install lazygit glow yazi neovim
+scoop install neovim vcredist2022
 scoop install wezterm 
 ```
 
