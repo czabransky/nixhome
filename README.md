@@ -4,9 +4,9 @@ This is a [nix](https://nixos.org/) and [nix home-manager](https://github.com/ni
 
 Feel free to choose whatever terminal application you like - this configuration is using the `tokyonight` theme.
 
-# Installation
+## Installation
 
-## Linux
+### Linux
 
 Install nix with flakes enabled.
 
@@ -44,10 +44,10 @@ Run `setup.sh` to add fish as your default shell.
 /bin/bash ~/nixhome/setup.sh $USER
 ```
 
-### Tmux Plugins
+#### Tmux Plugins
 
 ```sh
-# for tmux plugins to install automatically, install the plugin manager first
+## for tmux plugins to install automatically, install the plugin manager first
 mkdir -p ~/.config/tmux/plugins ;
 git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm ;
 ```
@@ -57,7 +57,7 @@ With tmux running:
 - install plugins: `ctrl+a + I`
 - reload: `ctrl+a + R`
 
-## Windows
+### Windows
 
 > [!TIP]
 > If you want to update powershell to version 7+: `winget install --id Microsoft.PowerShell --source winget`, but you will need to configure wezterm to use `pwsh`. Also, if you choose to install `Komorebi`, it is currently configured to use `pwsh` as well.
@@ -83,35 +83,36 @@ scoop bucket add nerd-fonts
 scoop bucket add extras
 scoop install RobotoMono-NF
 scoop install ripgrep file fd eza fzf bat zoxide mingw
-scoop install lazygit glow yazi neovim
+scoop install lazygit delta 
+scoop install yazi glow
 scoop install neovim vcredist2022
 scoop install wezterm 
 ```
 
 Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 
-### Tiling Window Manager
+#### Tiling Window Manager
 
-#### [Komorebi](https://lgug2z.github.io/komorebi/index.html)
+##### [Komorebi](https://lgug2z.github.io/komorebi/index.html)
 
 > [!WARNING]
 > Komorebi requires a commercial license for use at work.
 
 ```pwsh
 scoop install komorebi whkd
-# Default
+## Default
 komorebic start --whkd --bar
-# Configuration when Primary Monitor is not Index 0
+## Configuration when Primary Monitor is not Index 0
 komorebic start --whkd --bar -c "$Env:USERPROFILE/.config/komorebi/komorebi.portable.json"
 ```
 
-# Neovim
+## Neovim
 
 Launching neovim (aliased to `n`) will automatically install its plugins using the [Lazy Plugin Manager](https://github.com/folke/lazy.nvim).
 
 - Run `:checkhealth` to validate your configuration.
 
-## Keybinds
+### Keybinds
 
 Here are a few notable keybinds to help you get started.
 
@@ -122,3 +123,63 @@ Here are a few notable keybinds to help you get started.
 - `<leader>st` will open the `telescope.builtin` menu, where you can find tons of helpful info.
 - `<leader>sc` will open the `commands` menu, which lists available commands in a fuzzy finder.
 - `<leader>sh` will open the `help` search menu, where you can search on all things neovim.
+
+## Git Config and Lazygit
+
+Update git config located at `~/.gitconfig` with the following sections:
+
+```toml
+[core]
+    longpaths = true
+    editor = nvim
+    pager = delta
+
+[diff]
+    tool = vimdiff
+
+[merge]
+    conflictstyle = zdiff3
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true  # use n and N to move between diff sections
+    dark = true
+    side-by-side = true
+    line-numbers = true   
+    features = decorations 
+
+[delta "interactive"]
+    keep-plus-minus-markers = true
+
+[delta "decorations"]
+    commit-decoration-style = blue ol
+    commit-style = raw
+    file-style = omit
+    hunk-header-decoration-style = blue box
+    hunk-header-file-style = red
+    hunk-header-line-number-style = "#067a00"
+    hunk-header-style = file line-number syntax
+
+```
+
+> [!WARNING]
+> nvimdiff is crashing on exit when running within lazygit.
+
+`~/.config/lazygit/config.yml`
+
+```yml
+gui:
+  nerdFontsVersion: "3"
+
+git: 
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never
+
+```
+
+> [!NOTE]
+> This lazygit config is using the `delta` pager which is **not supported in lazygit on Windows**, but won't throw any errors.
+> lazygit may support pagers on windows if [this PR is addressed](https://github.com/creack/pty/pull/155)
