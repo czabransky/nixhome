@@ -128,7 +128,7 @@ Here are a few notable keybinds to help you get started.
 
 Update git config located at `~/.gitconfig` with the following sections:
 
-```toml
+```config
 [core]
     longpaths = true
     editor = nvim
