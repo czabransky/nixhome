@@ -1,5 +1,6 @@
 $Env:BAT_THEME = "Nord"
 $Env:EDITOR = "nvim"
+$Env:NMIM_APPNAME = "lazyvim"
 $Env:KOMOREBI_CONFIG_HOME = "$HOME/.config/komorebi"
 $Env:WHKD_CONFIG_HOME = "$HOME/.config/whkd"
 $Env:XDG_CONFIG_HOME = "$HOME/.config"
