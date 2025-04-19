@@ -45,7 +45,7 @@ if (Test-Path $HOME/.config/nvim-lazyvim) {
 }
 
 cp -Recurse $HOME/nixhome/nvim $HOME/.config/nvim
-cp -Recurse $HOME/nixhome/lazyvim $HOME/.config/nvim-lazyvim
+cp -Recurse $HOME/nixhome/nvim-lazyvim $HOME/.config/nvim-lazyvim
 
 # Source the profile to update the current shell
 . $profile
