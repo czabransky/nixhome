@@ -1,5 +1,3 @@
-$Env:NMIM_APPNAME = "lazyvim"
-
 param (
     [Switch]$UseKomorebi
 )
@@ -37,10 +35,17 @@ cp $HOME/nixhome/wezterm/wezterm.lua $HOME/.wezterm.lua ;
 
 # Configure Neovim
 cp $HOME/nixhome/vim/vimrc $HOME/.vimrc ;
-rm -Recurse $HOME/.config/nvim
-rm -Recurse $HOME/.config/lazyvim
+
+if (Test-Path $HOME/.config/nvim) {
+	rm -Recurse $HOME/.config/nvim
+}
+
+if (Test-Path $HOME/.config/nvim-lazyvim) {
+	rm -Recurse $HOME/.config/nvim-lazyvim
+}
+
 cp -Recurse $HOME/nixhome/nvim $HOME/.config/nvim
-cp -Recurse $HOME/nixhome/lazyvim $HOME/.config/lazyvim
+cp -Recurse $HOME/nixhome/lazyvim $HOME/.config/nvim-lazyvim
 
 # Source the profile to update the current shell
 . $profile
