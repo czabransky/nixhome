@@ -26,6 +26,7 @@
         pkgs.yazi
         pkgs.tmux
         pkgs.glow
+        pkgs.zk
         pkgs.neovim
         pkgs.nodejs_22
         pkgs.dotnetCorePackages.sdk_8_0_4xx
@@ -46,7 +47,15 @@
 		};
 		".config/tmux/tmux.conf".source = ~/nixhome/tmux/tmux.conf;
 		".config/nvim" = {
+			source = ~/nixhome/nvim;
+			recursive = true;
+		};
+		".config/nvim-lazyvim" = {
 			source = ~/nixhome/lazyvim;
+			recursive = true;
+		};
+		".config/nvim-lazyvim-md" = {
+			source = ~/nixhome/lazyvim-md;
 			recursive = true;
 		};
 	};
@@ -70,5 +79,6 @@
 
 	home.sessionVariables = {
 		EDITOR = "nvim";
+        NVIM_APPNAME = "nvim-lazyvim";
 	};
 }
