@@ -51,11 +51,11 @@
 			recursive = true;
 		};
 		".config/nvim-lazyvim" = {
-			source = ~/nixhome/lazyvim;
+			source = ~/nixhome/nvim-lazyvim;
 			recursive = true;
 		};
 		".config/nvim-lazyvim-md" = {
-			source = ~/nixhome/lazyvim-md;
+			source = ~/nixhome/nvim-lazyvim-md;
 			recursive = true;
 		};
 	};
