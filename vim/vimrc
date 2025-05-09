@@ -36,12 +36,14 @@ set undodir=~/.vim/undodir
 set undofile
 
 " Windows
-nmap <leader>w' :vsplit<CR>
-nmap <leader>w/ :split<CR>
 nmap <CR> :write<CR>
 nnoremap <leader>w, :vertical resize -10<CR>
 nnoremap <leader>w. :vertical resize +10<CR>
-nnoremap <leader>' <C-^>
+
+nmap <C-Left> <C-w><Left>
+nmap <C-Right> <C-w><Right>
+nmap <C-Up> <C-w><Up>
+nmap <C-Down> <C-w><Down>
 
 " Best Remaps of All Time
 nnoremap gg ggzz
