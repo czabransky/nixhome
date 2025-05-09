@@ -1,0 +1,155 @@
+" IDEA Vim
+" https://github.com/JetBrains/ideavim
+
+source ~/.vimrc
+
+" Plugins
+" open hyperlinks using gx
+" https://github.com/JetBrains/ideavim/wiki/IdeaVim-Plugins
+" =========================================================
+
+set noerrorbells
+set visualbell
+set notimeout " whichkey should stay on screen
+
+Plug 'nerdtree'
+" https://github.com/preservim/nerdtree
+" https://github.com/preservim/nerdtree/blob/master/doc/NERDTree.txt
+" https://raw.githubusercontent.com/wiki/JetBrains/ideavim/NERDTree-support.md
+
+Plug 'vim-commentary'
+" https://github.com/tpope/vim-commentary
+" https://github.com/tpope/vim-commentary/blob/master/doc/commentary.txt
+" Use gcc to comment out a line (takes a count), gc to comment out the target of a motion (for example, gcap to comment out a paragraph)
+
+Plug 'vim-exchange'
+" https://github.com/tommcdo/vim-exchange
+" https://github.com/tommcdo/vim-exchange/blob/master/doc/exchange.txt
+" Easy text exchange operator for Vim. Use cx+motion to select text.
+
+Plug 'vim-highlightedyank'
+" https://github.com/machakann/vim-highlightedyank
+let g:highlightedyank_highlight_duration = 1000
+let g:highlightedyank_highlight_in_visual = 1
+
+Plug 'vim-surround'
+" https://github.com/tpope/vim-surround
+" https://github.com/tpope/vim-surround/blob/master/doc/surround.txt
+
+
+" Installed Plugins
+" ========================================================================
+" The following Plugins must be installed in the IDEA Marketplace, and are
+" activated using the set <Plug> command.
+"
+set quickscope
+" https://github.com/unblevable/quick-scope
+let g:qs_enable=1
+let g:qs_max_chars=120
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+
+set which-key
+" https://github.com/TheBlob42/idea-which-key
+let g:WhichKey_ShowVimActions = "false"
+let g:WhichKey_ShowTypedSequence = "true"
+let g:WhichKey_DefaultDelay = 200
+let g:WhichKey_ProcessUnknownMappings = "false"
+let g:WhichKey_KeyColor = "#88d8b0"
+let g:WhichKey_KeyStyle = "none"
+let g:WhichKey_PrefixColor = "keyword"
+
+let g:WhichKeyDesc_workspace = "<leader>w [W]orkspace"
+let g:WhichKeyDesc_workspace_recent = "<leader>wp Recent [P]rojects"
+let g:WhichKeyDesc_workspace_idea_reload = "<leader>wr [R]eload ~/.ideavimrc"
+let g:WhichKeyDesc_workspace_maven_reimport = "<leader>wm [M]aven Reimport"
+
+let g:WhichKeyDesc_toggle = "<leader>t [T]oggle"
+let g:WhichKeyDesc_toggle_toggle = "<leader>tw Hide/Show All [W]indows"
+let g:WhichKeyDesc_toggle_distraction = "<leader>td Toggle [D]istraction Free Mode"
+let g:WhichKeyDesc_toggle_explorer = "<leader>tt [T]oggle Project [T]ree"
+let g:WhichKeyDesc_toggle_terminal = "<leader>ts [T]oggle [S]hell"
+let g:WhichKeyDesc_toggle_maven = "<leader>tm [T]oggle [M]aven Tool Window"
+let g:WhichKeyDesc_toggle_coverage = "<leader>tv [T]oggle Co[v]erage Tool Window"
+
+let g:WhichKeyDesc_window_split_vertical = "<leader>w| Vertical Split"
+let g:WhichKeyDesc_window_split_horizontal = "<leader>w- Horizontal Split"
+
+let g:WhichKeyDesc_search = "<leader>s Search"
+let g:WhichKeyDesc_search_files = "<leader>sf [S]earch [F]iles"
+let g:WhichKeyDesc_search_everywhere = "<leader>sg [S]earch Everywhere"
+let g:WhichKeyDesc_search_select_menu = "<leader>ss [S]elect In Menu"
+
+let g:WhichKeyDesc_run = "<leader>r Run Configurations"
+let g:WhichKeyDesc_run_edit_config = "<leader>re [E]dit / Set Active Configuration"
+let g:WhichKeyDesc_run_run = "<leader>rr [R]un Active Configuration"
+let g:WhichKeyDesc_run_active_config = "<leader>ra Run [A]ctive Configuration"
+let g:WhichKeyDesc_run_choose_config = "<leader>rc [C]hoose and Run Configuration"
+let g:WhichKeyDesc_run_scope = "<leader>rs Run Current [S]cope"
+let g:WhichKeyDesc_run_coverage = "<leader>rv Co[v]erage"
+
+let g:WhichKeyDesc_debug = "<leader>d Debug Configurations"
+let g:WhichKeyDesc_debug_edit_config = "<leader>de [E]dit / Set Active Configuration"
+let g:WhichKeyDesc_debug_debug = "<leader>dd [D]ebug Active Configuration"
+let g:WhichKeyDesc_debug_active_config = "<leader>da Debug [A]ctive Configuration"
+let g:WhichKeyDesc_debug_choose_config = "<leader>dc [C]hoose and Run Debug Configuration"
+let g:WhichKeyDesc_debug_scope = "<leader>ds Debug Current [S]cope"
+let g:WhichKeyDesc_debug_breakpoint = "<leader>dp Toggle Break[p]oint"
+
+let g:WhichKeyDesc_code = "<leader>c [C]ode Actions"
+let g:WhichKeyDesc_code_comment = "<leader>cc [C]omment Lines"
+let g:WhichKeyDesc_code_generate = "<leader>cg [G]enerate"
+let g:WhichKeyDesc_code_refactor_this = "<leader>cr [R]efactor This Menu"
+let g:WhichKeyDesc_code_override = "<leader>co [O]verride Methods"
+
+"" Project Key Mappings
+nmap <leader>wv :action IdeaVim.ReloadVimRc.reload<CR>
+nmap <leader>wp :action ManageRecentProjects<CR>
+nmap <leader>wm :action ActivateMavenToolWindow<CR>:action Maven.Reimport<CR>
+
+"" Window Management Key Mappings
+nmap <leader>tw :action HideAllWindows<CR>
+nmap <leader>td :action ToggleDistractionFreeMode<CR>
+nmap <leader>tt :NERDTreeToggle<CR>
+nmap <leader>ts :action ActivateTerminalToolWindow<CR>
+nmap <leader>tm :action ActivateMavenToolWindow<CR>
+nmap <leader>tv :action ActivateCoverageToolWindow<CR>
+
+"" Run / Debug Key Mappings
+nmap <leader>re :action editRunConfigurations<CR>
+nmap <leader>rr :action Run<CR>
+nmap <leader>ra :action Run<CR>
+nmap <leader>rc :action ChooseRunConfiguration<CR>
+nmap <leader>rs :action RunClass<CR>
+nmap <leader>rv :action Coverage<CR>
+nmap <leader>de :action editRunConfigurations<CR>
+nmap <leader>dd :action Debug<CR>
+nmap <leader>da :action Debug<CR>
+nmap <leader>dc :action ChooseDebugConfiguration<CR>
+nmap <leader>ds :action DebugClass<CR>
+nmap <leader>dp :action ToggleLineBreakpoint<CR>
+
+"" File Navigation Key Mappings
+nmap <leader>sf :action GotoFile<CR>
+nmap <leader>sg :action SearchEverywhere<CR>
+nmap <leader>ss :action SelectIn<CR>
+nmap <leader>e :action GotoNextError<CR>
+
+"" Editing Key Mappings
+nmap <leader>cc :action CommentByLineComment<CR>
+vmap <leader>cc :action CommentByLineComment<CR>
+nmap <leader>cg :action Generate<CR>
+nmap <leader>cr :action Refactorings.QuickListPopupAction<CR>
+nmap <leader>co :action OverrideMethods<CR>
+nmap <CR> :action ReformatCode<CR> :write<CR>
+
+
+" Git Actions mimic hotkeys from Fugitive
+nmap <leader>gs :action CheckinProject<CR>
+nmap <leader>gc :action CheckinProject<CR>
+nmap <leader>ga :action Git.Add<CR>
+nmap <leader>gp :action Git.Pull<CR>
+nmap <leader>gn :action Annotate<CR>
+nmap <leader>gl :action Git.Log<CR>
+nmap <leader>go :action Github.Open.In.Browser<CR>
+nmap <leader>gb :action Git.Branches<CR>
+
