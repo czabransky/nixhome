@@ -27,7 +27,7 @@ return {
 			args = { "pwsh.exe", "-NoLogo" },
 		})
 		tab:set_title("markdown")
-		pane:send_text("npx docusaurus start\r\n")
+		pane:send_text("yarn start\r\n")
 
 		mux.set_active_workspace("coding")
 	end),

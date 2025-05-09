@@ -1,3 +1,9 @@
+# Control PS Module Loading Behaviour
+# $PSModuleAutoLoadingPreference = 'ModuleQualified'
+# Import-Module Microsoft.PowerShell.Utility
+# Import-Module Microsoft.PowerShell.Management
+
+# Env Vars
 $Env:BAT_THEME = "Nord"
 $Env:EDITOR = "nvim"
 $Env:NVIM_APPNAME = "nvim-lazyvim"
@@ -7,10 +13,10 @@ $Env:XDG_CONFIG_HOME = "$HOME/.config"
 $Env:YAZI_CONFIG_HOME = "$HOME/.config/yazi"
 $Env:NOTES_HOME = "$HOME/.config/notes"
 
-Invoke-Expression (& { (zoxide init powershell | Out-String) })
 Set-Alias -Name g -Value glow
 Set-Alias -Name lg -Value lazygit
 Set-Alias -Name n -Value nvim
+Set-Alias -Name nl -Value "$Env:NVIM_APPNAME=nvim-lazyvim; nvim"
 Set-Alias -Name ns -Value nvimsession
 
 # Use fd by default to query directories
@@ -215,5 +221,9 @@ public class User32 {
 "@
 
 # Source user-specific configurations
-. $PSScriptRoot\custom.ps1
+if (Test-Path $PSScriptRoot\custom.ps1 ) {
+    . $PSScriptRoot\custom.ps1
+}
 
+# Init zoxide, should be at the end of the config
+Invoke-Expression (& { (zoxide init powershell | Out-String) })
