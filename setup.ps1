@@ -25,7 +25,6 @@ if ($UseKomorebi)
     cp -Recurse $HOME/nixhome/whkd $HOME/.config/whkd
 }
 
-
 # Configure Yazi
 rm -Recurse $HOME/.config/yazi
 cp -Recurse $HOME/nixhome/yazi $HOME/.config/yazi
@@ -33,8 +32,9 @@ cp -Recurse $HOME/nixhome/yazi $HOME/.config/yazi
 # Configure Wezterm
 cp $HOME/nixhome/wezterm/wezterm.lua $HOME/.wezterm.lua ;
 
-# Configure Neovim
+# Configure Vim
 cp $HOME/nixhome/vim/vimrc $HOME/.vimrc ;
+cp $HOME/nixhome/ideavim/ideavimrc $HOME/.ideavimrc ;
 
 if (Test-Path $HOME/.config/nvim) {
 	rm -Recurse $HOME/.config/nvim
