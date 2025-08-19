@@ -14,21 +14,12 @@ return {
 	max_fps = 144,
 
 	wezterm.on("gui-startup", function(_)
-		local tab, pane, window = mux.spawn_window({
+		local tab, _, window = mux.spawn_window({
 			workspace = "coding",
 			args = { "pwsh.exe", "-NoLogo" },
 		})
 		tab:set_title("coding")
 		window:gui_window():maximize()
-
-		tab, pane, window = mux.spawn_window({
-			workspace = "background",
-			cwd = wezterm.home_dir .. "/.config/notes/docusaurus",
-			args = { "pwsh.exe", "-NoLogo" },
-		})
-		tab:set_title("markdown")
-		pane:send_text("yarn start\r\n")
-
 		mux.set_active_workspace("coding")
 	end),
 

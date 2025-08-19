@@ -42,39 +42,25 @@ Plug 'vim-surround'
 " The following Plugins must be installed in the IDEA Marketplace, and are
 " activated using the set <Plug> command.
 "
-set quickscope
-" https://github.com/unblevable/quick-scope
-let g:qs_enable=1
-let g:qs_max_chars=120
-let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-
 set which-key
 " https://github.com/TheBlob42/idea-which-key
 let g:WhichKey_ShowVimActions = "false"
 let g:WhichKey_ShowTypedSequence = "true"
-let g:WhichKey_DefaultDelay = 200
+let g:WhichKey_DefaultDelay = 100
 let g:WhichKey_ProcessUnknownMappings = "false"
 let g:WhichKey_KeyColor = "#88d8b0"
 let g:WhichKey_KeyStyle = "none"
 let g:WhichKey_PrefixColor = "keyword"
 
-let g:WhichKeyDesc_workspace = "<leader>w [W]orkspace"
-let g:WhichKeyDesc_workspace_recent = "<leader>wp Recent [P]rojects"
-let g:WhichKeyDesc_workspace_idea_reload = "<leader>wr [R]eload ~/.ideavimrc"
-
-
 let g:WhichKeyDesc_toggle = "<leader>t [T]oggle"
-let g:WhichKeyDesc_explorer = "<leader>tt Toggle [T]ree"
 let g:WhichKeyDesc_toggle_toggle = "<leader>tw Hide/Show All [W]indows"
 let g:WhichKeyDesc_toggle_distraction = "<leader>td Toggle [D]istraction Free Mode"
-let g:WhichKeyDesc_toggle_terminal = "<leader>ts [T]oggle [S]hell"
-let g:WhichKeyDesc_toggle_coverage = "<leader>tv [T]oggle Co[v]erage Tool Window"
 
 let g:WhichKeyDesc_search = "<leader>f Find"
 let g:WhichKeyDesc_search_files = "<leader>ff [F]ind [F]iles"
+let g:WhichKeyDesc_search_everywhere = "<leader>fa [F]ind All"
 
 let g:WhichKeyDesc_search = "<leader>s Search"
-let g:WhichKeyDesc_search_everywhere = "<leader>sg [S]earch Everywhere"
 let g:WhichKeyDesc_search_select_menu = "<leader>ss [S]elect In Menu"
 
 let g:WhichKeyDesc_run = "<leader>r Run Configurations"
@@ -98,16 +84,9 @@ let g:WhichKeyDesc_code_generate = "<leader>cg [G]enerate"
 let g:WhichKeyDesc_code_refactor_this = "<leader>cr [R]efactor This Menu"
 let g:WhichKeyDesc_code_override = "<leader>co [O]verride Methods"
 
-"" Project Key Mappings
-nmap <leader>wr :action IdeaVim.ReloadVimRc.reload<CR>
-nmap <leader>wp :action ManageRecentProjects<CR>
-
 "" Window Management Key Mappings
 nmap <leader>tw :action HideAllWindows<CR>
 nmap <leader>td :action ToggleDistractionFreeMode<CR>
-nmap <leader>tt :NERDTreeToggle<CR>
-nmap <leader>ts :action ActivateTerminalToolWindow<CR>
-nmap <leader>tv :action ActivateCoverageToolWindow<CR>
 
 "" Run / Debug Key Mappings
 nmap <leader>re :action editRunConfigurations<CR>
@@ -123,8 +102,9 @@ nmap <leader>dp :action ToggleLineBreakpoint<CR>
 
 "" File Navigation Key Mappings
 nmap <leader>ff :action GotoFile<CR>
-nmap <leader>sg :action SearchEverywhere<CR>
+nmap <leader>fa :action SearchEverywhere<CR>
 nmap <leader>ss :action SelectIn<CR>
+nmap gs :action FileStructurePopup<CR>
 nmap <leader>ds :action GotoSymbol<CR>
 nmap <leader>e :action GotoNextError<CR>
 nmap <leader>gI :action GotoImplementation<CR>
