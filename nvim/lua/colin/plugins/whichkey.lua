@@ -21,13 +21,6 @@ return {
 			{ "<leader>h", group = "Harpoon", nowait = true, remap = false },
 			{ "<leader>s", group = "Search", nowait = true, remap = false },
 			{ "<leader>t", group = "Toggle", nowait = true, remap = false },
-			{
-				"<leader>tg",
-				"<cmd>Glow<CR>",
-				desc = "Toggle Glow",
-				nowait = true,
-				remap = false,
-			},
 			{ "<leader>w", group = "Workspace", nowait = true, remap = false },
 		})
 	end,
