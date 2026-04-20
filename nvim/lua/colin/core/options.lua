@@ -1,7 +1,14 @@
 local M = {}
 
 local function setup_wsl_clipboard()
-	if vim.fn.has("wsl") ~= 1 then
+	local is_wsl = vim.fn.has("wsl") == 1
+		or vim.env.WSL_DISTRO_NAME ~= nil
+		or vim.env.WSL_INTEROP ~= nil
+		or vim.fn.executable("wsl.exe") == 1
+		or vim.fn.executable("clip.exe") == 1
+		or vim.fn.executable("powershell.exe") == 1
+
+	if not is_wsl then
 		return
 	end
 
