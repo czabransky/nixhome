@@ -72,7 +72,7 @@ return {
 
 		vim.lsp.config("roslyn", {
 			capabilities = setup.capabilities_with_snippets,
-			-- on_attach = attach.on_attach,
+			on_attach = attach.on_attach,
 			settings = {
 				["csharp|background_analysis"] = {
 					dotnet_compiler_diagnostics_scope = "fullSolution",
