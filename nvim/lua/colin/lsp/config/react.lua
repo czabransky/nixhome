@@ -1,19 +1,13 @@
-local lspconfig = require("lspconfig")
 local setup = require("colin.lsp.lsp-setup")
 local attach = require("colin.lsp.lsp-attach")
 
-lspconfig.ts_ls.setup({
+vim.lsp.config("ts_ls", {
 	capabilities = setup.capabilities_with_snippets,
 	filetypes = {
-		"js",
-		"ts",
-		"tsx",
 		"javascript",
 		"javascriptreact",
-		"javascript.jsx",
 		"typescript",
 		"typescriptreact",
-		"typescript.tsx",
 	},
 	init_options = {
 		enable = true,
@@ -23,8 +17,8 @@ lspconfig.ts_ls.setup({
 		},
 	},
 	on_attach = attach.on_attach,
-	-- commands = {
-	--
-	-- },
-	root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
+	root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
+	single_file_support = false,
 })
+
+vim.lsp.enable("ts_ls")

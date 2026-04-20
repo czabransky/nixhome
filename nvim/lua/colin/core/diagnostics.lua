@@ -21,39 +21,37 @@ end
 
 vim.keymap.set("n", "<leader>dl", send_diagnostics_to_quickfix, { desc = "Quickfix [D]iagnostics [L]ist" })
 
+local function jump_diag(count, severity)
+	vim.diagnostic.jump({ count = count, severity = severity })
+	vim.cmd.normal({ "zz", bang = true })
+end
+
 vim.keymap.set("n", "<leader>e", function()
-	vim.diagnostic.goto_next({})
-	vim.api.nvim_feedkeys("zz", "n", false)
+	jump_diag(1)
 end, { desc = "Go to Next Diagnostic" })
 
 vim.keymap.set("n", "]d", function()
-	vim.diagnostic.goto_next({})
-	vim.api.nvim_feedkeys("zz", "n", false)
+	jump_diag(1)
 end, { desc = "Go to Next Diagnostic" })
 
 vim.keymap.set("n", "[d", function()
-	vim.diagnostic.goto_prev({})
-	vim.api.nvim_feedkeys("zz", "n", false)
+	jump_diag(-1)
 end, { desc = "Go to Previous Diagnostic" })
 
 vim.keymap.set("n", "]e", function()
-	vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
-	vim.api.nvim_feedkeys("zz", "n", false)
+	jump_diag(1, vim.diagnostic.severity.ERROR)
 end, { desc = "Go to Next Error" })
 
 vim.keymap.set("n", "[e", function()
-	vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
-	vim.api.nvim_feedkeys("zz", "n", false)
+	jump_diag(-1, vim.diagnostic.severity.ERROR)
 end, { desc = "Go to Previous Error" })
 
 vim.keymap.set("n", "]w", function()
-	vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN })
-	vim.api.nvim_feedkeys("zz", "n", false)
+	jump_diag(1, vim.diagnostic.severity.WARN)
 end, { desc = "Go to Next Warning" })
 
 vim.keymap.set("n", "[w", function()
-	vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN })
-	vim.api.nvim_feedkeys("zz", "n", false)
+	jump_diag(-1, vim.diagnostic.severity.WARN)
 end, { desc = "Go to Previous Warning" })
 
 vim.keymap.set("n", "<leader>cn", ":cnext<CR>zz", { desc = "Navigate to [N]ext Quickfix Item" })

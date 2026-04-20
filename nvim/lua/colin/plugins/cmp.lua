@@ -18,6 +18,7 @@ function M.nvimcmp()
 		"hrsh7th/nvim-cmp",
 		dependencies = {
 			{ "hrsh7th/cmp-nvim-lsp" },
+			{ "hrsh7th/cmp-nvim-lsp-signature-help" },
 			{ "hrsh7th/cmp-buffer" },
 			{ "hrsh7th/cmp-path" },
 			{ "onsails/lspkind.nvim" },
@@ -105,7 +106,6 @@ function M.nvimcmp()
 				}),
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
-					{ name = "dap" },
 					{ name = "buffer", max_item_count = 5 },
 					{ name = "path", max_item_count = 3 },
 					{ name = "luasnip", max_item_count = 3 },

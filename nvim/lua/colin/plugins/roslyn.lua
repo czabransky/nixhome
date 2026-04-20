@@ -6,8 +6,6 @@ return {
 	---@type RoslynNvimConfig
 	opts = {
 		ignore_target = function(target)
-			print(target)
-			print(string.match(target, 'Unified.sln'))
 			return string.match(target, 'Unified.sln') ~= nil
 		end,
 		lock_target = true,

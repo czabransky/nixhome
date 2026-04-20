@@ -21,7 +21,7 @@ end
 -- For these keymaps to function, you need VS Code and/or Visual Studio executables to exist in the $PATH
 local function open_in_vscode()
 	local cursor = vim.api.nvim_win_get_cursor(0)
-	local row, col = unpack(cursor)
+	local row, col = table.unpack(cursor)
 	vim.cmd("!code --goto " .. vim.fn.expand("%") .. ":" .. row .. ":" .. col .. " --reuse-window")
 end
 vim.keymap.set("n", "<leader>gc", open_in_vscode, { desc = "Open Current File in Visual Studio Code" })

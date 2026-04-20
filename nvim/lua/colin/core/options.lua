@@ -1,7 +1,12 @@
 local M = {}
 
 local function inherit_vimrc()
-	vim.cmd([[ source ~/.vimrc ]])
+	local ok, err = pcall(vim.cmd, [[ source ~/.vimrc ]])
+	if not ok then
+		vim.schedule(function()
+			vim.notify("Failed to source ~/.vimrc: " .. err, vim.log.levels.WARN)
+		end)
+	end
 end
 
 local function opt_overrides()

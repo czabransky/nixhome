@@ -4,15 +4,15 @@
 require("mason-lspconfig").setup({
 	ensure_installed = vim.tbl_keys({
 		lua_ls = {},
-		-- html = {},
-		-- cssls = {},
-		-- emmet_ls = {},
-		-- ts_ls = {},
-		-- sqlls = {},
+		html = {},
+		cssls = {},
+		emmet_language_server = {},
+		ts_ls = {},
+		sqlls = {},
 	}),
+	automatic_enable = false,
 })
 require("colin.lsp.config.lua")
--- require("colin.lsp.config.html")
--- require("colin.lsp.config.react")
--- require("colin.lsp.config.csharp")
--- require("colin.lsp.config.sql")
+require("colin.lsp.config.html")
+require("colin.lsp.config.react")
+require("colin.lsp.config.sql")

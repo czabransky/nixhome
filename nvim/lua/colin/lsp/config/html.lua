@@ -1,51 +1,43 @@
-local lspconfig = require("lspconfig")
-local configs = require("lspconfig/configs")
 local setup = require("colin.lsp.lsp-setup")
 local attach = require("colin.lsp.lsp-attach")
+local emmet_bin = vim.fn.exepath("emmet-language-server")
+if emmet_bin == "" then
+	emmet_bin = vim.fn.exepath("emmet_ls")
+end
+if emmet_bin == "" then
+	emmet_bin = "emmet-language-server"
+end
 local webfiles = {
 	"html",
 	"css",
 	"scss",
 	"less",
-	"jsx",
-	"js",
-	"ts",
-	"tsx",
 	"javascript",
 	"javascriptreact",
-	"javascript.jsx",
 	"typescript",
 	"typescriptreact",
-	"typescript.tsx",
 }
 
-lspconfig.cssls.setup({
+vim.lsp.config("cssls", {
 	capabilities = setup.capabilities_with_snippets,
 	filetypes = webfiles,
 	on_attach = attach.on_attach,
+	root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
 })
 
-lspconfig.html.setup({
+vim.lsp.config("html", {
 	capabilities = setup.capabilities,
+	filetypes = webfiles,
 	on_attach = attach.on_attach,
+	root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
 })
 
-if not lspconfig.emmet_ls then
-	configs.emmet_ls = {
-		default_config = {
-			cmd = { "emmet_ls", "--stdio" },
-			filetypes = webfiles,
-			root_dir = function(fname)
-				return vim.loop.cwd()
-			end,
-			settings = {},
-		},
-	}
-end
-
-lspconfig.emmet_ls.setup({
+vim.lsp.config("emmet_language_server", {
+	cmd = { emmet_bin, "--stdio" },
 	capabilities = setup.capabilities_with_snippets,
+	on_attach = attach.on_attach,
 	filetypes = webfiles,
+	root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
 	init_options = {
 		html = {
 			options = {
@@ -54,3 +46,7 @@ lspconfig.emmet_ls.setup({
 		},
 	},
 })
+
+vim.lsp.enable("cssls")
+vim.lsp.enable("html")
+vim.lsp.enable("emmet_language_server")

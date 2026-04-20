@@ -4,16 +4,24 @@ return {
 	event = { "BufEnter" },
 	dependencies = {
 		{ "nvim-treesitter/nvim-treesitter-textobjects" },
+		{ "windwp/nvim-ts-autotag" },
 	},
 	config = function()
 		require("nvim-treesitter.configs").setup({
 			auto_install = true,
 			ensure_installed = {
+				"bash",
+				"css",
 				"lua",
 				"markdown",
 				"markdown_inline",
 				"nix",
+				"html",
+				"javascript",
+				"json",
+				"jsonc",
 				"c_sharp",
+				"typescript",
 				"tsx",
 				"vim",
 				"vimdoc",
@@ -22,6 +30,7 @@ return {
 			highlight = {
 				enable = true,
 				use_languagetree = true,
+				additional_vim_regex_highlighting = false,
 			},
 			ignore_install = {},
 			incremental_selection = {
@@ -39,10 +48,10 @@ return {
 				enable_rename = true,
 				enable_close = true,
 				enable_close_on_slash = true,
-				filetypes = { "html", "xml", "tsx", "js", "ts", "jsx" },
+				filetypes = { "html", "xml", "tsx", "javascript", "typescript", "javascriptreact", "typescriptreact" },
 			},
 			modules = {},
-			sync_install = true,
+			sync_install = false,
 			textobjects = {
 				select = {
 					enable = true,

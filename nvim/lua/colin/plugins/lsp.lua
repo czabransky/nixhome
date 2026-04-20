@@ -16,14 +16,16 @@ return {
 	config = function()
 		-- Modify some aesthetics of the LSP popup window.
 		-- vim.opt.winhighlight = require('cmp').config.window.bordered().winhighlight
-		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
-		vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+		local border = "rounded"
+		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = border })
+		vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = border })
 		vim.diagnostic.config({
-			float = { border = "rounded" },
+			float = { border = border },
 			virtual_text = true,
 			signs = true,
 			update_in_insert = true,
 			underline = true,
+			severity_sort = true,
 		})
 
 		-- [[ LSP Attach to Buffer ]]
@@ -38,19 +40,17 @@ return {
 		-- 	return augroups[client.id]
 		-- end
 
+		local format_group = vim.api.nvim_create_augroup("UserLspFormat", { clear = true })
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
 			callback = function(args)
-				local client_id = args.data.client_id
-				local client = vim.lsp.get_client_by_id(client_id)
-				-- local bufnr = args.buf
-				if not client.server_capabilities.documentFormattingProvider then
-					return
-				end
+				local bufnr = args.buf
+				vim.api.nvim_clear_autocmds({ group = format_group, buffer = bufnr })
 				vim.api.nvim_create_autocmd("BufWritePre", {
-					pattern = "*",
+					group = format_group,
+					buffer = bufnr,
 					callback = function(ev)
-						require("conform").format({ bufnr = ev.buf })
+						require("conform").format({ bufnr = ev.buf, lsp_format = "fallback" })
 					end,
 				})
 				-- vim.api.nvim_create_autocmd('BufWritePre', {
@@ -67,5 +67,7 @@ return {
 				-- })
 			end,
 		})
+
+		require("colin.lsp")
 	end,
 }
