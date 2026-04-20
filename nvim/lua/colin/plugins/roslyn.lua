@@ -7,7 +7,7 @@ return {
 	opts = {
 		filewatching = "roslyn",
 		broad_search = true,
-		lock_target = true,
+		lock_target = false,
 		choose_target = function(targets)
 			if not targets or #targets == 0 then
 				return nil
@@ -18,7 +18,8 @@ return {
 			end
 
 			local current_file = vim.api.nvim_buf_get_name(0)
-			local cwd = vim.uv.cwd() or ""
+			local uv = vim.uv or vim.loop
+			local cwd = uv.cwd() or ""
 			local current_dir = cwd
 			if current_file ~= "" then
 				current_dir = vim.fs.dirname(current_file)
