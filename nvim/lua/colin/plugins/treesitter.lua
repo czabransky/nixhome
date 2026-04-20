@@ -7,6 +7,7 @@ return {
 		{ "windwp/nvim-ts-autotag" },
 	},
 	config = function()
+		local uv = vim.uv or vim.loop
 		require("nvim-treesitter.configs").setup({
 			auto_install = true,
 			ensure_installed = {
@@ -31,6 +32,14 @@ return {
 				enable = true,
 				use_languagetree = true,
 				additional_vim_regex_highlighting = false,
+				disable = function(_, bufnr)
+					local max_filesize = 200 * 1024
+					local ok, stats = pcall(uv.fs_stat, vim.api.nvim_buf_get_name(bufnr))
+					if ok and stats and stats.size > max_filesize then
+						return true
+					end
+					return false
+				end,
 			},
 			ignore_install = {},
 			incremental_selection = {

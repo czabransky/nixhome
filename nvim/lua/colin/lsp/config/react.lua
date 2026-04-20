@@ -10,10 +10,36 @@ vim.lsp.config("ts_ls", {
 		"typescriptreact",
 	},
 	init_options = {
-		enable = true,
-		lint = true,
-		preferences = {
-			disableSuggestions = true,
+		hostInfo = "neovim",
+	},
+	settings = {
+		typescript = {
+			suggest = {
+				completeFunctionCalls = true,
+			},
+			inlayHints = {
+				includeInlayParameterNameHints = "all",
+				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+				includeInlayFunctionParameterTypeHints = true,
+				includeInlayVariableTypeHints = false,
+				includeInlayPropertyDeclarationTypeHints = true,
+				includeInlayFunctionLikeReturnTypeHints = true,
+				includeInlayEnumMemberValueHints = true,
+			},
+		},
+		javascript = {
+			suggest = {
+				completeFunctionCalls = true,
+			},
+			inlayHints = {
+				includeInlayParameterNameHints = "all",
+				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+				includeInlayFunctionParameterTypeHints = true,
+				includeInlayVariableTypeHints = false,
+				includeInlayPropertyDeclarationTypeHints = true,
+				includeInlayFunctionLikeReturnTypeHints = true,
+				includeInlayEnumMemberValueHints = true,
+			},
 		},
 	},
 	on_attach = attach.on_attach,

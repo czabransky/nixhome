@@ -6,26 +6,62 @@ return {
 		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make", cond = vim.fn.executable("make") == 1 },
 	},
 	config = function()
+		local actions = require("telescope.actions")
 		require("telescope").setup({
 			defaults = {
-				path_display = { "smart" },
+				path_display = { "truncate" },
+				cache_picker = {
+					num_pickers = 20,
+				},
+				file_ignore_patterns = {
+					"^%.git/",
+					"^node_modules/",
+					"^dist/",
+					"^build/",
+					"^target/",
+					"^bin/",
+					"^obj/",
+				},
 				mappings = {
 					i = {
 						["<C-u>"] = true,
 						["<C-d>"] = true,
-						["<C-j>"] = require("telescope.actions").move_selection_next,
-						["<C-k>"] = require("telescope.actions").move_selection_previous,
-						["<C-q>"] = require("telescope.actions").smart_add_to_qflist
-							+ require("telescope.actions").open_qflist,
+						["<C-j>"] = actions.move_selection_next,
+						["<C-k>"] = actions.move_selection_previous,
+						["<C-q>"] = actions.smart_add_to_qflist + actions.open_qflist,
 					},
 				},
-				layout_strategy = "horizontal",
+				layout_strategy = "flex",
 				layout_config = {
 					prompt_position = "top",
-					horizontal = { mirror = false },
+					flex = { flip_columns = 140 },
+					horizontal = {
+						mirror = false,
+						preview_width = 0.55,
+					},
 					vertical = { mirror = false },
 				},
+				dynamic_preview_title = true,
 				sorting_strategy = "ascending",
+			},
+			pickers = {
+				find_files = {
+					hidden = true,
+					follow = true,
+				},
+				live_grep = {
+					additional_args = function()
+						return { "--hidden", "--glob", "!**/.git/*" }
+					end,
+				},
+			},
+			extensions = {
+				fzf = {
+					fuzzy = true,
+					override_generic_sorter = true,
+					override_file_sorter = true,
+					case_mode = "smart_case",
+				},
 			},
 		})
 

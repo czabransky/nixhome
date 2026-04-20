@@ -1,5 +1,5 @@
 local M = {}
-M.on_attach = function(_, bufnr)
+M.on_attach = function(client, bufnr)
 	local nmap = function(keys, func, desc)
 		if desc then
 			desc = "LSP: " .. desc
@@ -22,5 +22,17 @@ M.on_attach = function(_, bufnr)
 	end, "[W]orkspace [L]ist Folders")
 	nmap("K", vim.lsp.buf.hover, "Hover Documentation")
 	nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
+
+	if client and client.supports_method and client:supports_method("textDocument/inlayHint") then
+		vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+		nmap("<leader>th", function()
+			local enabled = false
+			local ok, result = pcall(vim.lsp.inlay_hint.is_enabled, { bufnr = bufnr })
+			if ok then
+				enabled = result
+			end
+			vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
+		end, "[T]oggle Inlay [H]ints")
+	end
 end
 return M

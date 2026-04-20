@@ -2,7 +2,8 @@
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+local uv = vim.uv or vim.loop
+if not uv.fs_stat(lazypath) then
 	vim.fn.system({
 		"git",
 		"clone",
@@ -17,7 +18,11 @@ vim.opt.rtp:prepend(lazypath) -- noqa
 require("lazy").setup({
 	checker = {
 		enabled = true,
-		notify = true,
+		notify = false,
+	},
+	change_detection = {
+		enabled = false,
+		notify = false,
 	},
 	performance = {
 		rtp = {
