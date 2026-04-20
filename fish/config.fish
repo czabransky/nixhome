@@ -7,6 +7,7 @@ set -qU XDG_CONFIG_HOME; or set XDG_CONFIG_HOME $HOME/.config
 set -qU XDG_DATA_HOME; or set XDG_DATA_HOME $HOME/.local/share
 set -qU XDG_CACHE_HOME; or set XXDG_CACHE_HOME $HOME/.cache
 set -qU YAZI_CONFIG_HOME; or set YAZI_CONFIG_HOME $HOME/.config/yazi
+set -qU DOTNET_ROOT; or set DOTNET_ROOT $HOME/.dotnet
 
 # Initialize shell packages
 starship init fish | source

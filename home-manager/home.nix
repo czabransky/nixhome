@@ -29,7 +29,7 @@
         pkgs.zk
         pkgs.neovim
         pkgs.nodejs_22
-        pkgs.dotnetCorePackages.sdk_8_0_4xx
+        pkgs.dotnetCorePackages.sdk_10_0_1xx
 	];
 
 # Home Manager is pretty good at managing dotfiles. 
@@ -48,14 +48,6 @@
 		".config/tmux/tmux.conf".source = ~/nixhome/tmux/tmux.conf;
 		".config/nvim" = {
 			source = ~/nixhome/nvim;
-			recursive = true;
-		};
-		".config/nvim-lazyvim" = {
-			source = ~/nixhome/nvim-lazyvim;
-			recursive = true;
-		};
-		".config/nvim-lazyvim-md" = {
-			source = ~/nixhome/nvim-lazyvim-md;
 			recursive = true;
 		};
 	};
@@ -79,6 +71,6 @@
 
 	home.sessionVariables = {
 		EDITOR = "nvim";
-        NVIM_APPNAME = "nvim-lazyvim";
+        NVIM_APPNAME = "nvim";
 	};
 }

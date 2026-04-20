@@ -24,7 +24,7 @@ return {
 	end),
 
 	-- follow tmux/nvim keybinds
-	leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 },
+	leader = { key = "w", mods = "CTRL", timeout_milliseconds = 1000 },
 	keys = {
 		-- Send "CTRL-A" to the terminal when pressing CTRL-A, CTRL-A
 		{
