@@ -1,27 +1,57 @@
 local M = {}
 
 local function setup_wsl_clipboard()
+	local uv = vim.uv or vim.loop
+	local function exists(path)
+		local ok, stat = pcall(uv.fs_stat, path)
+		return ok and stat ~= nil
+	end
+
+	local function in_wsl()
+		if vim.fn.has("wsl") == 1 or vim.env.WSL_DISTRO_NAME ~= nil or vim.env.WSL_INTEROP ~= nil then
+			return true
+		end
+
+		local proc_version = io.open("/proc/version", "r")
+		if not proc_version then
+			return false
+		end
+
+		local content = proc_version:read("*a") or ""
+		proc_version:close()
+		content = content:lower()
+		return content:find("microsoft", 1, true) ~= nil or content:find("wsl", 1, true) ~= nil
+	end
+
 	local is_wsl = vim.fn.has("wsl") == 1
 		or vim.env.WSL_DISTRO_NAME ~= nil
 		or vim.env.WSL_INTEROP ~= nil
 		or vim.fn.executable("wsl.exe") == 1
 		or vim.fn.executable("clip.exe") == 1
 		or vim.fn.executable("powershell.exe") == 1
+		or in_wsl()
 
 	if not is_wsl then
 		return
 	end
 
-	if vim.fn.executable("win32yank.exe") == 1 then
+	local clip_cmd = vim.fn.executable("clip.exe") == 1 and "clip.exe" or "/mnt/c/Windows/System32/clip.exe"
+	local ps_cmd = vim.fn.executable("powershell.exe") == 1 and "powershell.exe"
+		or "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
+
+	local win32yank_cmd = vim.fn.executable("win32yank.exe") == 1 and "win32yank.exe"
+		or "/mnt/c/Users/" .. (vim.env.USERNAME or "") .. "/scoop/shims/win32yank.exe"
+
+	if win32yank_cmd ~= "" and (win32yank_cmd == "win32yank.exe" or exists(win32yank_cmd)) then
 		vim.g.clipboard = {
 			name = "win32yank-wsl",
 			copy = {
-				["+"] = { "win32yank.exe", "-i", "--crlf" },
-				["*"] = { "win32yank.exe", "-i", "--crlf" },
+				["+"] = { win32yank_cmd, "-i", "--crlf" },
+				["*"] = { win32yank_cmd, "-i", "--crlf" },
 			},
 			paste = {
-				["+"] = { "win32yank.exe", "-o", "--lf" },
-				["*"] = { "win32yank.exe", "-o", "--lf" },
+				["+"] = { win32yank_cmd, "-o", "--lf" },
+				["*"] = { win32yank_cmd, "-o", "--lf" },
 			},
 			cache_enabled = 0,
 		}
@@ -29,23 +59,23 @@ local function setup_wsl_clipboard()
 	end
 
 	-- Fallback for WSL without win32yank.
-	if vim.fn.executable("clip.exe") == 1 and vim.fn.executable("powershell.exe") == 1 then
+	if (clip_cmd == "clip.exe" or exists(clip_cmd)) and (ps_cmd == "powershell.exe" or exists(ps_cmd)) then
 		vim.g.clipboard = {
 			name = "wsl-clip",
 			copy = {
-				["+"] = { "clip.exe" },
-				["*"] = { "clip.exe" },
+				["+"] = { clip_cmd },
+				["*"] = { clip_cmd },
 			},
 			paste = {
 				["+"] = {
-					"powershell.exe",
+					ps_cmd,
 					"-NoProfile",
 					"-NoLogo",
 					"-Command",
 					"[Console]::Out.Write((Get-Clipboard -Raw).ToString())",
 				},
 				["*"] = {
-					"powershell.exe",
+					ps_cmd,
 					"-NoProfile",
 					"-NoLogo",
 					"-Command",
@@ -54,7 +84,13 @@ local function setup_wsl_clipboard()
 			},
 			cache_enabled = 0,
 		}
+		return
 	end
+
+	vim.notify(
+		"WSL detected but no Windows clipboard bridge executable found; Neovim may fall back to wl-copy/xclip.",
+		vim.log.levels.WARN
+	)
 end
 
 local function inherit_vimrc()
