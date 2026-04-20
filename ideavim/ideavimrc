@@ -10,12 +10,12 @@ source ~/.vimrc
 
 set noerrorbells
 set visualbell
-set notimeout " whichkey should stay on screen
 
-Plug 'nerdtree'
-" https://github.com/preservim/nerdtree
-" https://github.com/preservim/nerdtree/blob/master/doc/NERDTree.txt
-" https://raw.githubusercontent.com/wiki/JetBrains/ideavim/NERDTree-support.md
+
+Plug 'vim-highlightedyank'
+" https://github.com/machakann/vim-highlightedyank
+let g:highlightedyank_highlight_duration = 1000
+let g:highlightedyank_highlight_in_visual = 1
 
 Plug 'vim-commentary'
 " https://github.com/tpope/vim-commentary
@@ -27,62 +27,12 @@ Plug 'vim-exchange'
 " https://github.com/tommcdo/vim-exchange/blob/master/doc/exchange.txt
 " Easy text exchange operator for Vim. Use cx+motion to select text.
 
-Plug 'vim-highlightedyank'
-" https://github.com/machakann/vim-highlightedyank
-let g:highlightedyank_highlight_duration = 1000
-let g:highlightedyank_highlight_in_visual = 1
-
 Plug 'vim-surround'
 " https://github.com/tpope/vim-surround
 " https://github.com/tpope/vim-surround/blob/master/doc/surround.txt
 
-
-" Installed Plugins
-" ========================================================================
-" The following Plugins must be installed in the IDEA Marketplace, and are
-" activated using the set <Plug> command.
-"
-set which-key
-" https://github.com/TheBlob42/idea-which-key
-let g:WhichKey_ShowVimActions = "false"
-let g:WhichKey_ShowTypedSequence = "true"
-let g:WhichKey_DefaultDelay = 100
-let g:WhichKey_ProcessUnknownMappings = "false"
-let g:WhichKey_KeyColor = "#88d8b0"
-let g:WhichKey_KeyStyle = "none"
-let g:WhichKey_PrefixColor = "keyword"
-
-let g:WhichKeyDesc_toggle = "<leader>t [T]oggle"
-let g:WhichKeyDesc_toggle_toggle = "<leader>tw Hide/Show All [W]indows"
-let g:WhichKeyDesc_toggle_distraction = "<leader>td Toggle [D]istraction Free Mode"
-
-let g:WhichKeyDesc_search = "<leader>f Find"
-let g:WhichKeyDesc_search_files = "<leader>ff [F]ind [F]iles"
-let g:WhichKeyDesc_search_everywhere = "<leader>fa [F]ind All"
-
-let g:WhichKeyDesc_search = "<leader>s Search"
-let g:WhichKeyDesc_search_select_menu = "<leader>ss [S]elect In Menu"
-
-let g:WhichKeyDesc_run = "<leader>r Run Configurations"
-let g:WhichKeyDesc_run_edit_config = "<leader>re [E]dit / Set Active Configuration"
-let g:WhichKeyDesc_run_run = "<leader>rr [R]un Active Configuration"
-let g:WhichKeyDesc_run_active_config = "<leader>ra Run [A]ctive Configuration"
-let g:WhichKeyDesc_run_choose_config = "<leader>rc [C]hoose and Run Configuration"
-let g:WhichKeyDesc_run_scope = "<leader>rs Run Current [S]cope"
-let g:WhichKeyDesc_run_coverage = "<leader>rv Co[v]erage"
-
-let g:WhichKeyDesc_debug = "<leader>d Debug Configurations"
-let g:WhichKeyDesc_debug_edit_config = "<leader>de [E]dit / Set Active Configuration"
-let g:WhichKeyDesc_debug_debug = "<leader>dd [D]ebug Active Configuration"
-let g:WhichKeyDesc_debug_active_config = "<leader>da Debug [A]ctive Configuration"
-let g:WhichKeyDesc_debug_choose_config = "<leader>dc [C]hoose and Run Debug Configuration"
-let g:WhichKeyDesc_debug_scope = "<leader>ds Debug Current [S]cope"
-let g:WhichKeyDesc_debug_breakpoint = "<leader>dp Toggle Break[p]oint"
-
-let g:WhichKeyDesc_code = "<leader>c [C]ode Actions"
-let g:WhichKeyDesc_code_generate = "<leader>cg [G]enerate"
-let g:WhichKeyDesc_code_refactor_this = "<leader>cr [R]efactor This Menu"
-let g:WhichKeyDesc_code_override = "<leader>co [O]verride Methods"
+" Rider Actions: IdeaVim: Action Track (Ctrl+Shift A)
+" =========================================================
 
 "" Window Management Key Mappings
 nmap <leader>tw :action HideAllWindows<CR>
@@ -101,11 +51,12 @@ nmap <leader>dc :action ChooseDebugConfiguration<CR>
 nmap <leader>dp :action ToggleLineBreakpoint<CR>
 
 "" File Navigation Key Mappings
-nmap <leader>ff :action GotoFile<CR>
+nmap <leader>so: action Switcher<CR>
 nmap <leader>fa :action SearchEverywhere<CR>
-nmap <leader>ss :action SelectIn<CR>
-nmap gs :action FileStructurePopup<CR>
-nmap <leader>ds :action GotoSymbol<CR>
+nmap <leader>ff :action GotoFile<CR>
+nmap <leader>fs :action GotoSymbol<CR>
+nmap <leader>ss :action FileStructurePopup<CR>
+nmap <leader>si :action SelectIn<CR>
 nmap <leader>e :action GotoNextError<CR>
 nmap <leader>gI :action GotoImplementation<CR>
 
