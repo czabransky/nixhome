@@ -1,5 +1,36 @@
 local M = {}
+
+local function has_rooted_roslyn_client(bufnr, exclude_id)
+	for _, c in ipairs(vim.lsp.get_clients({ bufnr = bufnr, name = "roslyn" })) do
+		if c.id ~= exclude_id and c.config and c.config.root_dir and c.config.root_dir ~= "" then
+			return true
+		end
+	end
+
+	return false
+end
+
 M.on_attach = function(client, bufnr)
+	if client and client.name == "roslyn" then
+		local root = client.config and client.config.root_dir
+		if not root or root == "" then
+			if has_rooted_roslyn_client(bufnr, client.id) then
+				vim.schedule(function()
+					client:stop(true)
+					vim.notify("Stopped duplicate roslyn client without root_dir.", vim.log.levels.INFO)
+				end)
+				return
+			end
+
+			vim.schedule(function()
+				vim.notify(
+					"Roslyn attached without root_dir. Run :Roslyn target and :Roslyn restart.",
+					vim.log.levels.WARN
+				)
+			end)
+		end
+	end
+
 	local nmap = function(keys, func, desc)
 		if desc then
 			desc = "LSP: " .. desc
