@@ -1,7 +1,16 @@
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
-		{ "williamboman/mason.nvim", config = true },
+		{
+			"williamboman/mason.nvim",
+			config = true,
+			opts = {
+				registries = {
+					"github:mason-org/mason-registry",
+					"github:Crashdummyy/mason-registry",
+				},
+			},
+		},
 		{ "williamboman/mason-lspconfig.nvim" },
 	},
 	config = function()

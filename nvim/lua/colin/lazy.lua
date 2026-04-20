@@ -48,6 +48,7 @@ require("lazy").setup({
 	require("colin.plugins.neogen"),
 	require("colin.plugins.noice"),
 	require("colin.plugins.rainbowtrails"),
+	require("colin.plugins.roslyn"),
 	require("colin.plugins.theme").tokyonight(),
 	require("colin.plugins.theme").catppuccin(),
 	require("colin.plugins.tree").nvimtree(),
