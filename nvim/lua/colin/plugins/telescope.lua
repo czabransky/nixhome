@@ -60,17 +60,18 @@ return {
 			})
 		end
 
-		vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Search Files" })
-		vim.keymap.set("n", "<leader>fa", find_all_files, { desc = "Search All Files" })
-		vim.keymap.set("n", "<leader>st", builtin.builtin, { desc = "Search Telescpe Builtin" })
+		vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "Search Files" })
+		vim.keymap.set("n", "<leader>sF", find_all_files, { desc = "Search All Files" })
+		vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "Search Telescope Pickers" })
 		vim.keymap.set("n", "<leader>sc", builtin.commands, { desc = "Search Commands" })
 		vim.keymap.set("n", "<leader>s/", live_grep_open_files, { desc = "Search / in Open Files" })
 		vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "Search Files With Grep" })
+		vim.keymap.set("n", "<leader>sG", builtin.git_files, { desc = "Search Git Files" })
 		vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "Search Current Word" })
 		vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "Search Resume from Previous State" })
+		vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "Search Keymaps" })
 		vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "Search Open Buffers" })
 		vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "Search Diagnostics" })
 		vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Search Help" })
-		vim.keymap.set("n", "<leader>gf", builtin.git_files, { desc = "Search Git Files" })
 	end,
 }

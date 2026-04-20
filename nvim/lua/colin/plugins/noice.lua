@@ -13,7 +13,6 @@ return {
 				override = {
 					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
 					["vim.lsp.util.stylize_markdown"] = true,
-					["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
 				},
 				message = { enable = false },
 			},
@@ -41,9 +40,19 @@ return {
 		end, { silent = true, expr = true })
 
 		vim.keymap.set({ "n", "i", "s" }, "<c-f>", function()
-			if not require("noice.lsp").scroll(-4) then
+			if not require("noice.lsp").scroll(4) then
 				return "<c-f>"
 			end
 		end, { silent = true, expr = true })
+
+		vim.keymap.set({ "n", "i", "s" }, "<c-b>", function()
+			if not require("noice.lsp").scroll(-4) then
+				return "<c-b>"
+			end
+		end, { silent = true, expr = true })
+
+		vim.keymap.set("n", "<leader>nh", "<cmd>Noice history<CR>", { desc = "Noice History" })
+		vim.keymap.set("n", "<leader>nl", "<cmd>Noice last<CR>", { desc = "Noice Last Message" })
+		vim.keymap.set("n", "<leader>nd", "<cmd>Noice dismiss<CR>", { desc = "Noice Dismiss" })
 	end,
 }

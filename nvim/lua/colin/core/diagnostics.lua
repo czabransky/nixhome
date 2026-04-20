@@ -19,16 +19,12 @@ local function send_diagnostics_to_quickfix()
 	vim.cmd("copen")
 end
 
-vim.keymap.set("n", "<leader>dl", send_diagnostics_to_quickfix, { desc = "Quickfix [D]iagnostics [L]ist" })
+vim.keymap.set("n", "<leader>xq", send_diagnostics_to_quickfix, { desc = "Diagnostics to Quickfix" })
 
 local function jump_diag(count, severity)
 	vim.diagnostic.jump({ count = count, severity = severity })
 	vim.cmd.normal({ "zz", bang = true })
 end
-
-vim.keymap.set("n", "<leader>e", function()
-	jump_diag(1)
-end, { desc = "Go to Next Diagnostic" })
 
 vim.keymap.set("n", "]d", function()
 	jump_diag(1)
@@ -54,7 +50,7 @@ vim.keymap.set("n", "[w", function()
 	jump_diag(-1, vim.diagnostic.severity.WARN)
 end, { desc = "Go to Previous Warning" })
 
-vim.keymap.set("n", "<leader>cn", ":cnext<CR>zz", { desc = "Navigate to [N]ext Quickfix Item" })
-vim.keymap.set("n", "<leader>cp", ":cprevious<CR>zz", { desc = "Navigate to [P]revious Quickfix Item" })
-vim.keymap.set("n", "<leader>co", ":copen<CR>", { desc = "[O]pen the Quickfix List" })
-vim.keymap.set("n", "<leader>cc", ":cclose<CR>", { desc = "[C]lose the Quickfix List" })
+vim.keymap.set("n", "]q", ":cnext<CR>zz", { desc = "Quickfix Next" })
+vim.keymap.set("n", "[q", ":cprevious<CR>zz", { desc = "Quickfix Previous" })
+vim.keymap.set("n", "<leader>qo", ":copen<CR>", { desc = "Quickfix Open" })
+vim.keymap.set("n", "<leader>qc", ":cclose<CR>", { desc = "Quickfix Close" })

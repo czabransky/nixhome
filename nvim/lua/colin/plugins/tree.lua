@@ -43,9 +43,11 @@ function M.nvimtree()
 					},
 				},
 			})
-			vim.keymap.set("n", "<leader>tt", function()
-				return require("nvim-tree.api").tree.toggle({ find_file = true })
-			end, { desc = "Toggle Tree" })
+			local api = require("nvim-tree.api")
+			vim.keymap.set("n", "<leader>e", api.tree.toggle, { desc = "Explorer Toggle" })
+			vim.keymap.set("n", "<leader>E", function()
+				api.tree.find_file({ open = true, focus = true })
+			end, { desc = "Explorer Reveal File" })
 			setup_netrw(0)
 		end,
 	}
@@ -71,7 +73,7 @@ function M.neotree()
 				enable_git_status = true,
 				popup_border_style = "rounded",
 			})
-			vim.keymap.set("n", "<leader>tt", "<cmd>Neotree<CR>", { desc = "Toggle Tree" })
+			vim.keymap.set("n", "<leader>e", "<cmd>Neotree<CR>", { desc = "Explorer Toggle" })
 			setup_netrw(1)
 		end,
 	}
@@ -90,12 +92,12 @@ function M.oil()
 					signcolumn = "yes",
 				},
 			})
-			vim.keymap.set("n", "<leader>tt", function()
+			vim.keymap.set("n", "<leader>e", function()
 				return require("oil").toggle_float()
-			end, { desc = "Toggle Tree" })
-			vim.keymap.set("n", "<leader>te", function()
-				return require("oil").toggle_float()
-			end, { desc = "Oil Explorer" })
+			end, { desc = "Explorer Toggle" })
+			vim.keymap.set("n", "<leader>E", function()
+				return require("oil").open_float()
+			end, { desc = "Explorer Reveal File" })
 		end,
 	}
 end
