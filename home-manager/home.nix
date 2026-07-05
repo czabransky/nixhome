@@ -2,7 +2,7 @@
 {
 	home.username = "colin";
 	home.homeDirectory = "/Users/colin";
-	home.stateVersion = "24.05"; 
+	home.stateVersion = "26.05"; 
 
 # The home.packages option allows you to install Nix packages.
 # https://search.nixos.org/packages
@@ -25,7 +25,6 @@
         pkgs.tmux
         pkgs.neovim
         pkgs.nodejs_latest
-        pkgs.dotnetCorePackages.sdk_10_0_3xx
 	];
 
 # Home Manager is pretty good at managing dotfiles. 
@@ -63,6 +62,15 @@
 			};
 			file = "scheme/Enki-Tokyo-Night.tmTheme";
 		};
+	};
+	 
+	programs.fish = {
+	  enable = true;
+	  interactiveShellInit = ''
+		if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+		  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+		fi
+	  '';
 	};
 
 	home.sessionVariables = {
