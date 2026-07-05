@@ -11,8 +11,6 @@
         pkgs.starship
         pkgs.curl
         pkgs.unzip
-        pkgs.xclip
-        pkgs.gcc
         pkgs.git
         pkgs.lazygit
         pkgs.ripgrep
@@ -25,11 +23,9 @@
         pkgs.file
         pkgs.yazi
         pkgs.tmux
-        pkgs.glow
-        pkgs.zk
         pkgs.neovim
-        pkgs.nodejs_22
-        pkgs.dotnetCorePackages.sdk_10_0_1xx
+        pkgs.nodejs_latest
+        pkgs.dotnetCorePackages.sdk_10_0_3xx
 	];
 
 # Home Manager is pretty good at managing dotfiles. 
