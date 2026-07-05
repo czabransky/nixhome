@@ -16,3 +16,11 @@ zoxide init fish | source
 # Configure default editors
 set -gx EDITOR nvim
 set -gx VISUAL code
+
+# Add Nix binaries to your current path
+if test -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
+    source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
+else if test -e ~/.nix-profile/etc/profile.d/nix.fish
+    source ~/.nix-profile/etc/profile.d/nix.fish
+end
+
