@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 {
 	home.username = "colin";
-	home.homeDirectory = "/home/colin";
+	home.homeDirectory = "/Users/colin";
 	home.stateVersion = "24.05"; 
 
 # The home.packages option allows you to install Nix packages.
@@ -69,4 +69,5 @@
 		EDITOR = "nvim";
         NVIM_APPNAME = "nvim";
 	};
+
 }

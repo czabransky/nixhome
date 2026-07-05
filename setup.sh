@@ -17,9 +17,9 @@ echo "changing shell authentication to 'sufficient' in pam.d/chsh"
 sudo sed -i 's/required/sufficient/g' /etc/pam.d/chsh
 
 echo "adding fish shell to shellenv"
-sudo sh -c 'printf "%s\n" /home/'"$USERNAME"'/.nix-profile/bin/fish >> /etc/shells'
+sudo sh -c 'printf "%s\n" /Users/'"$USERNAME"'/.nix-profile/bin/fish >> /etc/shells'
 
 echo "setting default shell to fish"
-sudo chsh -s /home/$USERNAME/.nix-profile/bin/fish $USERNAME
+sudo chsh -s /Users/$USERNAME/.nix-profile/bin/fish $USERNAME
 
 echo "setup complete, restart your terminal to activate the fish shell, or run command `fish`"
