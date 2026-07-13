@@ -24,7 +24,8 @@
         pkgs.yazi
         pkgs.tmux
         pkgs.neovim
-        pkgs.nodejs_latest
+        pkgs.nodejs_22
+		pkgs.pnpm
 	];
 
 # Home Manager is pretty good at managing dotfiles. 
