@@ -1,3 +1,3 @@
 function l --description "list files using eza"
-	eza --color=always --long --icons=always $argv
+	eza --all --color=always --long --icons=always $argv
 end

@@ -24,8 +24,12 @@
         pkgs.yazi
         pkgs.tmux
         pkgs.neovim
+		pkgs.docker
+		pkgs.docker-compose
+		pkgs.colima
         pkgs.nodejs_22
 		pkgs.pnpm
+		pkgs.postgresql_16
 	];
 
 # Home Manager is pretty good at managing dotfiles. 
