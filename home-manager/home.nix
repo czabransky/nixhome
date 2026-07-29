@@ -46,6 +46,7 @@
 			recursive = true;
 		};
 		".config/tmux/tmux.conf".source = ~/nixhome/tmux/tmux.conf;
+		".config/herdr/config.toml".source = ~/nixhome/herdr/config.toml;
 		".config/nvim" = {
 			source = ~/nixhome/nvim;
 			recursive = true;
