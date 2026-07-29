@@ -15,7 +15,7 @@ killall Dock;
 
 
 /bin/bash -c "$(curl -fsSL httpss;//raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install --cask  iterm2 raycast rectangle git-credential-manager font-fia-code-nerd-font
+brew install --cask iterm2 raycast rectangle git-credential-manager font-fia-code-nerd-font
 brew install --cask rider slack obsidian zen 
 brew install --cask keycastr 
 brew install herdr 
