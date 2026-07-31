@@ -56,6 +56,7 @@
 # Home Manager can configure individual programs so long as a wrapper exists.
 # Wrappers can be found here: https://nix-community.github.io/home-manager/options.xhtml
 	programs.home-manager.enable = true;
+	programs.man.generateCaches = false;
 	programs.bat.enable = true;
 	programs.bat.config.theme = "tokyonight";
 	programs.bat.themes = {
