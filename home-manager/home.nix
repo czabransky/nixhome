@@ -12,6 +12,7 @@
         pkgs.curl
         pkgs.unzip
         pkgs.git
+		pkgs.gh
         pkgs.lazygit
         pkgs.ripgrep
         pkgs.fzf
