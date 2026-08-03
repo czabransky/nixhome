@@ -24,6 +24,7 @@ set tabstop=4
 set timeout
 set timeoutlen=500
 set updatetime=50
+set conceallevel=0
 
 if !isdirectory($HOME.'/.vim')
 	call mkdir($HOME.'/.vim', '', 0770)
