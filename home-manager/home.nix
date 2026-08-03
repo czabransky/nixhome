@@ -52,6 +52,7 @@
 			source = ~/nixhome/nvim;
 			recursive = true;
 		};
+		".claude/settings.json".source = ~/nixhome/claude/settings.json;
 	};
 
 # Home Manager can configure individual programs so long as a wrapper exists.
