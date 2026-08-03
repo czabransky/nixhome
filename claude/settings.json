@@ -1,4 +1,7 @@
 {
+  "autoMode": {
+    "classifyAllShell": true
+  },
   "permissions": {
     "deny": [
       "Read(**/.env)",
