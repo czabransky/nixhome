@@ -11,6 +11,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	pattern = "*",
 })
 
+local defaults = vim.api.nvim_create_augroup("UserDefaults", { clear = true })
 vim.api.nvim_create_autocmd("FileType", {
 	desc = "Disable newline comments when inserting lines with o/O",
 	group = defaults,
