@@ -19,7 +19,6 @@ set shiftwidth=4
 set showmode
 set splitbelow
 set splitright
-set smartcase
 set smartindent
 set softtabstop=4
 set tabstop=4
