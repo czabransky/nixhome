@@ -14,6 +14,7 @@ return {
 	config = function()
 		local wk = require("which-key")
 		wk.add({
+			{ "<leader>b", group = "Buffer", nowait = true, remap = false },
 			{ "<leader>c", group = "Code", nowait = true, remap = false },
 			{ "<leader>d", group = "Document", nowait = true, remap = false },
 			{ "<leader>e", group = "Explorer", nowait = true, remap = false },

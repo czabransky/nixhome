@@ -4,6 +4,7 @@ require("colin.core.options").setup({
 })
 require("colin.core.keymaps")
 require("colin.core.autocmd")
+require("colin.core.buffers")
 require("colin.core.diagnostics")
 require("colin.lazy")
 require("colin.core.debug")
