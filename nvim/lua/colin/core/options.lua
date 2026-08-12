@@ -111,6 +111,7 @@ local function opt_overrides()
 		signcolumn = "yes",
 		background = "dark",
 		conceallevel = 1,
+		inccommand = "split",
 	}
 	for key, value in pairs(options) do
 		vim.opt[key] = value
