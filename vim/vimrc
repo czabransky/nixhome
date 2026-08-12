@@ -41,6 +41,8 @@ set undofile
 nmap <CR> :write<CR>
 nnoremap <leader>w, :vertical resize -10<CR>
 nnoremap <leader>w. :vertical resize +10<CR>
+nnoremap <leader>w- :resize -10<CR>
+nnoremap <leader>w+ :resize +10<CR>
 
 nmap <C-Left> <C-w><Left>
 nmap <C-Right> <C-w><Right>
