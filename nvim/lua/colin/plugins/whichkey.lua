@@ -16,7 +16,7 @@ return {
 		wk.add({
 			{ "<leader>b", group = "Buffer", nowait = true, remap = false },
 			{ "<leader>c", group = "Code", nowait = true, remap = false },
-			{ "<leader>d", group = "Document", nowait = true, remap = false },
+			{ "<leader>d", group = "Debug", nowait = true, remap = false },
 			{ "<leader>e", group = "Explorer", nowait = true, remap = false },
 			{ "<leader>g", group = "Git", nowait = true, remap = false },
 			{ "<leader>h", group = "Hunks", nowait = true, remap = false },
