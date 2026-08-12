@@ -1,6 +1,5 @@
 let mapleader = "\<SPACE>"
 let maplocalleader = "\<SPACE>"
-set breakindent
 set cursorline
 set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
 set history=1000
