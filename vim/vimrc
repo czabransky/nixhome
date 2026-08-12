@@ -17,6 +17,8 @@ set scroll=32
 set scrolloff=4
 set shiftwidth=4
 set showmode
+set splitbelow
+set splitright
 set smartcase
 set smartindent
 set softtabstop=4
