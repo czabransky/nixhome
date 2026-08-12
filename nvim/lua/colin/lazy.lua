@@ -40,6 +40,7 @@ require("lazy").setup({
 		border = "single",
 	},
 
+	require("colin.plugins.bufferline"),
 	require("colin.plugins.cmp").blinkcmp(),
 	require("colin.plugins.conform"),
 	require("colin.plugins.gitsigns"),
