@@ -1,3 +1,7 @@
+vim.keymap.set("n", "<leader>vl", function()
+	vim.opt_local.list = not vim.opt_local.list:get()
+end, { desc = "Toggle Whitespace" })
+
 vim.keymap.set("n", "<esc>", function()
 	for _, win in pairs(vim.api.nvim_list_wins()) do
 		if vim.api.nvim_win_get_config(win).relative == "win" then

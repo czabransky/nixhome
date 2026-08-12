@@ -25,6 +25,7 @@ set timeout
 set timeoutlen=500
 set updatetime=50
 set conceallevel=0
+set listchars=tab:→\ ,trail:·,nbsp:␣
 
 if !isdirectory($HOME.'/.vim')
 	call mkdir($HOME.'/.vim', '', 0770)
