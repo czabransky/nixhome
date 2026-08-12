@@ -24,3 +24,9 @@ else if test -e ~/.nix-profile/etc/profile.d/nix.fish
     source ~/.nix-profile/etc/profile.d/nix.fish
 end
 
+# Key Bindings
+#----------------------
+
+# Bind Ctrl+P to move up one directory
+bind \cp 'cd ..; commandline -f repaint'
+
