@@ -38,7 +38,13 @@ set undodir=~/.vim/undodir
 set undofile
 
 " Windows
-nmap <CR> :write<CR>
+" Quick-save on <CR>, scoped to normal file buffers only -- otherwise it
+" clobbers <CR> in special buffers (e.g. the inccommand=split preview) that
+" have their own or default <CR> behavior.
+augroup ActiveEditorWrite
+	autocmd!
+	autocmd BufEnter * if &buftype == '' | nnoremap <buffer> <CR> :write<CR> | endif
+augroup END
 nnoremap <leader>w, :vertical resize -10<CR>
 nnoremap <leader>w. :vertical resize +10<CR>
 nnoremap <leader>w- :resize -10<CR>
