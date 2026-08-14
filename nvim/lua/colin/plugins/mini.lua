@@ -30,18 +30,5 @@ return {
 				hex_color = hipatterns.gen_highlighter.hex_color(),
 			},
 		})
-		require("mini.surround").setup({
-			mappings = {
-				add = "ys",
-				delete = "ds",
-				replace = "cs",
-				find = "sf",
-				find_left = "sF",
-				highlight = "sh",
-				update_n_lines = "sn",
-				suffix_last = "l",
-				suffix_next = "n",
-			},
-		})
 	end,
 }

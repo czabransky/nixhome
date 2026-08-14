@@ -53,6 +53,7 @@ require("lazy").setup({
 	require("colin.plugins.lualine"),
 	require("colin.plugins.mini"),
 	require("colin.plugins.noice"),
+	require("colin.plugins.persistence"),
 	require("colin.plugins.roslyn"),
 	require("colin.plugins.sleuth"),
 	require("colin.plugins.theme").tokyonight(),
