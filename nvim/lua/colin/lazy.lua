@@ -54,6 +54,7 @@ require("lazy").setup({
 	require("colin.plugins.mini"),
 	require("colin.plugins.noice"),
 	require("colin.plugins.persistence"),
+	require("colin.plugins.render-markdown"),
 	require("colin.plugins.roslyn"),
 	require("colin.plugins.sleuth"),
 	require("colin.plugins.theme").tokyonight(),
