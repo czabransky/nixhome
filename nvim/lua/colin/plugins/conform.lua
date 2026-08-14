@@ -10,6 +10,7 @@ return {
 				lua = { "stylua", lsp_format = "fallback" },
 				python = { "isort", "black" },
 				rust = { "rustfmt", lsp_format = "fallback" },
+				nix = { "nixfmt" },
 				javascript = { "biome", "prettierd", "prettier", stop_after_first = true },
 				javascriptreact = { "biome", "prettierd", "prettier", stop_after_first = true },
 				typescript = { "biome", "prettierd", "prettier", stop_after_first = true },

@@ -12,7 +12,7 @@ set nowrap
 set number
 set mouse=a
 set relativenumber
-set scroll=32
+silent! set scroll=32
 set scrolloff=4
 set shiftwidth=4
 set showmode
@@ -26,6 +26,7 @@ set timeoutlen=500
 set updatetime=50
 set conceallevel=0
 set listchars=tab:→\ ,trail:·,nbsp:␣
+set foldlevelstart=99
 
 if !isdirectory($HOME.'/.vim')
 	call mkdir($HOME.'/.vim', '', 0770)
