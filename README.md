@@ -8,60 +8,18 @@ Feel free to choose whatever terminal application you like - this configuration 
 
 ### macOS / Linux
 
-Install nix with flakes enabled.
+One command initializes the whole machine — installs nix, enables flakes, clones this repo to `~/nixhome`, runs home-manager, sets fish as the default shell, and (on macOS) installs Homebrew plus this repo's [`homebrew/Brewfile`](./homebrew/Brewfile) and applies a handful of system defaults. It's safe to re-run any time.
 
 ```sh
-sh <(curl -L https://nixos.org/nix/install) --no-daemon ;
-mkdir -p ~/.config/nix ;
-grep -qxF 'experimental-features = nix-command flakes' ~/.config/nix/nix.conf || echo 'experimental-features = nix-command flakes' >> ~/.config/nix/nix.conf ;
+sh <(curl -fsSL https://raw.githubusercontent.com/czabransky/nixhome/main/setup.sh)
 ```
+
+- Defaults to your current `$USER`; pass a different name as an argument to override (`sh <(curl ...) someuser`).
+- You'll be prompted for your password partway through (for the `chsh`/`pam.d` step, and on macOS if Homebrew needs installing).
+- Once cloned, `~/nixhome/setup.sh` can also be run directly for future re-runs instead of the curl one-liner.
 
 > [!NOTE]
-> `nix-command` and `flakes` are still gated behind `experimental-features` on current stable Nix, so this step is required even though both have been stable/recommended for years.
-
-Restart your shell so the nix command is available. The nix shell is used to run git whether it's installed on the host or not.
-
-```sh
-nix shell nixpkgs#git --command nix flake clone github:czabransky/nixhome --dest ~/nixhome ;
-nix run home-manager/master -- init --switch ;
-```
-
-Configure home-manager symlink to git repository, and rename your nix profile to the current user.
-
-```sh
-rm -rf ~/.config/home-manager ;
-ln -s ~/nixhome/home-manager ~/.config/home-manager ;
-sed -i 's/colin/'"$USER"'/g' ~/nixhome/home-manager/flake.nix ;
-sed -i 's/colin/'"$USER"'/g' ~/nixhome/home-manager/home.nix ;
-```
-
-Run home-manager to install packages and symlink the remaining configuration files. The flake resolves its `system` from `builtins.currentSystem`, so the same flake works unmodified on both aarch64-darwin and x86_64-linux (this is also why `--impure` is required).
-
-```sh
-home-manager --impure switch
-```
-
-Run `setup.sh` to add fish as your default shell.
-
-```sh
-/bin/bash ~/nixhome/setup.sh $USER
-```
-
-> [!NOTE]
-> On macOS, `setup.sh` also bootstraps Homebrew (if not already installed), runs `brew bundle --file ~/nixhome/Brewfile` to install the casks/formulas in [`Brewfile`](./Brewfile), and applies a handful of `defaults write` system preference tweaks (screenshot location, Finder/Dock behavior, key repeat rate, etc.).
-
-#### Tmux Plugins
-
-```sh
-## for tmux plugins to install automatically, install the plugin manager first
-mkdir -p ~/.config/tmux/plugins ;
-git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm ;
-```
-
-With tmux running:
-
-- install plugins: `ctrl+a + I`
-- reload: `ctrl+a + R`
+> The flake resolves its `system` from `builtins.currentSystem`, so the same flake works unmodified on both aarch64-darwin and x86_64-linux — this, along with the `~`-relative paths in `home.nix`, is why `home-manager --impure switch` is required. `nix-command`/`flakes` are also still gated behind `experimental-features` on current stable Nix, so the script enables that explicitly too.
 
 ### Windows
 

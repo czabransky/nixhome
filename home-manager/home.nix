@@ -23,7 +23,6 @@
     pkgs.zoxide
     pkgs.file
     pkgs.yazi
-    pkgs.tmux
     pkgs.neovim
     pkgs.tree-sitter
     pkgs.nixfmt
@@ -49,13 +48,13 @@
       source = ~/nixhome/yazi;
       recursive = true;
     };
-    ".config/tmux/tmux.conf".source = ~/nixhome/tmux/tmux.conf;
     ".config/herdr/config.toml".source = ~/nixhome/herdr/config.toml;
     ".config/nvim" = {
       source = ~/nixhome/nvim;
       recursive = true;
     };
     ".claude/settings.json".source = ~/nixhome/claude/settings.json;
+    ".homebrew/Brewfile".source = ~/nixhome/homebrew/Brewfile;
   };
 
   # Home Manager can configure individual programs so long as a wrapper exists.
