@@ -24,9 +24,6 @@ return {
 			{ "<leader>n", group = "Notifications", nowait = true, remap = false },
 			{ "<leader>q", group = "Quickfix", nowait = true, remap = false },
 			{ "<leader>s", group = "Search", nowait = true, remap = false },
-			-- TODO: <leader>t (Toggle) is a dumpall group; move <leader>th (inlay hints) into
-			-- <leader>c (Code) and retire this group once new toggles land in feature-specific groups.
-			{ "<leader>t", group = "Toggle", nowait = true, remap = false },
 			{ "<leader>v", group = "View", nowait = true, remap = false },
 			{ "<leader>w", group = "Workspace", nowait = true, remap = false },
 			{ "<leader>x", group = "Diagnostics", nowait = true, remap = false },

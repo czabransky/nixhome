@@ -41,7 +41,7 @@ return {
 					gs.blame_line({ full = true })
 				end, "Blame Line")
 				map("n", "<leader>hu", gs.undo_stage_hunk, "Hunk Undo Stage")
-				map("n", "<leader>td", gs.toggle_deleted, "Toggle Deleted")
+				map("n", "<leader>hd", gs.toggle_deleted, "Hunk Toggle Deleted")
 			end,
 		})
 	end,

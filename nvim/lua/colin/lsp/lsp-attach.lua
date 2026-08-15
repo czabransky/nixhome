@@ -26,14 +26,14 @@ M.on_attach = function(client, bufnr)
 
 	if client and client.supports_method and client:supports_method("textDocument/inlayHint") then
 		vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-		nmap("<leader>th", function()
+		nmap("<leader>ci", function()
 			local enabled = false
 			local ok, result = pcall(vim.lsp.inlay_hint.is_enabled, { bufnr = bufnr })
 			if ok then
 				enabled = result
 			end
 			vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
-		end, "[T]oggle Inlay [H]ints")
+		end, "[C]ode Toggle [I]nlay Hints")
 	end
 end
 return M
