@@ -23,6 +23,7 @@
     pkgs.zoxide
     pkgs.file
     pkgs.yazi
+    pkgs.delta
     pkgs.neovim
     pkgs.tree-sitter
     pkgs.nixfmt
@@ -72,6 +73,19 @@
         sha256 = "sha256-Q+sac7xBdLhjfCjmlvfQwGS6KUzt+2fu+crG4NdNr4w=";
       };
       file = "scheme/Enki-Tokyo-Night.tmTheme";
+    };
+  };
+
+  # Mirrors git/lazygit-config.yml, which is copied into place on Windows
+  # since home-manager doesn't run there.
+  programs.lazygit = {
+    enable = true;
+    settings = {
+      gui.nerdFontsVersion = "3";
+      git.paging = {
+        colorArg = "always";
+        pager = "delta --dark --paging=never";
+      };
     };
   };
 

@@ -11,10 +11,10 @@ Feel free to choose whatever terminal application you like - this configuration 
 One command initializes the whole machine — installs nix, enables flakes, clones this repo to `~/nixhome`, runs home-manager, sets fish as the default shell, and (on macOS) installs Homebrew plus this repo's [`homebrew/Brewfile`](./homebrew/Brewfile) and applies a handful of system defaults. It's safe to re-run any time.
 
 ```sh
-sh <(curl -fsSL https://raw.githubusercontent.com/czabransky/nixhome/main/setup.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/czabransky/nixhome/main/setup.sh)
 ```
 
-- Defaults to your current `$USER`; pass a different name as an argument to override (`sh <(curl ...) someuser`).
+- Defaults to your current `$USER`; pass a different name as an argument to override (`bash <(curl ...) someuser`).
 - You'll be prompted for your password partway through (for the `chsh`/`pam.d` step, and on macOS if Homebrew needs installing).
 - Once cloned, `~/nixhome/setup.sh` can also be run directly for future re-runs instead of the curl one-liner.
 
@@ -26,38 +26,13 @@ sh <(curl -fsSL https://raw.githubusercontent.com/czabransky/nixhome/main/setup.
 > [!TIP]
 > If you want to update powershell to version 7+: `winget install --id Microsoft.PowerShell --source winget`, but you will need to configure wezterm to use `pwsh`. Also, if you choose to install `Komorebi`, it is currently configured to use `pwsh` as well.
 
-Install Git and download this repository.
+One command initializes the whole machine — installs Git and Scoop (if needed), installs all Scoop packages, clones this repo to `~\nixhome`, and configures powershell, wezterm, vim/ideavim, neovim, git/delta/lazygit, and Claude Code settings. It's safe to re-run any time.
 
 ```pwsh
-winget install --id Git.Git ;
-git clone https://github.com/czabransky/nixhome.git $HOME/nixhome
+irm https://raw.githubusercontent.com/czabransky/nixhome/main/setup.ps1 | iex
 ```
 
-Install Scoop
-
-```pwsh
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
-```
-
-Install Scoop Packages
-
-```pwsh
-scoop bucket add nerd-fonts
-scoop bucket add extras
-scoop install RobotoMono-NF
-scoop install ripgrep file fd eza fzf bat zoxide mingw
-scoop install lazygit delta 
-scoop install yazi glow
-scoop install neovim vcredist2022
-scoop install wezterm 
-```
-
-Run `setup.ps1` to configure powershell, wezterm, neovim, and Claude Code settings.
-
-```pwsh
-.\setup.ps1
-```
+- Once cloned, `~\nixhome\setup.ps1` can also be run directly for future re-runs instead of the `irm` one-liner.
 
 #### Tiling Window Manager
 
@@ -66,91 +41,25 @@ Run `setup.ps1` to configure powershell, wezterm, neovim, and Claude Code settin
 > [!WARNING]
 > Komorebi requires a commercial license for use at work.
 
-Pass `-UseKomorebi` to `setup.ps1` to also copy the Komorebi/whkd configuration — without this flag, no Komorebi/whkd config is installed.
+Komorebi/whkd are opt-in and skipped by default because of the license restriction above. Re-run the already-cloned script locally with `-UseKomorebi` to install and configure them:
 
 ```pwsh
-scoop install komorebi whkd
-.\setup.ps1 -UseKomorebi
+~\nixhome\setup.ps1 -UseKomorebi
 ## Default
 komorebic start --whkd --bar
 ## Configuration when Primary Monitor is not Index 0
 komorebic start --whkd --bar -c "$Env:USERPROFILE/.config/komorebi/komorebi.portable.json"
 ```
 
-## Neovim
+## Git, Delta & Lazygit
 
-Launching neovim (aliased to `n`) will automatically install its plugins using the [Lazy Plugin Manager](https://github.com/folke/lazy.nvim).
+Git's pager/diff/merge settings and delta's theme live in one place, [`git/config-nix`](./git/config-nix), layered on top of whatever's already in `~/.gitconfig` via `include.path` — so existing `user.name`, `user.email`, and credential-helper settings are left untouched. The setup scripts wire this up automatically:
 
-- Run `:checkhealth` to validate your configuration.
-
-### Keybinds
-
-Here are a few notable keybinds to help you get started.
-
-- Note: The `<leader>` key is mapped to `<SPACE>`
-- Pressing the `<leader>` key will open the `whichkey` display after a moment.
-- `<leader>tt` will open the `nvimtree` explorer. With the exporer open, `g?` will show available keybinds.
-- `<leader>sf` will open the `telescope` file search. Type the name of the file you want to open.
-- `<leader>st` will open the `telescope.builtin` menu, where you can find tons of helpful info.
-- `<leader>sc` will open the `commands` menu, which lists available commands in a fuzzy finder.
-- `<leader>sh` will open the `help` search menu, where you can search on all things neovim.
-
-## Git Config and Lazygit
-
-Update git config located at `~/.gitconfig` with the following sections:
-
-```config
-[core]
-    longpaths = true
-    editor = nvim
-    pager = delta
-
-[diff]
-    tool = vimdiff
-
-[merge]
-    conflictstyle = zdiff3
-
-[interactive]
-    diffFilter = delta --color-only
-
-[delta]
-    navigate = true  # use n and N to move between diff sections
-    dark = true
-    side-by-side = true
-    line-numbers = true   
-    features = decorations 
-
-[delta "interactive"]
-    keep-plus-minus-markers = true
-
-[delta "decorations"]
-    commit-decoration-style = blue ol
-    commit-style = raw
-    file-style = omit
-    hunk-header-decoration-style = blue box
-    hunk-header-file-style = red
-    hunk-header-line-number-style = "#067a00"
-    hunk-header-style = file line-number syntax
-
-```
+- macOS/Linux: `setup.sh` adds the `include.path` entry; `home.nix` installs `delta` and writes lazygit's config via `programs.lazygit.settings`.
+- Windows: `setup.ps1` adds the same `include.path` entry and copies [`git/lazygit-config.yml`](./git/lazygit-config.yml) into place.
 
 > [!WARNING]
 > nvimdiff is crashing on exit when running within lazygit.
 
-`~/.config/lazygit/config.yml`
-
-```yml
-gui:
-  nerdFontsVersion: "3"
-
-git: 
-  paging:
-    colorArg: always
-    pager: delta --dark --paging=never
-
-```
-
 > [!NOTE]
-> This lazygit config is using the `delta` pager which is **not supported in lazygit on Windows**, but won't throw any errors.
-> lazygit may support pagers on windows if [this PR is addressed](https://github.com/creack/pty/pull/155)
+> lazygit's delta pager is **not supported in lazygit on Windows** — it's configured there anyway for consistency, but silently ignored (no errors). lazygit may support pagers on Windows if [this PR is addressed](https://github.com/creack/pty/pull/155).

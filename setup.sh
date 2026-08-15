@@ -63,7 +63,12 @@ sed -i 's/colin/'"$USERNAME"'/g' "$REPO_DIR/home-manager/flake.nix"
 sed -i 's/colin/'"$USERNAME"'/g' "$REPO_DIR/home-manager/home.nix"
 
 echo "running home-manager switch"
-home-manager --impure switch
+home-manager --impure switch -b backup
+
+# Layer this repo's git/delta config on top of whatever's already in
+# ~/.gitconfig (user.name, credential helpers, etc.) without touching it
+git config --global --get-all include.path 2>/dev/null | grep -qxF "$REPO_DIR/git/config-nix" ||
+	git config --global --add include.path "$REPO_DIR/git/config-nix"
 
 # Set the default shell to fish
 echo "changing shell authentication to 'sufficient' in pam.d/chsh"
