@@ -30,6 +30,7 @@
     pkgs.docker
     pkgs.docker-compose
     pkgs.colima
+    pkgs.lazydocker
     pkgs.nodejs_22
     pkgs.pnpm
     pkgs.postgresql_16
