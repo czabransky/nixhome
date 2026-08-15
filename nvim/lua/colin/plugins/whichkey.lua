@@ -14,8 +14,9 @@ return {
 	config = function()
 		local wk = require("which-key")
 		wk.add({
+			{ "<leader>b", group = "Buffer", nowait = true, remap = false },
 			{ "<leader>c", group = "Code", nowait = true, remap = false },
-			{ "<leader>d", group = "Document", nowait = true, remap = false },
+			{ "<leader>d", group = "Debug", nowait = true, remap = false },
 			{ "<leader>e", group = "Explorer", nowait = true, remap = false },
 			{ "<leader>g", group = "Git", nowait = true, remap = false },
 			{ "<leader>h", group = "Hunks", nowait = true, remap = false },
@@ -23,7 +24,7 @@ return {
 			{ "<leader>n", group = "Notifications", nowait = true, remap = false },
 			{ "<leader>q", group = "Quickfix", nowait = true, remap = false },
 			{ "<leader>s", group = "Search", nowait = true, remap = false },
-			{ "<leader>t", group = "Toggle", nowait = true, remap = false },
+			{ "<leader>v", group = "View", nowait = true, remap = false },
 			{ "<leader>w", group = "Workspace", nowait = true, remap = false },
 			{ "<leader>x", group = "Diagnostics", nowait = true, remap = false },
 		})

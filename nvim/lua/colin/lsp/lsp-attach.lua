@@ -14,7 +14,7 @@ M.on_attach = function(client, bufnr)
 	nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
 	nmap("gi", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
 	nmap("<leader>D", require("telescope.builtin").lsp_type_definitions, "Type [D]efinition")
-	nmap("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
+	nmap("<leader>ss", require("telescope.builtin").lsp_document_symbols, "[S]earch [S]ymbols")
 	nmap("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
 	nmap("<leader>wa", vim.lsp.buf.add_workspace_folder, "[W]orkspace [A]dd Folder")
 	nmap("<leader>wr", vim.lsp.buf.remove_workspace_folder, "[W]orkspace [R]emove Folder")
@@ -26,14 +26,14 @@ M.on_attach = function(client, bufnr)
 
 	if client and client.supports_method and client:supports_method("textDocument/inlayHint") then
 		vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-		nmap("<leader>th", function()
+		nmap("<leader>ci", function()
 			local enabled = false
 			local ok, result = pcall(vim.lsp.inlay_hint.is_enabled, { bufnr = bufnr })
 			if ok then
 				enabled = result
 			end
 			vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
-		end, "[T]oggle Inlay [H]ints")
+		end, "[C]ode Toggle [I]nlay Hints")
 	end
 end
 return M

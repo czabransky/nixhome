@@ -1,6 +1,5 @@
 let mapleader = "\<SPACE>"
 let maplocalleader = "\<SPACE>"
-set breakindent
 set cursorline
 set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
 set history=1000
@@ -13,11 +12,12 @@ set nowrap
 set number
 set mouse=a
 set relativenumber
-set scroll=32
+silent! set scroll=32
 set scrolloff=4
 set shiftwidth=4
 set showmode
-set smartcase
+set splitbelow
+set splitright
 set smartindent
 set softtabstop=4
 set tabstop=4
@@ -25,6 +25,8 @@ set timeout
 set timeoutlen=500
 set updatetime=50
 set conceallevel=0
+set listchars=tab:→\ ,trail:·,nbsp:␣
+set foldlevelstart=99
 
 if !isdirectory($HOME.'/.vim')
 	call mkdir($HOME.'/.vim', '', 0770)
@@ -37,9 +39,17 @@ set undodir=~/.vim/undodir
 set undofile
 
 " Windows
-nmap <CR> :write<CR>
+" Quick-save on <CR>, scoped to normal file buffers only -- otherwise it
+" clobbers <CR> in special buffers (e.g. the inccommand=split preview) that
+" have their own or default <CR> behavior.
+augroup ActiveEditorWrite
+	autocmd!
+	autocmd BufEnter * if &buftype == '' | nnoremap <buffer> <CR> :write<CR> | endif
+augroup END
 nnoremap <leader>w, :vertical resize -10<CR>
 nnoremap <leader>w. :vertical resize +10<CR>
+nnoremap <leader>w- :resize -10<CR>
+nnoremap <leader>w+ :resize +10<CR>
 
 nmap <C-Left> <C-w><Left>
 nmap <C-Right> <C-w><Right>

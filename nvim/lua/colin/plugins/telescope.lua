@@ -43,6 +43,11 @@ return {
 				},
 				dynamic_preview_title = true,
 				sorting_strategy = "ascending",
+				preview = {
+					-- telescope's own treesitter preview highlighting calls nvim-treesitter
+					-- APIs that main removed; fall back to its regex-based highlighting instead.
+					treesitter = false,
+				},
 			},
 			pickers = {
 				find_files = {
@@ -98,7 +103,6 @@ return {
 
 		vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "Search Files" })
 		vim.keymap.set("n", "<leader>sF", find_all_files, { desc = "Search All Files" })
-		vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "Search Telescope Pickers" })
 		vim.keymap.set("n", "<leader>sc", builtin.commands, { desc = "Search Commands" })
 		vim.keymap.set("n", "<leader>s/", live_grep_open_files, { desc = "Search / in Open Files" })
 		vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "Search Files With Grep" })

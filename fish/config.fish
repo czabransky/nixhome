@@ -30,3 +30,7 @@ end
 # Bind Ctrl+P to move up one directory
 bind \cp 'cd ..; commandline -f repaint'
 
+# Bind Ctrl+O to insert the id(s) of a docker container selected via fzf
+bind \co _fzf_search_docker_ps
+bind -M insert \co _fzf_search_docker_ps
+

@@ -50,8 +50,7 @@
       "Bash(wget * | bash)",
       "Bash(wget * | sh)",
 
-      "Edit(//etc/**)",
-      "Write(//etc/**)"
+      "Edit(//etc/**)"
     ],
     "ask": [
       "Bash(rm -rf *)",

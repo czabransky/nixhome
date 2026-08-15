@@ -23,17 +23,11 @@ return {
 			},
 		})
 		require("mini.comment").setup()
-		require("mini.surround").setup({
-			mappings = {
-				add = "ys",
-				delete = "ds",
-				replace = "cs",
-				find = "sf",
-				find_left = "sF",
-				highlight = "sh",
-				update_n_lines = "sn",
-				suffix_last = "l",
-				suffix_next = "n",
+		require("mini.pairs").setup()
+		local hipatterns = require("mini.hipatterns")
+		hipatterns.setup({
+			highlighters = {
+				hex_color = hipatterns.gen_highlighter.hex_color(),
 			},
 		})
 	end,
