@@ -43,5 +43,9 @@ if (Test-Path $HOME/.config/nvim) {
 
 cp -Recurse $HOME/nixhome/nvim $HOME/.config/nvim
 
+# Configure Claude Code
+[System.IO.Directory]::CreateDirectory("$HOME/.claude")
+cp $HOME/nixhome/claude/settings.json $HOME/.claude/settings.json
+
 # Source the profile to update the current shell
 . $profile

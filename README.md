@@ -1,20 +1,23 @@
 # What is this Project?
 
-This is a [nix](https://nixos.org/) and [nix home-manager](https://github.com/nix-community/home-manager) driven dotfiles configuration for linux-based systems. With only a few commands your linux system will install a number of commonly used tools all while configuring them with my preferred settings.
+This is a [nix](https://nixos.org/) and [nix home-manager](https://github.com/nix-community/home-manager) driven dotfiles configuration for macOS and Linux, plus a PowerShell/Scoop driven setup for Windows. With only a few commands your machine will install a number of commonly used tools all while configuring them with my preferred settings.
 
 Feel free to choose whatever terminal application you like - this configuration is using the `tokyonight` theme.
 
 ## Installation
 
-### Linux
+### macOS / Linux
 
 Install nix with flakes enabled.
 
 ```sh
 sh <(curl -L https://nixos.org/nix/install) --no-daemon ;
 mkdir -p ~/.config/nix ;
-echo 'experimental-features = nix-command flakes' >> ~/.config/nix/nix.conf ;
+grep -qxF 'experimental-features = nix-command flakes' ~/.config/nix/nix.conf || echo 'experimental-features = nix-command flakes' >> ~/.config/nix/nix.conf ;
 ```
+
+> [!NOTE]
+> `nix-command` and `flakes` are still gated behind `experimental-features` on current stable Nix, so this step is required even though both have been stable/recommended for years.
 
 Restart your shell so the nix command is available. The nix shell is used to run git whether it's installed on the host or not.
 
@@ -32,7 +35,7 @@ sed -i 's/colin/'"$USER"'/g' ~/nixhome/home-manager/flake.nix ;
 sed -i 's/colin/'"$USER"'/g' ~/nixhome/home-manager/home.nix ;
 ```
 
-Run home-manager to install packages and symlink the remaining configuration files.
+Run home-manager to install packages and symlink the remaining configuration files. The flake resolves its `system` from `builtins.currentSystem`, so the same flake works unmodified on both aarch64-darwin and x86_64-linux (this is also why `--impure` is required).
 
 ```sh
 home-manager --impure switch
@@ -43,6 +46,9 @@ Run `setup.sh` to add fish as your default shell.
 ```sh
 /bin/bash ~/nixhome/setup.sh $USER
 ```
+
+> [!NOTE]
+> On macOS, `setup.sh` also bootstraps Homebrew (if not already installed), runs `brew bundle --file ~/nixhome/Brewfile` to install the casks/formulas in [`Brewfile`](./Brewfile), and applies a handful of `defaults write` system preference tweaks (screenshot location, Finder/Dock behavior, key repeat rate, etc.).
 
 #### Tmux Plugins
 
@@ -89,7 +95,11 @@ scoop install neovim vcredist2022
 scoop install wezterm 
 ```
 
-Run `setup.ps1` script to configure powershell, wezterm, and neovim.
+Run `setup.ps1` to configure powershell, wezterm, neovim, and Claude Code settings.
+
+```pwsh
+.\setup.ps1
+```
 
 #### Tiling Window Manager
 
@@ -98,8 +108,11 @@ Run `setup.ps1` script to configure powershell, wezterm, and neovim.
 > [!WARNING]
 > Komorebi requires a commercial license for use at work.
 
+Pass `-UseKomorebi` to `setup.ps1` to also copy the Komorebi/whkd configuration — without this flag, no Komorebi/whkd config is installed.
+
 ```pwsh
 scoop install komorebi whkd
+.\setup.ps1 -UseKomorebi
 ## Default
 komorebic start --whkd --bar
 ## Configuration when Primary Monitor is not Index 0

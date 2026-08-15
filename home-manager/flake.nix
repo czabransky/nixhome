@@ -12,7 +12,7 @@
 
   outputs = { nixpkgs, home-manager, ... }:
     let
-      system = "aarch64-darwin";
+      system = builtins.currentSystem;
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       homeConfigurations."colin" = home-manager.lib.homeManagerConfiguration {
