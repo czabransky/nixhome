@@ -63,6 +63,5 @@ require("lazy").setup({
 	require("colin.plugins.tree").nvimtree(),
 	require("colin.plugins.telescope"),
 	require("colin.plugins.treesitter"),
-	require("colin.plugins.vim-tmux-navigator"),
 	require("colin.plugins.whichkey"),
 })
