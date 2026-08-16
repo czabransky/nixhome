@@ -8,7 +8,19 @@ M.on_attach = function(client, bufnr)
 		vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
 	end
 	nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
-	nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+	nmap("<leader>cr", vim.lsp.buf.rename, "[C]ode [R]ename")
+	nmap("<leader>co", function()
+		-- "source.organizeImports" matches any server's more specific kind
+		-- (e.g. biome's "source.organizeImports.biome") per the LSP spec's
+		-- dot-separated CodeActionKind hierarchy.
+		vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })
+	end, "[C]ode [O]rganize Imports")
+	nmap("<leader>ce", function()
+		-- Generic "source.fixAll" so this keeps working across whichever
+		-- formatter/linter is actually attached (biome today, eslint before).
+		vim.lsp.buf.code_action({ context = { only = { "source.fixAll" } }, apply = true })
+	end, "[C]ode Fix All")
+	nmap("<leader>cR", "<cmd>LspRestart<cr>", "[C]ode LSP [R]estart")
 	nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 	nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
 	nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")

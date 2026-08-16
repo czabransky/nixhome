@@ -19,7 +19,6 @@ return {
 			{ "<leader>d", group = "Debug", nowait = true, remap = false },
 			{ "<leader>e", group = "Explorer", nowait = true, remap = false },
 			{ "<leader>g", group = "Git", nowait = true, remap = false },
-			{ "<leader>h", group = "Hunks", nowait = true, remap = false },
 			{ "<leader>m", group = "Marks", nowait = true, remap = false },
 			{ "<leader>n", group = "Notifications", nowait = true, remap = false },
 			{ "<leader>q", group = "Quickfix", nowait = true, remap = false },

@@ -49,6 +49,7 @@ require("lazy").setup({
 	require("colin.plugins.flash"),
 	require("colin.plugins.gitsigns"),
 	require("colin.plugins.grapple"),
+	require("colin.plugins.lazygit"),
 	require("colin.plugins.lsp"),
 	require("colin.plugins.lualine"),
 	require("colin.plugins.mini"),
