@@ -91,34 +91,62 @@ if [ "$OS" = "Darwin" ]; then
 	brew bundle --file ~/.homebrew/Brewfile
 
 	echo "applying macOS system defaults"
+
+	# Un-hide ~/Library (independent of Finder's "show hidden files" setting below)
 	chflags nohidden ~/Library
+
+	# Tab key moves focus through every control in dialogs, not just text fields/lists
 	defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+	# Pressing and holding a key repeats it instead of showing the accent-picker popover
 	defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+	# Always show file extensions in Finder, Open/Save dialogs, etc.
 	defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+	# Delay (ms/2) before key repeat kicks in after a key is held down
 	defaults write NSGlobalDomain InitialKeyRepeat -int 15
+	# Speed (ms/2) of character repeat once key repeat has started
 	defaults write NSGlobalDomain KeyRepeat -int 1
+	# Don't convert straight quotes to curly quotes in text fields
 	defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+	# Don't autocorrect spelling in text fields
 	defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+	# Default new documents to local disk instead of iCloud Drive
 	defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+	# Save dialogs open fully expanded (full path picker) instead of the collapsed one-liner
 	defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
 	defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+	# Window resize/animation speed; lower is snappier
 	defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
+	# Activity Monitor defaults to showing all processes instead of just "My Processes"
 	defaults write com.apple.ActivityMonitor ShowCategory -int 0
+	# Suppress the "app crashed" dialog (crash still gets logged, just no popup)
 	defaults write com.apple.CrashReporter DialogType -string "none"
+	# Allow dragging a window by clicking anywhere in it while holding a modifier
 	defaults write com.apple.WindowManager EnableStandardWindowDragging -bool true
+	# Don't litter network/USB volumes with .DS_Store files
 	defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 	defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+	# Dock auto-hide/reveal animation timing
 	defaults write com.apple.dock autohide-delay -float 0
 	defaults write com.apple.dock autohide-time-modifier -float 0.1
+	# Show hidden (dotfile) files in Finder
 	defaults write com.apple.finder AppleShowAllFiles -bool true
+	# Don't warn when changing a file's extension in Finder
 	defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+	# Sort folders before files when sorting a Finder window by name
 	defaults write com.apple.finder _FXSortFoldersFirst -bool true
+	# Don't reopen every window/app that was open at logout
 	defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false
+	# Show battery percentage in the menu bar
 	defaults write com.apple.menuextra.battery ShowPercent -bool true
+	# Show seconds in the menu bar clock
 	defaults write com.apple.menuextra.clock ShowSeconds -bool true
+	# Save screenshots to ~/Screenshots instead of the Desktop
 	defaults write com.apple.screencapture location -string "~/Screenshots"
+	# Require a password immediately (no grace period) when waking from screensaver/sleep
 	defaults write com.apple.screensaver askForPassword -int 1
 	defaults write com.apple.screensaver askForPasswordDelay -int 0
+
+	# Restart the processes above so the new settings take effect immediately
 	killall SystemUIServer
 	killall Dock
 	killall Finder
