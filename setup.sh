@@ -91,20 +91,37 @@ if [ "$OS" = "Darwin" ]; then
 	brew bundle --file ~/.homebrew/Brewfile
 
 	echo "applying macOS system defaults"
-	defaults write com.apple.screencapture location -string "~/Screenshots"
+	chflags nohidden ~/Library
+	defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+	defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+	defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+	defaults write NSGlobalDomain InitialKeyRepeat -int 15
+	defaults write NSGlobalDomain KeyRepeat -int 1
+	defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+	defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+	defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+	defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+	defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+	defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
+	defaults write com.apple.ActivityMonitor ShowCategory -int 0
+	defaults write com.apple.CrashReporter DialogType -string "none"
+	defaults write com.apple.WindowManager EnableStandardWindowDragging -bool true
 	defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 	defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
-	defaults write com.apple.WindowManager EnableStandardWindowDragging -bool true
-	defaults write com.apple.CrashReporter DialogType -string "none"
 	defaults write com.apple.dock autohide-delay -float 0
 	defaults write com.apple.dock autohide-time-modifier -float 0.1
-	defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 	defaults write com.apple.finder AppleShowAllFiles -bool true
-	defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-	defaults write NSGlobalDomain KeyRepeat -int 1
-	defaults write NSGlobalDomain InitialKeyRepeat -int 15
+	defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+	defaults write com.apple.finder _FXSortFoldersFirst -bool true
+	defaults write com.apple.loginwindow LoginwindowLaunchesRelaunchApps -bool false
+	defaults write com.apple.menuextra.battery ShowPercent -bool true
+	defaults write com.apple.menuextra.clock ShowSeconds -bool true
+	defaults write com.apple.screencapture location -string "~/Screenshots"
+	defaults write com.apple.screensaver askForPassword -int 1
+	defaults write com.apple.screensaver askForPasswordDelay -int 0
 	killall SystemUIServer
 	killall Dock
+	killall Finder
 fi
 
 echo "setup complete! restart your terminal to activate the fish shell, or run: fish"
