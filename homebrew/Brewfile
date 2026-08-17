@@ -6,6 +6,7 @@ brew "gotop"
 brew "herdr"
 # Universal database tool and SQL client
 cask "dbeaver-community"
+# Clear font for cli tools
 cask "font-fira-code-nerd-font"
 # Cross-platform Git credential storage for multiple hosting providers
 cask "git-credential-manager"
@@ -23,5 +24,7 @@ cask "rectangle"
 cask "rider"
 # Team communication and collaboration software
 cask "slack"
+# Rust based IDE
+cask "zed"
 # Gecko based web browser
 cask "zen"
