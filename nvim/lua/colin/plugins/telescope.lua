@@ -1,6 +1,6 @@
 return {
 	"nvim-telescope/telescope.nvim",
-	branch = "0.1.x",
+	branch = "master",
 	dependencies = {
 		{ "nvim-lua/plenary.nvim" },
 		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make", cond = vim.fn.executable("make") == 1 },
@@ -44,8 +44,6 @@ return {
 				dynamic_preview_title = true,
 				sorting_strategy = "ascending",
 				preview = {
-					-- telescope's own treesitter preview highlighting calls nvim-treesitter
-					-- APIs that main removed; fall back to its regex-based highlighting instead.
 					treesitter = false,
 				},
 			},
