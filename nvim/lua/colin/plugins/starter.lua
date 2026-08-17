@@ -143,11 +143,6 @@ end
 function M.splash()
 	local starter = require("mini.starter")
 
-	-- Header is one flat highlight group applied to every header line - no
-	-- per-character color without real extmarks. This just recolors the
-	-- whole thing; tweak the hex for a different shade.
-	vim.api.nvim_set_hl(0, "MiniStarterHeader", { fg = "#7c7ce8" })
-
 	starter.setup({
 		-- cwd deliberately isn't concatenated in here: header lines share one
 		-- pad so the art's internal alignment holds together (a dotted-i's dot
