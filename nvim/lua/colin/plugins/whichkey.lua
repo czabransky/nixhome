@@ -26,6 +26,7 @@ return {
 			{ "<leader>v", group = "View", nowait = true, remap = false },
 			{ "<leader>w", group = "Workspace", nowait = true, remap = false },
 			{ "<leader>x", group = "Diagnostics", nowait = true, remap = false },
+			{ "<leader>y", group = "Yank", nowait = true, remap = false },
 		})
 	end,
 }
