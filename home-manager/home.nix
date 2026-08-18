@@ -102,7 +102,7 @@
 
   home.sessionVariables = {
     EDITOR = "nvim";
-    VISUAL = "nvim"
+    VISUAL = "nvim";
     NVIM_APPNAME = "nvim";
   };
 
