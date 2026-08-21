@@ -1,6 +1,10 @@
-vim.keymap.set("n", "<leader>vl", function()
+vim.keymap.set("n", "<leader>cl", function()
 	vim.opt_local.list = not vim.opt_local.list:get()
-end, { desc = "Toggle Whitespace" })
+end, { desc = "[C]ode Toggle White[l]space" })
+
+vim.keymap.set("n", "<leader>cw", function()
+	vim.wo.wrap = not vim.wo.wrap
+end, { desc = "[C]ode Toggle [W]rap" })
 
 vim.keymap.set("n", "<esc>", function()
 	for _, win in pairs(vim.api.nvim_list_wins()) do

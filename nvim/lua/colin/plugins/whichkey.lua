@@ -23,7 +23,6 @@ return {
 			{ "<leader>n", group = "Notifications", nowait = true, remap = false },
 			{ "<leader>q", group = "Quickfix", nowait = true, remap = false },
 			{ "<leader>s", group = "Search", nowait = true, remap = false },
-			{ "<leader>v", group = "View", nowait = true, remap = false },
 			{ "<leader>w", group = "Workspace", nowait = true, remap = false },
 			{ "<leader>x", group = "Diagnostics", nowait = true, remap = false },
 			{ "<leader>y", group = "Yank", nowait = true, remap = false },
