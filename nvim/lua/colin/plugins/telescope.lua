@@ -4,6 +4,7 @@ return {
 	dependencies = {
 		{ "nvim-lua/plenary.nvim" },
 		"nvim-telescope/telescope-fzf-native.nvim",
+		"nvim-telescope/telescope-ui-select.nvim",
 	},
 	config = function()
 		local actions = require("telescope.actions")
@@ -65,10 +66,22 @@ return {
 					override_file_sorter = true,
 					case_mode = "smart_case",
 				},
+				-- Without this, vim.ui.select() (code actions, lsp_implementations
+				-- picks, etc.) falls back to Neovim's bare default: a numbered
+				-- list dumped in the message area where you type a digit + <CR> -
+				-- no arrow-key selection at all. This routes it through Telescope
+				-- instead, "cursor" theme for a small tooltip-like popup at the
+				-- cursor rather than a full-screen picker.
+				-- get_cursor()'s own default height (9) only fits ~5 visible
+				-- result rows once the prompt line and borders are subtracted.
+				["ui-select"] = require("telescope.themes").get_cursor({
+					layout_config = { height = 15 },
+				}),
 			},
 		})
 
 		pcall(require("telescope").load_extension, "fzf")
+		pcall(require("telescope").load_extension, "ui-select")
 
 		local builtin = require("telescope.builtin")
 
