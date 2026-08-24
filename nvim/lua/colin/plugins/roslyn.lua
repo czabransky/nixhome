@@ -11,6 +11,17 @@ return {
 		vim.lsp.config("roslyn", {
 			capabilities = setup.capabilities_with_snippets,
 			on_attach = attach.on_attach,
+			-- Default scope is "openFiles" - diagnostics only exist (and only
+			-- show up in :Telescope diagnostics / <leader>xq / etc.) for
+			-- buffers you've actually opened. "fullSolution" makes Roslyn
+			-- push diagnostics for the whole solution in the background, so
+			-- errors in files you haven't opened aren't hidden.
+			settings = {
+				["csharp|background_analysis"] = {
+					dotnet_analyzer_diagnostics_scope = "fullSolution",
+					dotnet_compiler_diagnostics_scope = "fullSolution",
+				},
+			},
 		})
 
 		require("roslyn").setup({})
