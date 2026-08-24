@@ -104,7 +104,7 @@ return {
 					return
 				end
 				pcall(vim.treesitter.start, args.buf)
-				vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+				require("colin.core.indent").apply_current(args.buf)
 				vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
 				vim.wo[0][0].foldmethod = "expr"
 			end,
