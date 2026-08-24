@@ -23,6 +23,16 @@ function M.nvimtree()
 					float = {
 						-- Set enable to true if prefer a floating file explorer.
 						enable = true,
+						-- nvim-tree only registers its WinLeave auto-close
+						-- autocmd once, at this setup() call, gated on
+						-- float.enable + quit_on_focus_loss both being true
+						-- at THIS moment - it never re-checks later. Since
+						-- float starts true, leaving quit_on_focus_loss at
+						-- its true default means "close on focus loss" stays
+						-- registered forever, even after <leader>el switches
+						-- to docked. False here means it's never registered
+						-- at all, so the tree stays open in either mode.
+						quit_on_focus_loss = false,
 						open_win_config = {
 							width = 100,
 						},
