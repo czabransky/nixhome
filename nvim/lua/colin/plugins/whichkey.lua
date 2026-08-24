@@ -21,6 +21,7 @@ return {
 			{ "<leader>g", group = "Git", nowait = true, remap = false },
 			{ "<leader>m", group = "Marks", nowait = true, remap = false },
 			{ "<leader>n", group = "Notifications", nowait = true, remap = false },
+			{ "<leader>p", group = "Parameter", nowait = true, remap = false },
 			{ "<leader>q", group = "Quickfix", nowait = true, remap = false },
 			{ "<leader>s", group = "Search", nowait = true, remap = false },
 			{ "<leader>w", group = "Workspace", nowait = true, remap = false },

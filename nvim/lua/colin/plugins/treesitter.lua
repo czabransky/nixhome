@@ -46,6 +46,7 @@ return {
 
 				local select = require("nvim-treesitter-textobjects.select")
 				local move = require("nvim-treesitter-textobjects.move")
+				local swap = require("nvim-treesitter-textobjects.swap")
 
 				local function map_select(lhs, query)
 					vim.keymap.set({ "x", "o" }, lhs, function()
@@ -80,6 +81,13 @@ return {
 				map_move("[]", move.goto_previous_end, "@class.outer")
 				map_move("]f", move.goto_next, "@function.outer")
 				map_move("[f", move.goto_previous, "@function.outer")
+
+				vim.keymap.set("n", "<leader>pl", function()
+					swap.swap_next("@parameter.inner")
+				end, { desc = "Swap Parameter Right" })
+				vim.keymap.set("n", "<leader>ph", function()
+					swap.swap_previous("@parameter.inner")
+				end, { desc = "Swap Parameter Left" })
 			end,
 		},
 		{
