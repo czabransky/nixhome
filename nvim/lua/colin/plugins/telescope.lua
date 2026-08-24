@@ -118,6 +118,7 @@ return {
 		vim.keymap.set("n", "<leader>s/", live_grep_open_files, { desc = "Search / in Open Files" })
 		vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "Search Files With Grep" })
 		vim.keymap.set("n", "<leader>sG", builtin.git_files, { desc = "Search Git Files" })
+		vim.keymap.set("n", "<leader>sS", builtin.git_status, { desc = "Search Git Status (Changed Files)" })
 		vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "Search Current Word" })
 		vim.keymap.set("n", "<leader>sr", builtin.oldfiles, { desc = "Search Recent Files" })
 		vim.keymap.set("n", "<leader>sp", builtin.resume, { desc = "Search Previous (Resume State)" })

@@ -3,6 +3,11 @@ return {
 	"lewis6991/gitsigns.nvim",
 	config = function()
 		require("gitsigns").setup({
+			-- Highlights the exact changed *words* within a hunk line (not
+			-- just "this line changed") in previews and inline preview -
+			-- word_diff requires diff_opts.internal.
+			diff_opts = { internal = true },
+			word_diff = true,
 			on_attach = function(bufnr)
 				local gs = package.loaded.gitsigns
 
@@ -36,12 +41,17 @@ return {
 				end, "Hunk Reset")
 				map("n", "<leader>gS", gs.stage_buffer, "Buffer Stage")
 				map("n", "<leader>gR", gs.reset_buffer, "Buffer Reset")
-				map("n", "<leader>gp", gs.preview_hunk, "Hunk Preview")
 				map("n", "<leader>gb", function()
 					gs.blame_line({ full = true })
 				end, "Blame Line")
 				map("n", "<leader>gu", gs.undo_stage_hunk, "Hunk Undo Stage")
-				map("n", "<leader>gt", gs.toggle_deleted, "Hunk Toggle Deleted")
+				map("n", "<leader>gc", function()
+					-- toggle_deleted alone only shows removed lines as virtual
+					-- text; linehl highlights added/changed lines in place, so
+					-- together this gives the full added+removed picture.
+					gs.toggle_deleted()
+					gs.toggle_linehl()
+				end, "Git Changes (Toggle Deleted + Added)")
 			end,
 		})
 	end,
