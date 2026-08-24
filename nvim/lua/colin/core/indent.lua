@@ -9,6 +9,12 @@ M.smart_enabled = false
 
 function M.apply_current(buf)
 	vim.bo[buf].indentexpr = M.smart_enabled and "v:lua.require'nvim-treesitter'.indentexpr()" or ""
+	-- ~/.vimrc sets smartindent globally; it used to always be masked by
+	-- Treesitter's indentexpr taking precedence. With indentexpr empty by
+	-- default, smartindent surfaces instead and badly mis-indents mini.pairs'
+	-- CR-based brace expansion ("{<CR>" feeds "<CR><C-o>O" under the hood).
+	-- Force it off here so this module is the sole source of truth.
+	vim.bo[buf].smartindent = false
 end
 
 function M.toggle()
