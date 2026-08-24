@@ -25,7 +25,20 @@ M.on_attach = function(client, bufnr)
 	nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 	nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
 	nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
+	-- Alias for Neovim's newer default gr* convention (grn/gra/grr/gri), which
+	-- this config never adopted. Without it, typing "grr" fires "gr" on the
+	-- 2nd key (nothing else shares that prefix) and leaves a stray "r" -
+	-- normal-mode "replace char" - waiting to swallow whatever key comes next.
+	-- (Confirmed: the ~1s latency here is Roslyn's own response time, not
+	-- Telescope overhead - plain vim.lsp.buf.references() was just as slow.
+	-- Use <C-q> in the picker to send results to the quickfix list.)
+	nmap("grr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
 	nmap("gi", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
+	-- Call hierarchy (standard LSP callHierarchy/incomingCalls|outgoingCalls).
+	-- No read/write/assignment classification exists at this level - that's
+	-- only available per-buffer via textDocument/documentHighlight.
+	nmap("<leader>ch", require("telescope.builtin").lsp_incoming_calls, "[C]alls Incoming (callers)")
+	nmap("<leader>cH", require("telescope.builtin").lsp_outgoing_calls, "[C]alls Outgoing (callees)")
 	nmap("<leader>D", require("telescope.builtin").lsp_type_definitions, "Type [D]efinition")
 	nmap("<leader>ss", require("telescope.builtin").lsp_document_symbols, "[S]earch [S]ymbols")
 	nmap("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")

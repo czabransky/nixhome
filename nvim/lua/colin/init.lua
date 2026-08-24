@@ -8,6 +8,7 @@ require("colin.core.buffers")
 require("colin.core.diagnostics")
 require("colin.core.yank")
 require("colin.core.indent")
+require("colin.core.quickfix")
 require("colin.lazy")
 require("colin.core.debug")
 
