@@ -31,6 +31,10 @@ vim.keymap.set("n", "<leader>xd", function()
 	end
 end, { desc = "Toggle Diagnostics" })
 
+vim.keymap.set("n", "<leader>xl", function()
+	vim.diagnostic.open_float(nil, { scope = "line", border = "rounded" })
+end, { desc = "Diagnostics Line" })
+
 local function jump_diag(count, severity)
 	vim.diagnostic.jump({ count = count, severity = severity })
 	vim.cmd.normal({ "zz", bang = true })
