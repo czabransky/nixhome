@@ -21,6 +21,16 @@ end
 
 vim.keymap.set("n", "<leader>xq", send_diagnostics_to_quickfix, { desc = "Diagnostics to Quickfix" })
 
+vim.keymap.set("n", "<leader>xd", function()
+	if vim.diagnostic.is_enabled() then
+		vim.diagnostic.enable(false)
+		vim.notify("Diagnostics disabled")
+	else
+		vim.diagnostic.enable(true)
+		vim.notify("Diagnostics enabled")
+	end
+end, { desc = "Toggle Diagnostics" })
+
 local function jump_diag(count, severity)
 	vim.diagnostic.jump({ count = count, severity = severity })
 	vim.cmd.normal({ "zz", bang = true })
