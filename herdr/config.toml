@@ -5,3 +5,5 @@ focus_pane_down = ["prefix+j", "prefix+down"]
 focus_pane_up = ["prefix+k", "prefix+up"]
 focus_pane_right = ["prefix+l", "prefix+right"]
 open_worktree = "prefix+shift+o"
+switch_tab = ""
+switch_workspace = "prefix+1..9"
