@@ -44,10 +44,25 @@ function M.nvimtree()
 				},
 			})
 			local api = require("nvim-tree.api")
-			vim.keymap.set("n", "<leader>e", api.tree.toggle, { desc = "Explorer Toggle" })
-			vim.keymap.set("n", "<leader>E", function()
+			vim.keymap.set("n", "<leader>ee", api.tree.toggle, { desc = "Explorer Toggle" })
+			vim.keymap.set("n", "<leader>er", function()
 				api.tree.find_file({ open = true, focus = true })
 			end, { desc = "Explorer Reveal File" })
+
+			-- view.open() only ever reads the live config, so flipping
+			-- float.enable here and re-opening switches between floating
+			-- and docked - no plugin support for this beyond that.
+			local tree_config = require("nvim-tree.config")
+			vim.keymap.set("n", "<leader>el", function()
+				local was_open = api.tree.is_visible()
+				tree_config.g.view.float.enable = not tree_config.g.view.float.enable
+				if was_open then
+					api.tree.close()
+					api.tree.open()
+					api.tree.find_file({ open = true, focus = true })
+				end
+				vim.notify("nvim-tree: " .. (tree_config.g.view.float.enable and "floating" or "docked"))
+			end, { desc = "Explorer Toggle Float/Docked" })
 			setup_netrw(0)
 		end,
 	}
