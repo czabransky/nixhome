@@ -6,20 +6,38 @@ vim.keymap.set("n", "<leader>qC", function()
 	vim.notify("Quickfix list cleared")
 end, { desc = "Quickfix Clear" })
 
--- Remove the entry under the cursor from the quickfix list (e.g. as you work
--- through references and mark each one done), keeping the list open and
--- the cursor on a sensible remaining entry.
+-- z-prefixed to match nvim-bqf's own qf-buffer conventions (zn/zN/zf).
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "qf",
 	callback = function(args)
-		vim.keymap.set("n", "dd", function()
-			local qflist = vim.fn.getqflist()
-			local idx = vim.fn.line(".")
-			table.remove(qflist, idx)
-			vim.fn.setqflist(qflist)
-			if #qflist > 0 then
-				vim.api.nvim_win_set_cursor(0, { math.min(idx, #qflist), 0 })
-			end
-		end, { buffer = args.buf, desc = "Quickfix Remove Item" })
+		local opts = { buffer = args.buf }
+
+		-- Remove the entry under the cursor (e.g. as you work through
+		-- references and mark each one done), keeping the list open and the
+		-- cursor on a sensible remaining entry.
+		vim.keymap.set(
+			"n",
+			"zd",
+			function()
+				local qflist = vim.fn.getqflist()
+				local idx = vim.fn.line(".")
+				table.remove(qflist, idx)
+				vim.fn.setqflist(qflist)
+				if #qflist > 0 then
+					vim.api.nvim_win_set_cursor(0, { math.min(idx, #qflist), 0 })
+				end
+			end,
+			vim.tbl_extend("force", opts, { desc = "Quickfix Remove Item" })
+		)
+
+		-- Same as <leader>qC, available without leaving the qf window.
+		vim.keymap.set(
+			"n",
+			"zc",
+			function()
+				vim.fn.setqflist({})
+			end,
+			vim.tbl_extend("force", opts, { desc = "Quickfix Clear" })
+		)
 	end,
 })
