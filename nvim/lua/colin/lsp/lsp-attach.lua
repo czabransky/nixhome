@@ -1,5 +1,18 @@
 local M = {}
 
+-- Neovim namespaces push-model diagnostics (textDocument/publishDiagnostics -
+-- what Roslyn uses, since it doesn't support workspace/diagnostic pull) per
+-- client id. Its own auto-cleanup on detach only resets PULL namespaces, so
+-- when :lsp restart stops a client and starts a new one, the old client's
+-- diagnostics never get cleared - the new client just adds its own copies
+-- alongside them, stacking up duplicates on every restart.
+vim.api.nvim_create_autocmd("LspDetach", {
+	callback = function(args)
+		local ns = vim.lsp.diagnostic.get_namespace(args.data.client_id)
+		vim.diagnostic.reset(ns, args.buf)
+	end,
+})
+
 M.on_attach = function(client, bufnr)
 	local nmap = function(keys, func, desc)
 		if desc then
