@@ -35,6 +35,20 @@ vim.keymap.set("n", "<leader>xl", function()
 	vim.diagnostic.open_float(nil, { scope = "line", border = "rounded" })
 end, { desc = "Diagnostics Line" })
 
+vim.keymap.set("n", "<leader>xy", function()
+	local lnum = vim.api.nvim_win_get_cursor(0)[1] - 1
+	local diagnostics = vim.diagnostic.get(0, { lnum = lnum })
+	if #diagnostics == 0 then
+		vim.notify("No diagnostics on this line", vim.log.levels.WARN)
+		return
+	end
+	local messages = vim.tbl_map(function(d)
+		return d.message
+	end, diagnostics)
+	vim.fn.setreg("+", table.concat(messages, "\n"))
+	vim.notify(("Copied %d diagnostic(s) to clipboard"):format(#messages))
+end, { desc = "Diagnostics Line Yank" })
+
 local function jump_diag(count, severity)
 	vim.diagnostic.jump({ count = count, severity = severity })
 	vim.cmd.normal({ "zz", bang = true })
