@@ -125,6 +125,9 @@ return {
 		vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "Search Keymaps" })
 		vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "Search Open Buffers" })
 		vim.keymap.set("n", "<leader>sx", builtin.diagnostics, { desc = "Search Diagnostics" })
+		vim.keymap.set("n", "<leader>se", function()
+			builtin.diagnostics({ severity = vim.diagnostic.severity.ERROR })
+		end, { desc = "Search Diagnostics (Errors Only)" })
 		vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Search Help" })
 	end,
 }
