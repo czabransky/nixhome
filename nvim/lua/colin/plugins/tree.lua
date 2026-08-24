@@ -74,6 +74,22 @@ function M.nvimtree()
 				vim.notify("nvim-tree: " .. (tree_config.g.view.float.enable and "floating" or "docked"))
 			end, { desc = "Explorer Toggle Float/Docked" })
 			setup_netrw(0)
+
+			-- Docked nvim-tree windows ARE captured by :mksession (floating
+			-- ones are not - Neovim's session format skips floats entirely).
+			-- On restore, the window is recreated with a plain `file
+			-- NvimTree_1` command since nvim-tree's own buffer setup never
+			-- runs, leaving a normal listed buffer named "NvimTree_1" that
+			-- shows up as a bufferline tab. Closing the tree before
+			-- persistence.nvim saves avoids serializing it at all.
+			vim.api.nvim_create_autocmd("User", {
+				pattern = "PersistenceSavePre",
+				callback = function()
+					if api.tree.is_visible() then
+						api.tree.close()
+					end
+				end,
+			})
 		end,
 	}
 end
