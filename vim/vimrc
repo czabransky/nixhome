@@ -41,10 +41,18 @@ set undofile
 " Windows
 " Quick-save on <CR>, scoped to normal file buffers only -- otherwise it
 " clobbers <CR> in special buffers (e.g. the inccommand=split preview) that
-" have their own or default <CR> behavior.
+" have their own or default <CR> behavior. Uses FileType, not BufEnter: for
+" freshly-created special buffers (quickfix, help, etc.) BufEnter can fire
+" before buftype is actually settled, letting this slip through onto them -
+" e.g. every quickfix window (grr, <leader>xq, ...) permanently getting
+" <CR> -> :write<CR>, which throws E32 since none of them have a filename.
+" FileType only fires once buftype is guaranteed final.
 augroup ActiveEditorWrite
 	autocmd!
-	autocmd BufEnter * if &buftype == '' | nnoremap <buffer> <CR> :write<CR> | endif
+	autocmd FileType * if &buftype == '' | nnoremap <buffer> <CR> :write<CR> | endif
+	" Safety net: explicitly strip it from known special filetypes, in case
+	" it slipped through before their buftype/filetype was set.
+	autocmd FileType qf,help,checkhealth,lspinfo,man silent! nunmap <buffer> <CR>
 augroup END
 nnoremap <leader>w, :vertical resize -10<CR>
 nnoremap <leader>w. :vertical resize +10<CR>
