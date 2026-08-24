@@ -54,6 +54,7 @@ require("lazy").setup({
 	require("colin.plugins.lsp"),
 	require("colin.plugins.lualine"),
 	require("colin.plugins.mini"),
+	require("colin.plugins.neogen"),
 	require("colin.plugins.noice"),
 	require("colin.plugins.persistence"),
 	require("colin.plugins.render-markdown"),
