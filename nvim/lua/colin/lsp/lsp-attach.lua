@@ -20,8 +20,13 @@ M.on_attach = function(client, bufnr)
 		-- formatter/linter is actually attached (biome today, eslint before).
 		vim.lsp.buf.code_action({ context = { only = { "source.fixAll" } }, apply = true })
 	end, "[C]ode Fix All")
-	nmap("<leader>cR", "<cmd>LspRestart<cr>", "[C]ode LSP [R]estart")
-	nmap("<leader>cL", "<cmd>LspInfo<cr>", "[C]ode [L]SP Info")
+	-- :LspRestart/:LspInfo (nvim-lspconfig's legacy commands) no longer exist:
+	-- Neovim 0.11+ ships a native :lsp command (enable/disable/restart/stop),
+	-- and nvim-lspconfig deliberately skips defining its own once it detects
+	-- that's present. :lsp restart with no args restarts every client
+	-- attached to the current buffer, same semantics as the old :LspRestart.
+	nmap("<leader>cR", "<cmd>lsp restart<cr>", "[C]ode LSP [R]estart")
+	nmap("<leader>cL", "<cmd>checkhealth vim.lsp<cr>", "[C]ode [L]SP Info")
 	nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 	nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
 	nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
