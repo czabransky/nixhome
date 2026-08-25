@@ -9,6 +9,15 @@ return {
 	config = function()
 		require("kulala").setup({
 			global_keymaps = false,
+			lsp = {
+				-- Kulala ships its own built-in LSP for .http/.rest buffers
+				-- (documentSymbol/hover/completion/codeAction) but starts it
+				-- outside nvim-lspconfig, so it never picks up
+				-- lsp-attach.lua's on_attach on its own - without this,
+				-- <leader>ss (Search Symbols) and the rest of the shared LSP
+				-- keymaps just don't exist here.
+				on_attach = require("colin.lsp.lsp-attach").on_attach,
+			},
 		})
 
 		local kulala = require("kulala")
