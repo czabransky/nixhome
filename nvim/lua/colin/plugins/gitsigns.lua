@@ -11,7 +11,7 @@ return {
 			-- it has to be flipped explicitly in <leader>gc too.
 			diff_opts = { internal = true },
 			word_diff = false,
-			signcolumn = false,
+			signcolumn = true,
 			on_attach = function(bufnr)
 				local gs = package.loaded.gitsigns
 
@@ -54,8 +54,7 @@ return {
 					-- state so one press turns the full add+change+remove
 					-- picture on or off together, regardless of their prior
 					-- states.
-					local enabled = gs.toggle_signs()
-					gs.toggle_linehl(enabled)
+					local enabled = gs.toggle_linehl()
 					gs.toggle_deleted(enabled)
 					gs.toggle_word_diff(enabled)
 				end, "Toggle Git Changes")
