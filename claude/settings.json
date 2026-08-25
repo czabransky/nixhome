@@ -100,7 +100,6 @@
     "ask": [
       "Bash(rm -rf *)",
       "Bash(sudo *)",
-      "Bash(git *)",
       "Bash(npm publish*)",
       "Bash(npm unpublish*)",
       "Bash(kill -9*)",
@@ -125,6 +124,7 @@
       "Bash(aws s3 rm*)",
       "Bash(aws ec2 terminate-instances*)",
       "Bash(gcloud * delete*)"
-    ]
+    ],
+    "defaultMode": "manual"
   }
 }
