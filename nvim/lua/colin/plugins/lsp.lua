@@ -12,13 +12,26 @@ return {
 			},
 		},
 		{ "williamboman/mason-lspconfig.nvim" },
+		{
+			"WhoIsSethDaniel/mason-tool-installer.nvim",
+			config = true,
+			opts = {
+				-- Non-LSP Mason tools (formatters, linters, etc.) that
+				-- mason-lspconfig's ensure_installed won't manage.
+				ensure_installed = {
+					"biome",
+					"kulala-fmt"
+				},
+			},
+		},
 	},
 	config = function()
 		-- Modify some aesthetics of the LSP popup window.
 		-- vim.opt.winhighlight = require('cmp').config.window.bordered().winhighlight
 		local border = "rounded"
 		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = border })
-		vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = border })
+		vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help,
+			{ border = border })
 		vim.diagnostic.config({
 			float = { border = border },
 			virtual_text = true,

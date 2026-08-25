@@ -21,6 +21,8 @@ return {
 				python = { "isort", "black" },
 				rust = { "rustfmt", lsp_format = "fallback" },
 				nix = { "nixfmt" },
+				http = { "kulala-fmt" },
+				rest = { "kulala-fmt" },
 				javascript = { "biome", "prettierd", "prettier", stop_after_first = true },
 				javascriptreact = { "biome", "prettierd", "prettier", stop_after_first = true },
 				typescript = { "biome", "prettierd", "prettier", stop_after_first = true },
