@@ -7,33 +7,34 @@
   # The home.packages option allows you to install Nix packages.
   # https://search.nixos.org/packages
   home.packages = [
-    pkgs.fish
-    pkgs.starship
-    pkgs.curl
-    pkgs.unzip
-    pkgs.git
-    pkgs.gh
-    pkgs.lazygit
-    pkgs.ripgrep
-    pkgs.fzf
-    pkgs.fd
-    pkgs.jq
     pkgs.bat
-    pkgs.eza
-    pkgs.zoxide
-    pkgs.file
-    pkgs.yazi
+    pkgs.colima
+    pkgs.curl
     pkgs.delta
-    pkgs.neovim
-    pkgs.tree-sitter
-    pkgs.nixfmt
     pkgs.docker
     pkgs.docker-compose
-    pkgs.colima
+    pkgs.eza
+    pkgs.fd
+    pkgs.file
+    pkgs.fish
+    pkgs.fzf
+    pkgs.gh
+    pkgs.git
+    pkgs.jq
     pkgs.lazydocker
+    pkgs.lazygit
+    pkgs.neovim
+    pkgs.netcoredbg
+    pkgs.nixfmt
     pkgs.nodejs_22
     pkgs.pnpm
     pkgs.postgresql_16
+    pkgs.ripgrep
+    pkgs.starship
+    pkgs.tree-sitter
+    pkgs.unzip
+    pkgs.yazi
+    pkgs.zoxide
   ];
 
   # Home Manager is pretty good at managing dotfiles.
