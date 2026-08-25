@@ -12,4 +12,4 @@ require("colin.core.quickfix")
 require("colin.lazy")
 require("colin.core.debug")
 
-vim.cmd.colorscheme("catppuccin-frappe")
+require("colin.plugins.theme").apply_saved()

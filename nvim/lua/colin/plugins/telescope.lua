@@ -129,5 +129,8 @@ return {
 			builtin.diagnostics({ severity = vim.diagnostic.severity.ERROR })
 		end, { desc = "Search Diagnostics (Errors Only)" })
 		vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Search Help" })
+		vim.keymap.set("n", "<leader>sT", function()
+			require("colin.plugins.theme").picker()
+		end, { desc = "Search Themes" })
 	end,
 }
