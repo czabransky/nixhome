@@ -74,4 +74,5 @@ require("lazy").setup({
 	require("colin.plugins.telescope"),
 	require("colin.plugins.treesitter"),
 	require("colin.plugins.whichkey"),
+	require("colin.plugins.window-picker"),
 })
