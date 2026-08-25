@@ -24,6 +24,7 @@ return {
 			{ "<leader>o", group = "Overseer", nowait = true, remap = false },
 			{ "<leader>p", group = "Parameter", nowait = true, remap = false },
 			{ "<leader>q", group = "Quickfix", nowait = true, remap = false },
+			{ "<leader>R", group = "Requests", nowait = true, remap = false },
 			{ "<leader>s", group = "Search", nowait = true, remap = false },
 			{ "<leader>w", group = "Workspace", nowait = true, remap = false },
 			{ "<leader>x", group = "Diagnostics", nowait = true, remap = false },
