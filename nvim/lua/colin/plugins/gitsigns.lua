@@ -11,10 +11,6 @@ return {
 			-- it has to be flipped explicitly in <leader>gc too.
 			diff_opts = { internal = true },
 			word_diff = false,
-			-- Off by default (gitsigns' own default signcolumn=true shows
-			-- add/change/delete marks on every buffer unconditionally) -
-			-- <leader>gc below turns signs + linehl + deleted lines +
-			-- word_diff on together, on demand.
 			signcolumn = false,
 			on_attach = function(bufnr)
 				local gs = package.loaded.gitsigns
