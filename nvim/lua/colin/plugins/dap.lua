@@ -16,6 +16,16 @@ function M.core()
 			dapui.setup()
 			require("nvim-dap-virtual-text").setup()
 
+			-- netcoredbg (nix package) - .NET/C# debugging. No dap.configurations.cs
+			-- here for the same reason as JS: .vscode/launch.json is read
+			-- automatically on-demand (:help dap-providers), so per-project
+			-- launch/attach targets stay out of dotfiles.
+			dap.adapters.coreclr = {
+				type = "executable",
+				command = "netcoredbg",
+				args = { "--interpreter=vscode" },
+			}
+
 			dap.listeners.after.event_initialized["dapui_config"] = function()
 				dapui.open()
 			end
