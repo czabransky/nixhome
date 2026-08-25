@@ -20,11 +20,11 @@ function M.core()
 			-- nvim-dap references these sign names but never defines them itself.
 			vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "CursorLine" })
 			local dap_signs = {
-				DapBreakpoint = { text = "", texthl = "DiagnosticError" },
-				DapBreakpointCondition = { text = "", texthl = "DiagnosticWarn" },
-				DapBreakpointRejected = { text = "", texthl = "DiagnosticError" },
-				DapLogPoint = { text = ".>", texthl = "DiagnosticInfo" },
-				DapStopped = { text = "", texthl = "DiagnosticWarn", linehl = "DapStoppedLine", numhl = "DiagnosticWarn" },
+				DapBreakpoint = { text = "", texthl = "DiagnosticError" },
+				DapBreakpointCondition = { text = "", texthl = "DiagnosticWarn" },
+				DapBreakpointRejected = { text = "", texthl = "DiagnosticError" },
+				DapLogPoint = { text = "", texthl = "DiagnosticInfo" },
+				DapStopped = { text = "", texthl = "DiagnosticWarn", linehl = "DapStoppedLine", numhl = "DiagnosticWarn" },
 			}
 			for name, sign in pairs(dap_signs) do
 				vim.fn.sign_define(name, sign)
