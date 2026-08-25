@@ -5,9 +5,17 @@ return {
 		require("gitsigns").setup({
 			-- Highlights the exact changed *words* within a hunk line (not
 			-- just "this line changed") in previews and inline preview -
-			-- word_diff requires diff_opts.internal.
+			-- word_diff requires diff_opts.internal. Off by default along
+			-- with signcolumn below - gitsigns tracks word_diff as its own
+			-- independent render toggle (not implied by linehl/deleted), so
+			-- it has to be flipped explicitly in <leader>gc too.
 			diff_opts = { internal = true },
-			word_diff = true,
+			word_diff = false,
+			-- Off by default (gitsigns' own default signcolumn=true shows
+			-- add/change/delete marks on every buffer unconditionally) -
+			-- <leader>gc below turns signs + linehl + deleted lines +
+			-- word_diff on together, on demand.
+			signcolumn = false,
 			on_attach = function(bufnr)
 				local gs = package.loaded.gitsigns
 
@@ -46,12 +54,15 @@ return {
 				end, "Blame Line")
 				map("n", "<leader>gu", gs.undo_stage_hunk, "Hunk Undo Stage")
 				map("n", "<leader>gc", function()
-					-- toggle_deleted alone only shows removed lines as virtual
-					-- text; linehl highlights added/changed lines in place, so
-					-- together this gives the full added+removed picture.
-					gs.toggle_deleted()
-					gs.toggle_linehl()
-				end, "Git Changes (Toggle Deleted + Added)")
+					-- Drive signs/linehl/deleted/word_diff off the same new
+					-- state so one press turns the full add+change+remove
+					-- picture on or off together, regardless of their prior
+					-- states.
+					local enabled = gs.toggle_signs()
+					gs.toggle_linehl(enabled)
+					gs.toggle_deleted(enabled)
+					gs.toggle_word_diff(enabled)
+				end, "Toggle Git Changes")
 			end,
 		})
 	end,
