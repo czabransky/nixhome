@@ -87,7 +87,8 @@ function M.core()
 				if all_disabled then
 					for bufnr, buf_bps in pairs(disabled_snapshot or {}) do
 						for _, b in ipairs(buf_bps) do
-							bp.set({ condition = b.condition, hitCondition = b.hitCondition, logMessage = b.logMessage }, bufnr, b.line)
+							bp.set({ condition = b.condition, hitCondition = b.hitCondition, logMessage = b.logMessage },
+								bufnr, b.line)
 						end
 					end
 					broadcast_breakpoints(dap.sessions(), bp.get())
@@ -112,6 +113,13 @@ function M.core()
 				"<leader>dB",
 				persist.set_conditional_breakpoint,
 				{ desc = "[D]ebug Conditional [B]reakpoint" }
+			)
+			vim.keymap.set("n", "<leader>dk", persist.toggle_breakpoint, { desc = "[D]ebug Toggle Brea[k]point" })
+			vim.keymap.set(
+				"n",
+				"<leader>dK",
+				persist.set_conditional_breakpoint,
+				{ desc = "[D]ebug Conditional Brea[k]point" }
 			)
 			vim.keymap.set("n", "<leader>dC", persist.clear_all_breakpoints, { desc = "[D]ebug [C]lear All Breakpoints" })
 			vim.keymap.set(
