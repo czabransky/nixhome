@@ -28,6 +28,15 @@ if a deployed copy differs from the repo, the change isn't live yet.
 a switch is needed and let me do it. After I say I've run it, it's fine to
 verify the deploy landed (e.g. the diff above) before testing further.
 
+## Claude settings specifically: edit the repo copy, never the deployed one
+
+`~/.claude/settings.json` is a symlink into the Nix store (deployed from
+`~/nixhome/claude/settings.json` per the rule above). **Always edit
+`~/nixhome/claude/settings.json`** — never `~/.claude/settings.json` or its
+Nix store target. Same applies to any other file under `~/nixhome/claude/`.
+Editing the deployed copy has no lasting effect (it's regenerated on the next
+`home-manager switch`) and edits the wrong source of truth.
+
 ## nvim plugins are a separate layer again
 
 `~/.local/share/nvim/lazy/*` (lazy.nvim's plugin checkouts) and
