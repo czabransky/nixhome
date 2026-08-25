@@ -28,18 +28,10 @@ return {
 
 		-- roslyn.nvim needs the actual language server binary, which isn't
 		-- in Mason's official registry (licensing) - it comes from the
-		-- Crashdummyy fork already added in plugins/lsp.lua. Without this,
-		-- the client fails to spawn silently and on_attach never fires.
-		-- Gate on a cheap executable check so this costs nothing once
-		-- installed - it only does anything on a fresh machine.
-		local mason_bin = vim.fs.joinpath(vim.fn.stdpath("data"), "mason", "bin", "roslyn-language-server")
-		if vim.fn.executable(mason_bin) == 0 then
-			require("mason-registry").refresh(function()
-				local ok, pkg = pcall(require("mason-registry").get_package, "roslyn")
-				if ok and not pkg:is_installed() then
-					pkg:install()
-				end
-			end)
-		end
+		-- Crashdummyy fork's "roslyn" package, kept installed declaratively
+		-- via mason-tool-installer's ensure_installed list in plugins/lsp.lua
+		-- (more reliable than a hand-rolled executable-check-and-install
+		-- here - that approach silently broke once because is_installed()
+		-- doesn't verify the bin symlink actually survived).
 	end,
 }
