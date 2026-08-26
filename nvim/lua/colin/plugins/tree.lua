@@ -78,7 +78,6 @@ function M.nvimtree()
 				tree_config.g.actions.open_file.quit_on_open = tree_config.g.view.float.enable
 				if was_open then
 					api.tree.close()
-					api.tree.open()
 					api.tree.find_file({ open = true, focus = true })
 				end
 				vim.notify("nvim-tree: " .. (tree_config.g.view.float.enable and "floating" or "docked"))
