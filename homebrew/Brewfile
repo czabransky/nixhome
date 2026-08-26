@@ -6,6 +6,8 @@ brew "gotop"
 brew "herdr"
 # Universal database tool and SQL client
 cask "dbeaver-community"
+# Desktop application wrapper around excalidraw
+cask "excalidrawz"
 # Clear font for cli tools
 cask "font-fira-code-nerd-font"
 # Cross-platform Git credential storage for multiple hosting providers
