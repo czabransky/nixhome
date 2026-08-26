@@ -7,7 +7,6 @@ function M.core()
 			"rcarriga/nvim-dap-ui",
 			"nvim-neotest/nvim-nio",
 			"theHamsta/nvim-dap-virtual-text",
-			"Weissle/persistent-breakpoints.nvim",
 		},
 		event = "VeryLazy",
 		config = function()
@@ -16,21 +15,6 @@ function M.core()
 
 			dapui.setup()
 			require("nvim-dap-virtual-text").setup()
-
-			-- Saves breakpoints (incl. conditions/log messages) to disk and
-			-- reloads them into any buffer as it's opened, so they survive
-			-- restarting Neovim - core nvim-dap only keeps them in memory.
-			-- The <leader>db/<leader>dB keymaps below go through this
-			-- plugin's api (not dap.toggle_breakpoint/set_breakpoint
-			-- directly) so every set/removal actually gets persisted.
-			require("persistent-breakpoints").setup({
-				load_breakpoints_event = { "BufReadPost" },
-				-- persistence.nvim (plugins/persistence.lua) restores buffers
-				-- as part of a session load rather than a plain BufReadPost,
-				-- which can skip this plugin's normal reload path - forces it
-				-- to reload regardless.
-				always_reload = true,
-			})
 
 			-- Sign column icons for breakpoints and the current execution line.
 			-- nvim-dap references these sign names but never defines them itself.
@@ -133,7 +117,9 @@ function M.core()
 
 			-- .vscode/launch.json is read automatically on-demand (:help dap-providers),
 			-- so per-project attach targets (monorepo apps, docker backends) stay out of dotfiles.
-			local persist = require("persistent-breakpoints.api")
+			local function set_conditional_breakpoint()
+				dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+			end
 
 			vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "[D]ebug [C]ontinue" })
 			vim.keymap.set("n", "<leader>dL", dap.run_last, { desc = "[D]ebug Run [L]ast" })
@@ -152,21 +138,11 @@ function M.core()
 					enter = true,
 				})
 			end, { desc = "[D]ebug [L]ocals Popup" })
-			vim.keymap.set("n", "<leader>db", persist.toggle_breakpoint, { desc = "[D]ebug Toggle [B]reakpoint" })
-			vim.keymap.set(
-				"n",
-				"<leader>dB",
-				persist.set_conditional_breakpoint,
-				{ desc = "[D]ebug Conditional [B]reakpoint" }
-			)
-			vim.keymap.set("n", "<leader>dk", persist.toggle_breakpoint, { desc = "[D]ebug Toggle Brea[k]point" })
-			vim.keymap.set(
-				"n",
-				"<leader>dK",
-				persist.set_conditional_breakpoint,
-				{ desc = "[D]ebug Conditional Brea[k]point" }
-			)
-			vim.keymap.set("n", "<leader>dC", persist.clear_all_breakpoints, { desc = "[D]ebug [C]lear All Breakpoints" })
+			vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "[D]ebug Toggle [B]reakpoint" })
+			vim.keymap.set("n", "<leader>dB", set_conditional_breakpoint, { desc = "[D]ebug Conditional [B]reakpoint" })
+			vim.keymap.set("n", "<leader>dk", dap.toggle_breakpoint, { desc = "[D]ebug Toggle Brea[k]point" })
+			vim.keymap.set("n", "<leader>dK", set_conditional_breakpoint, { desc = "[D]ebug Conditional Brea[k]point" })
+			vim.keymap.set("n", "<leader>dC", dap.clear_breakpoints, { desc = "[D]ebug [C]lear All Breakpoints" })
 			vim.keymap.set(
 				"n",
 				"<leader>dx",
