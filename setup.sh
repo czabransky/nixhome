@@ -90,6 +90,9 @@ if [ "$OS" = "Darwin" ]; then
 	echo "installing Homebrew packages from ~/.homebrew/Brewfile"
 	brew bundle --file ~/.homebrew/Brewfile
 
+	# Register the local excalidrawz MCP server (no-op if already registered)
+	claude mcp add excalidrawz -- npx -y mcp-remote http://127.0.0.1:8490/mcp 2>/dev/null || true
+
 	echo "applying macOS system defaults"
 
 	# Un-hide ~/Library (independent of Finder's "show hidden files" setting below)
