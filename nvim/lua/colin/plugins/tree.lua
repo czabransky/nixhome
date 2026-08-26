@@ -39,6 +39,15 @@ function M.nvimtree()
 					},
 					width = 50,
 				},
+				actions = {
+					open_file = {
+						-- Only makes sense while floating (view.float.enable
+						-- above starts true) - a docked sidebar should stay
+						-- open like a persistent explorer. <leader>el below
+						-- flips this to match whenever it toggles float/docked.
+						quit_on_open = true,
+					},
+				},
 				renderer = {
 					icons = {
 						git_placement = "after",
@@ -66,6 +75,7 @@ function M.nvimtree()
 			vim.keymap.set("n", "<leader>el", function()
 				local was_open = api.tree.is_visible()
 				tree_config.g.view.float.enable = not tree_config.g.view.float.enable
+				tree_config.g.actions.open_file.quit_on_open = tree_config.g.view.float.enable
 				if was_open then
 					api.tree.close()
 					api.tree.open()
