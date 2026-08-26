@@ -12,10 +12,20 @@ return {
 	},
 	config = function()
 		require("conform").setup({
-			format_on_save = {
-				timeout_ms = 500,
-				lsp_format = "fallback",
-			},
+			-- kulala-fmt (formatters_by_ft.http/rest below) inserts a blank
+			-- line after every ###/# @name comment - not configurable, just
+			-- its opinionated style. Excluded here so it doesn't rewrite
+			-- .http files on every save; <leader>cf still runs it manually.
+			format_on_save = function(bufnr)
+				local ft = vim.bo[bufnr].filetype
+				if ft == "http" or ft == "rest" then
+					return
+				end
+				return {
+					timeout_ms = 500,
+					lsp_format = "fallback",
+				}
+			end,
 			formatters_by_ft = {
 				lua = { "stylua", lsp_format = "fallback" },
 				python = { "isort", "black" },
