@@ -4,8 +4,6 @@ brew "btop"
 brew "gotop"
 # Agent multiplexer that lives in your terminal
 brew "herdr"
-# Agentic coding tool that lives in your terminal
-cask "claude-code"
 # Universal database tool and SQL client
 cask "dbeaver-community"
 # Desktop application wrapper around excalidraw

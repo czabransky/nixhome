@@ -65,6 +65,22 @@ sed -i 's/colin/'"$USERNAME"'/g' "$REPO_DIR/home-manager/home.nix"
 echo "running home-manager switch"
 home-manager --impure switch -b backup
 
+# Install the Claude Code CLI if it isn't already available (the native
+# installer keeps itself updated, unlike a Homebrew cask)
+if ! command -v claude >/dev/null 2>&1; then
+	echo "installing claude cli"
+	curl -fsSL https://claude.ai/install.sh | bash
+
+	# Make claude available in this shell without requiring a restart
+	# (the installer's own PATH changes land in shell rc files, not this session)
+	export PATH="$HOME/.local/bin:$PATH"
+fi
+
+# Register the local excalidrawz MCP server (no-op if already registered)
+if command -v claude >/dev/null 2>&1; then
+	claude mcp add excalidrawz -- npx -y mcp-remote http://127.0.0.1:8490/mcp 2>/dev/null || true
+fi
+
 # Layer this repo's git/delta config on top of whatever's already in
 # ~/.gitconfig (user.name, credential helpers, etc.) without touching it
 git config --global --get-all include.path 2>/dev/null | grep -qxF "$REPO_DIR/git/config-nix" ||
@@ -89,9 +105,6 @@ if [ "$OS" = "Darwin" ]; then
 
 	echo "installing Homebrew packages from ~/.homebrew/Brewfile"
 	brew bundle --file ~/.homebrew/Brewfile
-
-	# Register the local excalidrawz MCP server (no-op if already registered)
-	claude mcp add excalidrawz -- npx -y mcp-remote http://127.0.0.1:8490/mcp 2>/dev/null || true
 
 	echo "applying macOS system defaults"
 
