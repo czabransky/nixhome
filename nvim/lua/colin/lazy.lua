@@ -47,6 +47,7 @@ require("lazy").setup({
 	require("colin.plugins.dap").core(),
 	require("colin.plugins.dap").js_debug(),
 	require("colin.plugins.dap").js_adapter(),
+	require("colin.plugins.excalidraw"),
 	require("colin.plugins.flash"),
 	require("colin.plugins.fzf-native"),
 	require("colin.plugins.gitsigns"),

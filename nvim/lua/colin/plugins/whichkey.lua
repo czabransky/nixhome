@@ -17,6 +17,7 @@ return {
 			{ "<leader>b", group = "Buffer", nowait = true, remap = false },
 			{ "<leader>c", group = "Code", nowait = true, remap = false },
 			{ "<leader>d", group = "Debug", nowait = true, remap = false },
+			{ "<leader>D", group = "Excalidraw", nowait = true, remap = false },
 			{ "<leader>e", group = "Explorer", nowait = true, remap = false },
 			{ "<leader>g", group = "Git", nowait = true, remap = false },
 			{ "<leader>m", group = "Marks", nowait = true, remap = false },
