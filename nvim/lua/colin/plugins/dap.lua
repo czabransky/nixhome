@@ -7,6 +7,10 @@ function M.core()
 			"rcarriga/nvim-dap-ui",
 			"nvim-neotest/nvim-nio",
 			"theHamsta/nvim-dap-virtual-text",
+			-- Actual setup() lives in plugins/fidget.lua (shared with
+			-- rest.nvim) - just needed here so it's loaded by the time the
+			-- coreclr adapter below reaches for fidget.progress.
+			"j-hui/fidget.nvim",
 		},
 		event = "VeryLazy",
 		config = function()
@@ -45,7 +49,14 @@ function M.core()
 			dap.adapters.coreclr = function(cb, config)
 				local cwd = config.cwd or vim.loop.cwd()
 				local output = {}
-				vim.notify("dotnet build (" .. cwd .. ")...", vim.log.levels.INFO)
+				-- lsp_client name distinguishes this from rest.nvim's own
+				-- fidget.progress handles for plugins/fidget.lua's
+				-- notification.redirect filter - see that file for why.
+				local handle = require("fidget.progress").handle.create({
+					title = "dotnet build",
+					message = cwd,
+					lsp_client = { name = "dap" },
+				})
 				vim.fn.jobstart({ "dotnet", "build" }, {
 					cwd = cwd,
 					stdout_buffered = true,
@@ -53,6 +64,7 @@ function M.core()
 					on_stdout = function(_, data) vim.list_extend(output, data) end,
 					on_stderr = function(_, data) vim.list_extend(output, data) end,
 					on_exit = function(_, code)
+						handle:finish()
 						if code ~= 0 then
 							vim.notify(
 								"dotnet build failed (exit " .. code .. "), debug session aborted:\n"

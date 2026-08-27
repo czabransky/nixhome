@@ -645,27 +645,11 @@ return {
 	ft = "http",
 	cmd = "Rest",
 	dependencies = {
-		{
-			"j-hui/fidget.nvim",
-			-- Pure rest.nvim dependency here (nothing else in this config
-			-- uses fidget - grep confirms) - client/curl/cli.lua fires one
-			-- of these per request via fidget.progress.handle, which pops a
-			-- toast per request. With run_all() firing several in a row and
-			-- the Report tab already showing the same info, that's just
-			-- noise. fidget.progress.suppress() only gates its LSP-polling
-			-- path, not these direct handle:report()/notification.notify()
-			-- calls (checked handle.lua - they bypass it entirely), so the
-			-- notification-level filter is the actual lever: all of
-			-- fidget's progress messages report at vim.log.levels.INFO
-			-- (progress.lua's format_progress, hardcoded), so raising the
-			-- filter above that silences them while leaving fidget itself
-			-- (and rest.nvim's require("fidget.progress")) working.
-			config = function()
-				require("fidget").setup({
-					notification = { filter = vim.log.levels.OFF },
-				})
-			end,
-		},
+		-- fidget.nvim's actual setup() (including suppressing rest.nvim's
+		-- own per-request progress toasts) lives in plugins/fidget.lua -
+		-- it's shared with plugins/dap.lua too, so it's its own top-level
+		-- plugin rather than configured here.
+		"j-hui/fidget.nvim",
 		"nvim-neotest/nvim-nio",
 		{
 			"manoelcampos/xml2lua",
