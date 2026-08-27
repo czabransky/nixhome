@@ -1,3 +1,7 @@
+-- ARCHIVED - not loaded (no longer required from lazy.lua). Kept for
+-- reference/possible revival; wasn't working reliably, being replaced by
+-- rest.nvim for .http/.rest requests.
+--
 -- https://github.com/mistweaverco/kulala.nvim
 -- HTTP client for .http/.rest files (JetBrains .http spec). No special glue
 -- needed to use it alongside nvim-dap: launch/attach the debugger (dap.lua)

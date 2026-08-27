@@ -52,7 +52,6 @@ require("lazy").setup({
 	require("colin.plugins.fzf-native"),
 	require("colin.plugins.gitsigns"),
 	require("colin.plugins.grapple"),
-	require("colin.plugins.kulala"),
 	require("colin.plugins.lazygit"),
 	require("colin.plugins.lsp"),
 	require("colin.plugins.lualine"),
