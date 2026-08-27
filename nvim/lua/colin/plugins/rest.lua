@@ -100,6 +100,81 @@ local function inspect()
 	end)
 end
 
+-- rest.nvim has no run-all: request.lua's M.run() only ever resolves and
+-- fires ONE request node, and the function that actually sends it
+-- (run_request - client dispatch, response handlers, cookie jar, UI update)
+-- is a local, non-exported upstream, so it can't be called directly here.
+-- This reimplements that same sequence (matching run_request line for line:
+-- client dispatch -> response handlers -> cookie jar -> UI update) in a loop
+-- over every request node in the buffer, top to bottom. Doing it inside ONE
+-- nio coroutine matters: client.request(req).wait actually blocks that
+-- coroutine until the response arrives, so each iteration only starts once
+-- the previous one is fully done - required for chains like
+-- adminLogin -> createInvite -> redeemInvite, where a later request's
+-- {{adminAccessToken}} depends on the earlier one's post-request script
+-- having already run (client.global.set is vim.env under the hood - see
+-- inspect() above). Looping plain M.run(name) calls instead would race,
+-- since each spawns its own independent coroutine.
+local function run_all()
+	local parser = require("rest-nvim.parser")
+	local Context = require("rest-nvim.context").Context
+	local config = require("rest-nvim.config")
+	local clients = require("rest-nvim.client")
+	local jar = require("rest-nvim.cookie_jar")
+	local ui = require("rest-nvim.ui.result")
+
+	local bufnr = vim.api.nvim_get_current_buf()
+	local nodes = parser.get_all_request_nodes(bufnr)
+	if #nodes == 0 then
+		vim.notify("No requests found in buffer", vim.log.levels.WARN, { title = "rest.nvim" })
+		return
+	end
+
+	require("nio").run(function()
+		local ctx = Context:new()
+		if config.env.enable and vim.b[bufnr]._rest_nvim_env_file then
+			ctx:load_file(vim.b[bufnr]._rest_nvim_env_file)
+		end
+
+		for i, req_node in ipairs(nodes) do
+			local ok, req = pcall(parser.parse, req_node, bufnr, ctx)
+			if not ok or not req then
+				vim.notify(("run_all: failed to parse request #%d - stopping"):format(i), vim.log.levels.ERROR, { title = "rest.nvim" })
+				return
+			end
+
+			local client = clients.get_available_clients(req)[1]
+			if not client then
+				vim.notify(
+					("run_all: no client available for %s - stopping"):format(req.name or ("#" .. i)),
+					vim.log.levels.ERROR,
+					{ title = "rest.nvim" }
+				)
+				return
+			end
+
+			ui.update({ request = req })
+			local req_ok, res = pcall(client.request(req).wait)
+			if not req_ok then
+				vim.notify(
+					("run_all: %s failed - stopping chain"):format(req.name or ("#" .. i)),
+					vim.log.levels.ERROR,
+					{ title = "rest.nvim" }
+				)
+				return
+			end
+
+			vim.iter(req.handlers):each(function(f)
+				f(res)
+			end)
+			jar.update_jar(req.url, res)
+			ui.update({ response = res })
+		end
+
+		vim.notify(("run_all: ran %d requests"):format(#nodes), vim.log.levels.INFO, { title = "rest.nvim" })
+	end)
+end
+
 return {
 	"rest-nvim/rest.nvim",
 	ft = "http",
@@ -122,6 +197,7 @@ return {
 	},
 	keys = {
 		{ "<leader>Rs", "<cmd>Rest run<cr>", desc = "[R]equest [S]end" },
+		{ "<leader>Ra", run_all, desc = "[R]equest Send [A]ll" },
 		{ "<leader>Rl", "<cmd>Rest last<cr>", desc = "[R]equest Rerun [L]ast" },
 		{ "<leader>Ro", "<cmd>Rest open<cr>", desc = "[R]equest [O]pen Window" },
 		{ "<leader>Re", "<cmd>Rest env select<cr>", desc = "[R]equest Select [E]nvironment" },
