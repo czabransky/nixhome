@@ -531,20 +531,32 @@ end
 ---request after it.
 local function run_to_cursor()
 	local parser = require("rest-nvim.parser")
-	local cursor_node = parser.get_request_node_by_cursor()
-	if not cursor_node then
-		vim.notify("No request under cursor", vim.log.levels.WARN, { title = "rest.nvim" })
-		return
-	end
-	local cursor_start = cursor_node:range()
-
 	local bufnr = vim.api.nvim_get_current_buf()
+	local cursor_row = vim.api.nvim_win_get_cursor(0)[1] - 1 -- 0-indexed, matches TSNode:range()
+
+	-- Deliberately NOT parser.get_request_node_by_cursor() here: it reads
+	-- from the buffer's attached treesitter tree (vim.treesitter.get_node())
+	-- while get_all_request_nodes() below parses via ts_parser:parse(false)
+	-- - "false" reuses the cached tree rather than forcing invalidation.
+	-- Right after an edit, those two can briefly disagree on node
+	-- boundaries, so comparing node ranges FROM TWO SEPARATE PARSES (as a
+	-- past version of this did) could silently mismatch and cut the loop
+	-- short. Using containment against ONE parse's ranges instead removes
+	-- that gap entirely - there's nothing left to disagree with.
 	local nodes = {}
+	local found = false
 	for _, node in ipairs(parser.get_all_request_nodes(bufnr)) do
 		table.insert(nodes, node)
-		if node:range() == cursor_start then
+		local start_row, _, end_row = node:range()
+		if cursor_row >= start_row and cursor_row <= end_row then
+			found = true
 			break
 		end
+	end
+
+	if not found then
+		vim.notify("No request under cursor", vim.log.levels.WARN, { title = "rest.nvim" })
+		return
 	end
 	run_nodes(bufnr, nodes)
 end
