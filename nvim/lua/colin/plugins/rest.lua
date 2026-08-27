@@ -160,22 +160,46 @@ end
 ---@type {name:string, method:string, ok:boolean, detail:string, bufnr:integer, line:integer}[]
 local report_entries = {}
 
--- A literal tab on the SAME "rest_nvim_result" pane group (cycling via the
--- built-in H/L keys alongside Response/Headers/Cookies/Statistics) turns out
--- not to be cleanly reachable: ui/panes.lua's create_pane_group() errors on
--- a name that's already registered, and the module-level table it's stored
--- in has no public getter - only reachable by pulling the "groups" upvalue
--- off paneui.winbar via the debug library, and even then, appending a pane
--- means hand-copying create_pane_group's private per-pane construction
--- logic (buffer creation, modifiable toggling, on_init wiring) rather than
--- calling any public API for it. That's reimplementing plugin internals
--- rest.nvim doesn't own as a stable interface, on a young plugin whose
--- internals are still actively moving - too fragile for what it buys here.
--- This instead builds the Report as its own pane GROUP via the same public
--- rest-nvim.ui.panes API the built-in panes use, so it looks and behaves
--- the same (winbar styling, RestPaneTitle highlight) even though it opens
--- in its own window rather than literally inside the existing one.
-local report_group ---@type rest.ui.panes.PaneGroup?
+-- A literal tab on the built-in "rest_nvim_result" pane group (cycling via
+-- the existing H/L keys alongside Response/Headers/Cookies/Statistics) - not
+-- by reaching into that group's state after the fact (ui/panes.lua's
+-- create_pane_group() errors on a name that's already registered, and the
+-- module-level table it lives in has no public getter), but by wrapping the
+-- PUBLIC create_pane_group() function itself: when ui/result.lua calls it
+-- with name == "rest_nvim_result", we splice our own pane spec into the
+-- *pane_opts list it was given* before forwarding to the real,
+-- unmodified create_pane_group(). The real function still does 100% of the
+-- actual construction (buffer creation, on_init wiring, modifiable
+-- toggling) for our pane too - we're not duplicating any of its private
+-- logic, just injecting one more entry into a list it already iterates.
+-- Must run before rest-nvim.ui.result is required for the first time by
+-- anyone (verified: none of rest.nvim's eagerly-loaded files - plugin/
+-- rest-nvim.lua, autocmds.lua, commands.lua's .setup() - touch it; every
+-- ui() access in commands.lua is a lazy `require()` inside a command's
+-- impl), so this is called once at the very top of config() below.
+local result_group ---@type rest.ui.panes.PaneGroup?
+
+---Right-pad `s` to `width` display columns (not bytes - strdisplaywidth,
+---not #s, since names can carry multi-byte UTF-8 like the em-dash in
+---"### Basic liveness check — no auth required.").
+local function pad_display(s, width)
+	local w = vim.fn.strdisplaywidth(s)
+	return w >= width and s or (s .. string.rep(" ", width - w))
+end
+
+---Truncate `s` to at most `width` display columns, trimming by character
+---(strcharpart) rather than byte so multi-byte UTF-8 never gets split
+---mid-character, with a trailing ellipsis if it was actually cut.
+local function truncate_display(s, width)
+	if vim.fn.strdisplaywidth(s) <= width then
+		return s
+	end
+	local out = s
+	while vim.fn.strdisplaywidth(out) > width - 1 and vim.fn.strchars(out) > 0 do
+		out = vim.fn.strcharpart(out, 0, vim.fn.strchars(out) - 1)
+	end
+	return out .. "…"
+end
 
 local function ensure_report_hl()
 	for name, source in pairs({ RestReportOk = "DiagnosticOk", RestReportError = "DiagnosticError" }) do
@@ -184,7 +208,7 @@ local function ensure_report_hl()
 	end
 end
 
-local function build_report_group()
+local function install_report_tab()
 	ensure_report_hl()
 	vim.api.nvim_create_autocmd("ColorScheme", {
 		group = vim.api.nvim_create_augroup("RestNvimReportHl", { clear = true }),
@@ -193,77 +217,144 @@ local function build_report_group()
 
 	local paneui = require("rest-nvim.ui.panes")
 	local ns = vim.api.nvim_create_namespace("rest_nvim_report")
-	return paneui.create_pane_group("rest_nvim_report", {
-		{
-			name = "Report",
-			on_init = function(self)
-				-- Matches the "^rest_nvim" pattern the PersistenceSavePre
-				-- handler below filters on, same as the built-in panes.
-				vim.bo[self.bufnr].filetype = "rest_nvim_report"
-				vim.keymap.set("n", "<cr>", function()
-					local entry = report_entries[vim.api.nvim_win_get_cursor(0)[1]]
-					if not entry then
-						return
-					end
-					vim.cmd.wincmd("p")
-					vim.api.nvim_set_current_buf(entry.bufnr)
-					vim.api.nvim_win_set_cursor(0, { entry.line, 0 })
-				end, { buffer = self.bufnr, nowait = true, desc = "Jump to request" })
-				for _, lhs in ipairs({ "q", "<esc>" }) do
-					vim.keymap.set("n", lhs, "<cmd>close<cr>", { buffer = self.bufnr, nowait = true, silent = true })
-				end
-			end,
-			render = function(self)
-				vim.api.nvim_buf_clear_namespace(self.bufnr, ns, 0, -1)
-				if #report_entries == 0 then
-					vim.api.nvim_buf_set_lines(self.bufnr, 0, -1, false, {
-						"No run_all() results yet.",
-						"<leader>Ra to run every request in a .http buffer.",
+	local original_create_pane_group = paneui.create_pane_group
+
+	paneui.create_pane_group = function(name, pane_opts, opts)
+		if name == "rest_nvim_result" then
+			table.insert(pane_opts, {
+				name = "Report",
+				-- Group-level on_init (set in ui/result.lua) already gives
+				-- this pane the H/L cycle keys, "?" help, and filetype -
+				-- only the jump-to-source behavior is ours to add.
+				on_init = function(self)
+					vim.keymap.set("n", "<cr>", function()
+						local entry = report_entries[vim.api.nvim_win_get_cursor(0)[1]]
+						if not entry then
+							return
+						end
+						vim.cmd.wincmd("p")
+						vim.api.nvim_set_current_buf(entry.bufnr)
+						vim.api.nvim_win_set_cursor(0, { entry.line, 0 })
+					end, { buffer = self.bufnr, nowait = true, desc = "Jump to request" })
+
+					-- render() below sizes columns off vim.fn.bufwinid(self.
+					-- bufnr) - but the very first render (triggered by
+					-- run_all()'s ui.update() calls, mid-loop) happens
+					-- before this buffer is showing in any window at all,
+					-- so that lookup falls back to a guess that's often
+					-- wrong once the buffer actually lands in a real split
+					-- (that mismatch is exactly what pushed the status
+					-- column off the right edge). Re-render every time this
+					-- buffer actually becomes visible - via H/L cycling,
+					-- open_report(), or anything else - so column widths
+					-- are always computed against the window really showing
+					-- them.
+					vim.api.nvim_create_autocmd("BufWinEnter", {
+						buffer = self.bufnr,
+						callback = function()
+							self:render()
+						end,
 					})
+				end,
+				render = function(self)
+					vim.api.nvim_buf_clear_namespace(self.bufnr, ns, 0, -1)
+					if #report_entries == 0 then
+						vim.api.nvim_buf_set_lines(self.bufnr, 0, -1, false, {
+							"No run_all() results yet.",
+							"<leader>Ra to run every request in a .http buffer.",
+						})
+						return false
+					end
+
+					-- Column widths are sized off the actual pane window and
+					-- actual content, not fixed guesses - a hardcoded
+					-- %-30.30s both wasted most of a wide split and (since
+					-- Lua string patterns count bytes, not display cells)
+					-- chopped multi-byte names like the em-dash above
+					-- mid-character.
+					local win = vim.fn.bufwinid(self.bufnr)
+					local width = win ~= -1 and vim.api.nvim_win_get_width(win) or math.floor(vim.o.columns / 2)
+
+					local method_width, detail_width = 4, 0
+					for _, entry in ipairs(report_entries) do
+						method_width = math.max(method_width, vim.fn.strdisplaywidth(entry.method))
+						detail_width = math.max(detail_width, vim.fn.strdisplaywidth(entry.detail))
+					end
+					local tag_width = 6 -- "[PASS]" / "[FAIL]"
+					local separators = 3 -- one space each between tag/method/name/detail
+					local name_width = math.max(10, width - tag_width - method_width - detail_width - separators)
+
+					local lines = {}
+					local passed = 0
+					for _, entry in ipairs(report_entries) do
+						if entry.ok then
+							passed = passed + 1
+						end
+						table.insert(
+							lines,
+							("[%s] %s %s %s"):format(
+								entry.ok and "PASS" or "FAIL",
+								pad_display(entry.method, method_width),
+								pad_display(truncate_display(entry.name, name_width), name_width),
+								entry.detail
+							)
+						)
+					end
+					table.insert(lines, "")
+					table.insert(lines, ("%d/%d passed"):format(passed, #report_entries))
+					vim.api.nvim_buf_set_lines(self.bufnr, 0, -1, false, lines)
+
+					for i, entry in ipairs(report_entries) do
+						local row = i - 1
+						pcall(vim.api.nvim_buf_set_extmark, self.bufnr, ns, row, 1, {
+							end_col = 5,
+							hl_group = entry.ok and "RestReportOk" or "RestReportError",
+						})
+					end
 					return false
-				end
+				end,
+			})
+		end
 
-				local lines = {}
-				local passed = 0
-				for _, entry in ipairs(report_entries) do
-					if entry.ok then
-						passed = passed + 1
-					end
-					table.insert(
-						lines,
-						("[%s] %-6s %-30.30s %s"):format(entry.ok and "PASS" or "FAIL", entry.method, entry.name, entry.detail)
-					)
-				end
-				table.insert(lines, "")
-				table.insert(lines, ("%d/%d passed"):format(passed, #report_entries))
-				vim.api.nvim_buf_set_lines(self.bufnr, 0, -1, false, lines)
-
-				for i, entry in ipairs(report_entries) do
-					local row = i - 1
-					pcall(vim.api.nvim_buf_set_extmark, self.bufnr, ns, row, 1, {
-						end_col = 5,
-						hl_group = entry.ok and "RestReportOk" or "RestReportError",
-					})
-				end
-				return false
-			end,
-		},
-	})
+		local group = original_create_pane_group(name, pane_opts, opts)
+		if name == "rest_nvim_result" then
+			result_group = group
+		end
+		return group
+	end
 end
 
----Open (or refresh, if already open) the Report pane in a vertical split.
+---Find the window (if any, in the current tabpage) currently showing a pane
+---from the built-in result group - same technique ui/result.lua's own
+---ui.is_open() uses (__pane_group buffer var), just without needing that
+---module's private `group` local.
+local function find_result_window()
+	return vim.iter(vim.api.nvim_tabpage_list_wins(0)):find(function(win)
+		return vim.b[vim.api.nvim_win_get_buf(win)].__pane_group == "rest_nvim_result"
+	end)
+end
+
+---Open the result pane (if needed) and switch straight to its Report tab.
 local function open_report()
-	report_group = report_group or build_report_group()
-	local pane = report_group.panes[1]
-	local winid = pane.bufnr and vim.fn.bufwinid(pane.bufnr) or -1
-	if winid == -1 then
+	local winid = find_result_window()
+	if not winid then
 		vim.cmd("vsplit")
 		winid = vim.api.nvim_get_current_win()
+		require("rest-nvim.ui.result").enter(winid) -- builds result_group on first call
 	end
-	report_group:enter(winid)
-	-- :enter() only (re)renders when the pane buffer doesn't already exist -
-	-- force a render so a second run_all()'s results actually show up.
-	pane:render()
+	if not result_group then
+		return
+	end
+	for _, pane in ipairs(result_group.panes) do
+		if pane.name == "Report" then
+			-- No explicit pane:render() here - assigning the buffer to a
+			-- real window fires the BufWinEnter re-render set up in
+			-- on_init above, now that bufwinid(self.bufnr) will actually
+			-- resolve to this window.
+			vim.api.nvim_win_set_buf(winid, pane.bufnr)
+			break
+		end
+	end
 end
 
 local function run_all()
@@ -359,7 +450,27 @@ return {
 	ft = "http",
 	cmd = "Rest",
 	dependencies = {
-		"j-hui/fidget.nvim",
+		{
+			"j-hui/fidget.nvim",
+			-- Pure rest.nvim dependency here (nothing else in this config
+			-- uses fidget - grep confirms) - client/curl/cli.lua fires one
+			-- of these per request via fidget.progress.handle, which pops a
+			-- toast per request. With run_all() firing several in a row and
+			-- the Report tab already showing the same info, that's just
+			-- noise. fidget.progress.suppress() only gates its LSP-polling
+			-- path, not these direct handle:report()/notification.notify()
+			-- calls (checked handle.lua - they bypass it entirely), so the
+			-- notification-level filter is the actual lever: all of
+			-- fidget's progress messages report at vim.log.levels.INFO
+			-- (progress.lua's format_progress, hardcoded), so raising the
+			-- filter above that silences them while leaving fidget itself
+			-- (and rest.nvim's require("fidget.progress")) working.
+			config = function()
+				require("fidget").setup({
+					notification = { filter = vim.log.levels.OFF },
+				})
+			end,
+		},
 		"nvim-neotest/nvim-nio",
 		{
 			"manoelcampos/xml2lua",
@@ -386,6 +497,8 @@ return {
 		{ "<leader>RR", open_report, desc = "[R]equest [R]eport" },
 	},
 	config = function()
+		install_report_tab()
+
 		vim.g.rest_nvim = {
 			env = {
 				enable = true,
