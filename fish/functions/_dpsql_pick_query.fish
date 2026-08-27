@@ -68,7 +68,7 @@ function _dpsql_pick_query --description "Pick a query for CONTAINER USER DB via
 		set -f edit_file $edit_dir/query.sql
 		printf '%s\n' $sql >$edit_file
 
-		$editor $edit_file
+		$editor $edit_file </dev/tty >/dev/tty 2>/dev/tty
 		set sql (cat $edit_file | string collect)
 		rm -rf $edit_dir
 	end
