@@ -27,6 +27,7 @@
     pkgs.netcoredbg
     pkgs.nixfmt
     pkgs.nodejs_22
+    pkgs.nushell
     pkgs.pnpm
     pkgs.postgresql_16
     pkgs.ripgrep
@@ -53,6 +54,10 @@
     ".config/herdr/config.toml".source = ~/nixhome/herdr/config.toml;
     ".config/nvim" = {
       source = ~/nixhome/nvim;
+      recursive = true;
+    };
+    ".config/nushell" = {
+      source = ~/nixhome/nushell;
       recursive = true;
     };
     ".claude/settings.json".source = ~/nixhome/claude/settings.json;
