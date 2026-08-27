@@ -292,8 +292,24 @@ local function install_report_tab()
 					-- Lua string patterns count bytes, not display cells)
 					-- chopped multi-byte names like the em-dash above
 					-- mid-character.
+					--
+					-- nvim_win_get_width() is the FULL window width,
+					-- including the number/sign/fold column gutters (the
+					-- line-number column visible on the left of this pane)
+					-- - not the usable text width, so sizing off it
+					-- directly overshoots by exactly the gutter width and
+					-- clips the status column. getwininfo().textoff is the
+					-- actual gutter width for THIS window, whatever its
+					-- number/signcolumn/foldcolumn settings are - subtract
+					-- it instead of a guessed constant.
 					local win = vim.fn.bufwinid(self.bufnr)
-					local width = win ~= -1 and vim.api.nvim_win_get_width(win) or math.floor(vim.o.columns / 2)
+					local width
+					if win ~= -1 then
+						local info = vim.fn.getwininfo(win)[1]
+						width = vim.api.nvim_win_get_width(win) - (info and info.textoff or 0)
+					else
+						width = math.floor(vim.o.columns / 2)
+					end
 
 					local method_width, detail_width = 4, 0
 					for _, entry in ipairs(report_entries) do
@@ -302,7 +318,15 @@ local function install_report_tab()
 					end
 					local tag_width = 6 -- "[PASS]" / "[FAIL]"
 					local separators = 3 -- one space each between tag/method/name/detail
-					local name_width = math.max(10, width - tag_width - method_width - detail_width - separators)
+					-- Floor of 1, not some larger "reasonable minimum" - a
+					-- bigger floor guarantees overflow (and the status
+					-- column clipping off the right edge, same visible
+					-- symptom as the stale-width bug below) the moment the
+					-- window is too narrow for tag+method+detail+that
+					-- minimum to fit. Letting the name column shrink all
+					-- the way down is the only way this stays truthful to
+					-- the window's actual width at any size.
+					local name_width = math.max(1, width - tag_width - method_width - detail_width - separators)
 
 					local lines = {}
 					local passed = 0
@@ -342,6 +366,33 @@ local function install_report_tab()
 		end
 		return group
 	end
+
+	-- BufWinEnter (registered per-pane in on_init above) only re-renders
+	-- when the Report buffer becomes newly visible in a window - it does
+	-- NOT fire for a window that's already showing it and just gets
+	-- resized wider/narrower in place (e.g. <leader>w.), so that case was
+	-- still rendering against a stale width and clipping the status column.
+	-- WinResized fires for exactly that case; re-render the Report pane
+	-- specifically if one of the resized windows is showing it.
+	vim.api.nvim_create_autocmd("WinResized", {
+		group = vim.api.nvim_create_augroup("RestNvimReportResize", { clear = true }),
+		callback = function()
+			if not result_group then
+				return
+			end
+			for _, winid in ipairs(vim.v.event.windows) do
+				if vim.b[vim.api.nvim_win_get_buf(winid)].__pane_group == "rest_nvim_result" then
+					for _, pane in ipairs(result_group.panes) do
+						if pane.name == "Report" then
+							pane:render()
+							break
+						end
+					end
+					break
+				end
+			end
+		end,
+	})
 end
 
 ---Find the window (if any, in the current tabpage) currently showing a pane
@@ -377,20 +428,17 @@ local function open_report()
 	end
 end
 
-local function run_all()
+---Shared by run_all() and run_to_cursor() - both just differ in which
+---subset of the buffer's request nodes they pass in here.
+---@param bufnr integer
+---@param nodes TSNode[]
+local function run_nodes(bufnr, nodes)
 	local parser = require("rest-nvim.parser")
 	local Context = require("rest-nvim.context").Context
 	local config = require("rest-nvim.config")
 	local clients = require("rest-nvim.client")
 	local jar = require("rest-nvim.cookie_jar")
 	local ui = require("rest-nvim.ui.result")
-
-	local bufnr = vim.api.nvim_get_current_buf()
-	local nodes = parser.get_all_request_nodes(bufnr)
-	if #nodes == 0 then
-		vim.notify("No requests found in buffer", vim.log.levels.WARN, { title = "rest.nvim" })
-		return
-	end
 
 	report_entries = {}
 
@@ -465,6 +513,42 @@ local function run_all()
 	end)
 end
 
+local function run_all()
+	local parser = require("rest-nvim.parser")
+	local bufnr = vim.api.nvim_get_current_buf()
+	local nodes = parser.get_all_request_nodes(bufnr)
+	if #nodes == 0 then
+		vim.notify("No requests found in buffer", vim.log.levels.WARN, { title = "rest.nvim" })
+		return
+	end
+	run_nodes(bufnr, nodes)
+end
+
+---Debugger-style "run to cursor": runs every request from the top of the
+---buffer through (and including) the one under the cursor, then stops -
+---rebuilds a chain's state (globals a later post-request script depends on)
+---up through the request actually being debugged, without also firing every
+---request after it.
+local function run_to_cursor()
+	local parser = require("rest-nvim.parser")
+	local cursor_node = parser.get_request_node_by_cursor()
+	if not cursor_node then
+		vim.notify("No request under cursor", vim.log.levels.WARN, { title = "rest.nvim" })
+		return
+	end
+	local cursor_start = cursor_node:range()
+
+	local bufnr = vim.api.nvim_get_current_buf()
+	local nodes = {}
+	for _, node in ipairs(parser.get_all_request_nodes(bufnr)) do
+		table.insert(nodes, node)
+		if node:range() == cursor_start then
+			break
+		end
+	end
+	run_nodes(bufnr, nodes)
+end
+
 return {
 	"rest-nvim/rest.nvim",
 	ft = "http",
@@ -506,15 +590,16 @@ return {
 		},
 	},
 	keys = {
-		{ "<leader>Rs", "<cmd>Rest run<cr>", desc = "[R]equest [S]end" },
-		{ "<leader>Ra", run_all, desc = "[R]equest Send [A]ll" },
-		{ "<leader>Rl", "<cmd>Rest last<cr>", desc = "[R]equest Rerun [L]ast" },
-		{ "<leader>Ro", toggle_result, desc = "[R]equest [O]pen Window" },
+		{ "<leader>Rs", "<cmd>Rest run<cr>",        desc = "[R]equest [S]end" },
+		{ "<leader>Ra", run_all,                    desc = "[R]equest Send [A]ll" },
+		{ "<leader>Rc", run_to_cursor,              desc = "[R]equest Run To [C]ursor" },
+		{ "<leader>Rl", "<cmd>Rest last<cr>",       desc = "[R]equest Rerun [L]ast" },
+		{ "<leader>Ro", toggle_result,              desc = "[R]equest [O]pen Window" },
 		{ "<leader>Re", "<cmd>Rest env select<cr>", desc = "[R]equest Select [E]nvironment" },
-		{ "<leader>Rv", "<cmd>Rest env show<cr>", desc = "[R]equest [V]iew Environment" },
-		{ "<leader>Ry", "<cmd>Rest curl yank<cr>", desc = "[R]equest Cop[y] As cURL" },
-		{ "<leader>Ri", inspect, desc = "[R]equest [I]nspect" },
-		{ "<leader>RR", open_report, desc = "[R]equest [R]eport" },
+		{ "<leader>Rv", "<cmd>Rest env show<cr>",   desc = "[R]equest [V]iew Environment" },
+		{ "<leader>Ry", "<cmd>Rest curl yank<cr>",  desc = "[R]equest Cop[y] As cURL" },
+		{ "<leader>Ri", inspect,                    desc = "[R]equest [I]nspect" },
+		{ "<leader>RR", open_report,                desc = "[R]equest [R]eport" },
 	},
 	config = function()
 		install_report_tab()
