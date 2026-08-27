@@ -20,7 +20,6 @@ return {
 				-- mason-lspconfig's ensure_installed won't manage.
 				ensure_installed = {
 					"biome",
-					"kulala-fmt",
 					-- Crashdummyy fork build (not the official mason-registry
 					-- "roslyn-language-server" NuGet package - a different,
 					-- unrelated entry with a colliding bin name). roslyn.nvim

@@ -6,6 +6,7 @@ local ensure_installed = {
 	"markdown_inline",
 	"nix",
 	"html",
+	"http",
 	"javascript",
 	"json",
 	"c_sharp",

@@ -62,6 +62,7 @@ require("lazy").setup({
 	require("colin.plugins.overseer"),
 	require("colin.plugins.persistence"),
 	require("colin.plugins.render-markdown"),
+	require("colin.plugins.rest"),
 	require("colin.plugins.roslyn"),
 	require("colin.plugins.sleuth"),
 	require("colin.plugins.theme").catppuccin(),
