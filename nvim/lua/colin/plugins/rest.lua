@@ -33,6 +33,26 @@
 -- context) but without calling run_request(), so nothing is sent - then
 -- shows the fully-resolved method/url/headers/body in a floating window,
 -- closer to kulala's <leader>Ri inspect popup than a single-var notify.
+---formatexpr for filetype=json, called by `gq` (see the FileType autocmd in
+---config() below). A *formatprg* was tried first (simpler), but formatprg's
+---mechanism for `gq` is running `:{range}!{formatprg}` as a literal ex
+---command (see :help formatprg) - visible proof from a screen recording of
+---<leader>Ra: a noice.nvim "Cmdline" popup flashing `.!jq .` on every
+---response, one per request. formatexpr instead calls this Lua function
+---directly - vim.fn.system() here is a plain blocking subprocess call, never
+---touching the cmdline/ex-command machinery, so there's nothing for a
+---cmdline UI to show.
+_G.rest_nvim_json_formatexpr = function()
+	local first, count = vim.v.lnum, vim.v.count
+	local lines = vim.api.nvim_buf_get_lines(0, first - 1, first - 1 + count, false)
+	local out = vim.fn.system({ "jq", "." }, table.concat(lines, "\n"))
+	if vim.v.shell_error ~= 0 then
+		return 1 -- non-zero: fall back to Vim's internal formatting
+	end
+	vim.api.nvim_buf_set_lines(0, first - 1, first - 1 + count, false, vim.split(out, "\n", { trimempty = true }))
+	return 0
+end
+
 ---Close every visible window whose buffer filetype starts with "rest_nvim"
 ---(the built-in Response/Headers/Cookies/Statistics panes and our own
 ---Report pane all share that prefix). Returns whether anything was closed,
@@ -517,13 +537,13 @@ return {
 		-- format is silently skipped, and the "# @_RES" marker in the
 		-- result pane loses its "(formatted)" suffix). This is what was
 		-- read as "JQ filtering is gone" / unformatted JSON bodies - give
-		-- json buffers (including this throwaway one) a formatprg so gq has
-		-- something to run. Also fixes `gq` in real .json files.
+		-- json buffers (including this throwaway one) a formatexpr so gq
+		-- has something to run. Also fixes `gq` in real .json files.
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = "json",
 			group = vim.api.nvim_create_augroup("RestNvimJsonFormat", { clear = true }),
 			callback = function()
-				vim.bo.formatprg = "jq ."
+				vim.bo.formatexpr = "v:lua.rest_nvim_json_formatexpr()"
 			end,
 		})
 
