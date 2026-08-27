@@ -180,6 +180,19 @@ end
 ---@type {name:string, method:string, ok:boolean, detail:string, bufnr:integer, line:integer}[]
 local report_entries = {}
 
+-- report_entries is shared, mutable module state, and run_nodes() below
+-- reassigns it wholesale (report_entries = {}) at the start of every run -
+-- two overlapping runs (e.g. <leader>Ra fired again before a prior chain
+-- over a real, slower API finished) race on that reassignment and on the
+-- table.insert()s that follow, corrupting whichever run's table survives.
+-- Confirmed directly: firing a second run_all() ~150ms into a first one
+-- produced a report stuck on a wrong, truncated count that didn't correct
+-- itself even on a subsequent clean run - because that clean run's inserts
+-- were themselves landing in a table an unfinished earlier coroutine could
+-- still reassign out from under it. run_in_progress makes overlap
+-- impossible instead of trying to make it safe.
+local run_in_progress = false
+
 -- A literal tab on the built-in "rest_nvim_result" pane group (cycling via
 -- the existing H/L keys alongside Response/Headers/Cookies/Statistics) - not
 -- by reaching into that group's state after the fact (ui/panes.lua's
@@ -418,14 +431,28 @@ local function open_report()
 	end
 	for _, pane in ipairs(result_group.panes) do
 		if pane.name == "Report" then
-			-- No explicit pane:render() here - assigning the buffer to a
-			-- real window fires the BufWinEnter re-render set up in
-			-- on_init above, now that bufwinid(self.bufnr) will actually
-			-- resolve to this window.
 			vim.api.nvim_win_set_buf(winid, pane.bufnr)
+			-- Explicit, unconditional render - NOT relying on the
+			-- BufWinEnter re-render from on_init above. BufWinEnter only
+			-- fires when the buffer is newly entering this window; on the
+			-- second and later run_all() in a session, this window
+			-- already shows this exact buffer from the previous run, so
+			-- nvim_win_set_buf above is a no-op that buffer's window
+			-- attachment never re-fires BufWinEnter for. Without this,
+			-- whatever render happened to run last (mid-loop, via
+			-- ui.update()) is what stays on screen indefinitely.
+			pane:render()
 			break
 		end
 	end
+	-- Always focus winid explicitly, not just as a side effect of the
+	-- vsplit branch above - when the result window already exists (e.g.
+	-- called again after run_nodes' auto-open already created it),
+	-- nvim_win_set_buf alone changes what that window shows without moving
+	-- focus there, so <leader>RR would silently stop "jumping" to it.
+	-- run_nodes' auto-open call wraps this whole function with its own
+	-- save/restore of the previous window, so this doesn't fight that.
+	vim.api.nvim_set_current_win(winid)
 end
 
 ---Shared by run_all() and run_to_cursor() - both just differ in which
@@ -433,6 +460,12 @@ end
 ---@param bufnr integer
 ---@param nodes TSNode[]
 local function run_nodes(bufnr, nodes)
+	if run_in_progress then
+		vim.notify("A run is already in progress - wait for it to finish first", vim.log.levels.WARN, { title = "rest.nvim" })
+		return
+	end
+	run_in_progress = true
+
 	local parser = require("rest-nvim.parser")
 	local Context = require("rest-nvim.context").Context
 	local config = require("rest-nvim.config")
@@ -443,73 +476,119 @@ local function run_nodes(bufnr, nodes)
 	report_entries = {}
 
 	require("nio").run(function()
-		local ctx = Context:new()
-		if config.env.enable and vim.b[bufnr]._rest_nvim_env_file then
-			ctx:load_file(vim.b[bufnr]._rest_nvim_env_file)
-		end
-
-		for i, req_node in ipairs(nodes) do
-			local start_row = req_node:range()
-			local ok, req = pcall(parser.parse, req_node, bufnr, ctx)
-			if not ok or not req then
-				table.insert(report_entries, {
-					name = ("#%d"):format(i),
-					method = "?",
-					ok = false,
-					detail = "failed to parse request",
-					bufnr = bufnr,
-					line = start_row + 1,
-				})
-				break
+		-- Wrapped in pcall so run_in_progress always gets released below,
+		-- even on a genuinely unexpected error outside the pcall'd steps
+		-- already inside the loop - otherwise a stuck-true lock would brick
+		-- every run_all()/run_to_cursor() for the rest of the session.
+		local run_ok, run_err = pcall(function()
+			local ctx = Context:new()
+			if config.env.enable and vim.b[bufnr]._rest_nvim_env_file then
+				ctx:load_file(vim.b[bufnr]._rest_nvim_env_file)
 			end
 
-			local client = clients.get_available_clients(req)[1]
-			if not client then
+			for i, req_node in ipairs(nodes) do
+				local start_row = req_node:range()
+				local ok, req = pcall(parser.parse, req_node, bufnr, ctx)
+				if not ok or not req then
+					table.insert(report_entries, {
+						name = ("#%d"):format(i),
+						method = "?",
+						ok = false,
+						detail = "failed to parse request",
+						bufnr = bufnr,
+						line = start_row + 1,
+					})
+					break
+				end
+
+				local client = clients.get_available_clients(req)[1]
+				if not client then
+					table.insert(report_entries, {
+						name = req.name or ("#" .. i),
+						method = req.method,
+						ok = false,
+						detail = "no client available",
+						bufnr = bufnr,
+						line = start_row + 1,
+					})
+					break
+				end
+
+				ui.update({ request = req })
+				local started = vim.uv.hrtime()
+				local req_ok, res = pcall(client.request(req).wait)
+				local elapsed_ms = math.floor((vim.uv.hrtime() - started) / 1e6)
+
+				if not req_ok then
+					table.insert(report_entries, {
+						name = req.name or ("#" .. i),
+						method = req.method,
+						ok = false,
+						detail = ("ERROR (%dms): %s"):format(elapsed_ms, res),
+						bufnr = bufnr,
+						line = start_row + 1,
+					})
+					break
+				end
+
+				vim.iter(req.handlers):each(function(f)
+					f(res)
+				end)
+				jar.update_jar(req.url, res)
+
+				-- Report entry inserted BEFORE ui.update() - ui.update()
+				-- synchronously re-renders every pane, Report included, so
+				-- inserting after it means every render (this one and any
+				-- later one that never gets re-triggered) permanently
+				-- lags one entry behind, missing the one that was just
+				-- added. Confirmed directly: report_entries itself always
+				-- had the correct final count right after the loop, but
+				-- the very LAST entry's own render fired before its
+				-- insert - only masked on the first-ever run, where the
+				-- trailing open_report()'s BufWinEnter (new buffer
+				-- entering a window for the first time) forces one more,
+				-- correct render. Every run after that reuses the same
+				-- buffer-in-window pairing, BufWinEnter never re-fires,
+				-- and that stale one-behind render is what's left
+				-- displayed - permanently, since nothing else re-renders
+				-- after the loop ends.
 				table.insert(report_entries, {
 					name = req.name or ("#" .. i),
 					method = req.method,
-					ok = false,
-					detail = "no client available",
+					ok = res.status.code < 400,
+					detail = ("%d %s (%dms)"):format(res.status.code, res.status.text, elapsed_ms),
 					bufnr = bufnr,
 					line = start_row + 1,
 				})
-				break
+				ui.update({ response = res })
 			end
+		end)
 
-			ui.update({ request = req })
-			local started = vim.uv.hrtime()
-			local req_ok, res = pcall(client.request(req).wait)
-			local elapsed_ms = math.floor((vim.uv.hrtime() - started) / 1e6)
-
-			if not req_ok then
-				table.insert(report_entries, {
-					name = req.name or ("#" .. i),
-					method = req.method,
-					ok = false,
-					detail = ("ERROR (%dms): %s"):format(elapsed_ms, res),
-					bufnr = bufnr,
-					line = start_row + 1,
-				})
-				break
-			end
-
-			vim.iter(req.handlers):each(function(f)
-				f(res)
-			end)
-			jar.update_jar(req.url, res)
-			ui.update({ response = res })
-
-			table.insert(report_entries, {
-				name = req.name or ("#" .. i),
-				method = req.method,
-				ok = res.status.code < 400,
-				detail = ("%d %s (%dms)"):format(res.status.code, res.status.text, elapsed_ms),
-				bufnr = bufnr,
-				line = start_row + 1,
-			})
+		run_in_progress = false
+		if not run_ok then
+			vim.notify(("run_all: unexpected error - %s"):format(run_err), vim.log.levels.ERROR, { title = "rest.nvim" })
 		end
 
-		vim.schedule(open_report)
+		-- Not a plain open_report() - that's also what <leader>RR calls
+		-- directly, where staying focused in the Report pane so you can
+		-- read/navigate it is exactly the point. Here it's an unrequested
+		-- auto-preview after a run, and open_report()'s vsplit leaves focus
+		-- in the NEW window (unlike toggle_result(), which explicitly
+		-- wincmd("p")s back) - so without restoring focus, the .http buffer
+		-- silently stops being "current". The next <leader>Ra/Rc would then
+		-- run against the Report buffer itself instead: its lines start
+		-- with literal GET/POST tokens, so tree-sitter-http partially
+		-- misparses the report table AS request sections, producing a
+		-- wrong (and, since it never lands back in the real buffer either,
+		-- stuck-wrong) request count on every run after the first -
+		-- confirmed exactly via a headless repro before this fix.
+		vim.schedule(function()
+			local prev_win = vim.api.nvim_get_current_win()
+			open_report()
+			if vim.api.nvim_win_is_valid(prev_win) then
+				vim.api.nvim_set_current_win(prev_win)
+			end
+		end)
 	end)
 end
 
