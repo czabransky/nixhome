@@ -177,7 +177,7 @@ end
 -- doc/kulala.testing-and-reporting.txt) - there's nothing here to assert
 -- against, so PASS/FAIL is purely HTTP-status-based (2xx/3xx passes,
 -- anything else - 4xx/5xx or the request erroring out entirely - fails).
----@type {name:string, method:string, ok:boolean, detail:string, bufnr:integer, line:integer}[]
+---@type {name:string, method:string, ok:boolean, detail:string, bufnr:integer, line:integer, req:rest.Request?, res:rest.Response?, elapsed_ms:number?}[]
 local report_entries = {}
 
 -- report_entries is shared, mutable module state, and run_nodes() below
@@ -418,7 +418,202 @@ local function find_result_window()
 	end)
 end
 
+---Best-effort pretty-print: jq-formatted if `text` parses as JSON,
+---otherwise returned unchanged (plain text/HTML/XML bodies, etc.) - same
+---approach as the formatexpr above, just called directly instead of via gq.
+---@param text string?
+---@return string?
+local function try_pretty_json(text)
+	if not text or text == "" then
+		return text
+	end
+	local out = vim.fn.system({ "jq", "." }, text)
+	if vim.v.shell_error ~= 0 then
+		return text
+	end
+	return out
+end
+
+---@param headers table<string,string[]>
+---@return string[]
+local function format_headers(headers)
+	local names = vim.tbl_keys(headers)
+	table.sort(names) -- pairs() order is unspecified - keep this reproducible
+	local lines = {}
+	for _, name in ipairs(names) do
+		for _, value in ipairs(headers[name]) do
+			table.insert(lines, ("%s: %s"):format(name, value))
+		end
+	end
+	return lines
+end
+
+---Full request+response detail for one report entry - everything inspect()
+---shows for a single request, plus the actual response (status, headers,
+---body, timing, size), for whichever entry is under the cursor in the
+---popup's request list.
+---@param entry table
+---@return string[]
+local function render_entry_detail(entry)
+	local lines = { ("%s  %s"):format(entry.ok and "PASS" or "FAIL", entry.name) }
+
+	if entry.req then
+		vim.list_extend(lines, { "", ("%s %s"):format(entry.req.method, entry.req.url) })
+		vim.list_extend(lines, format_headers(entry.req.headers))
+		if entry.req.body and entry.req.body.data then
+			local data = entry.req.body.data
+			vim.list_extend(lines, { "" })
+			vim.list_extend(lines, vim.split(try_pretty_json(type(data) == "string" and data or vim.inspect(data)), "\n"))
+		end
+	else
+		vim.list_extend(lines, { "", "(request could not be resolved - see detail below)" })
+	end
+
+	vim.list_extend(lines, { "", string.rep("─", 60), "" })
+
+	if entry.res then
+		vim.list_extend(lines, {
+			("%s %d %s"):format(entry.res.status.version, entry.res.status.code, entry.res.status.text),
+			("Duration: %dms"):format(entry.elapsed_ms or 0),
+			("Size: %d bytes"):format(entry.res.body and #entry.res.body or 0),
+			"",
+		})
+		vim.list_extend(lines, format_headers(entry.res.headers))
+		if entry.res.body and entry.res.body ~= "" then
+			vim.list_extend(lines, { "" })
+			vim.list_extend(lines, vim.split(try_pretty_json(entry.res.body), "\n"))
+		end
+		if entry.res.statistics and next(entry.res.statistics) then
+			local stat_names = vim.tbl_keys(entry.res.statistics)
+			table.sort(stat_names)
+			vim.list_extend(lines, { "", "--- curl statistics ---" })
+			for _, name in ipairs(stat_names) do
+				table.insert(lines, ("%s: %s"):format(name, entry.res.statistics[name]))
+			end
+		end
+	else
+		table.insert(lines, entry.detail)
+	end
+
+	return lines
+end
+
+---<leader>RR: an interactive, Telescope-style two-pane popup over the last
+---run_all()/run_to_cursor() results - a scrollable request list on the
+---left, and the full request+response detail (headers, bodies, status,
+---timing, size, curl stats) for whichever one is under the cursor, live,
+---on the right. The embedded Report tab (open_report() below) only ever
+---had room for one summary line per request; this is for actually
+---analyzing a specific failure instead of just seeing that it failed.
+local function open_report_popup()
+	if #report_entries == 0 then
+		vim.notify(
+			"No run_all() results yet - <leader>Ra to run every request in a .http buffer.",
+			vim.log.levels.WARN,
+			{ title = "rest.nvim" }
+		)
+		return
+	end
+
+	local total_width = math.floor(vim.o.columns * 0.9)
+	local total_height = math.floor(vim.o.lines * 0.85)
+	local list_width = math.max(28, math.floor(total_width * 0.3))
+	local gap = 2
+	local detail_width = total_width - list_width - gap
+	local row = math.floor((vim.o.lines - total_height) / 2)
+	local col = math.floor((vim.o.columns - total_width) / 2)
+
+	local list_buf = vim.api.nvim_create_buf(false, true)
+	local detail_buf = vim.api.nvim_create_buf(false, true)
+	vim.bo[detail_buf].filetype = "http" -- same as inspect()'s popup - reasonable highlighting for the request half; the response half just rides along
+
+	local list_lines = {}
+	for _, entry in ipairs(report_entries) do
+		table.insert(list_lines, ("[%s] %-6s %s"):format(entry.ok and "PASS" or "FAIL", entry.method, entry.name))
+	end
+	vim.api.nvim_buf_set_lines(list_buf, 0, -1, false, list_lines)
+	vim.bo[list_buf].modifiable = false
+
+	local report_ns = vim.api.nvim_create_namespace("rest_nvim_report")
+	for i, entry in ipairs(report_entries) do
+		pcall(vim.api.nvim_buf_set_extmark, list_buf, report_ns, i - 1, 1, {
+			end_col = 5,
+			hl_group = entry.ok and "RestReportOk" or "RestReportError",
+		})
+	end
+
+	local list_win = vim.api.nvim_open_win(list_buf, true, {
+		relative = "editor",
+		row = row,
+		col = col,
+		width = list_width,
+		height = total_height,
+		border = "rounded",
+		style = "minimal",
+		title = " Requests ",
+	})
+	local detail_win = vim.api.nvim_open_win(detail_buf, false, {
+		relative = "editor",
+		row = row,
+		col = col + list_width + gap,
+		width = detail_width,
+		height = total_height,
+		border = "rounded",
+		style = "minimal",
+		title = " Detail ",
+	})
+	vim.wo[detail_win].wrap = true
+
+	local function render_detail(idx)
+		local entry = report_entries[idx]
+		if not entry or not vim.api.nvim_buf_is_valid(detail_buf) then
+			return
+		end
+		vim.bo[detail_buf].modifiable = true
+		vim.api.nvim_buf_set_lines(detail_buf, 0, -1, false, render_entry_detail(entry))
+		vim.bo[detail_buf].modifiable = false
+	end
+	render_detail(1)
+
+	vim.api.nvim_create_autocmd("CursorMoved", {
+		buffer = list_buf,
+		callback = function()
+			render_detail(vim.api.nvim_win_get_cursor(list_win)[1])
+		end,
+	})
+
+	local function close_popup()
+		pcall(vim.api.nvim_win_close, list_win, true)
+		pcall(vim.api.nvim_win_close, detail_win, true)
+	end
+	-- Covers closing either window through some OTHER means (<C-w>c, etc.)
+	-- so the sibling never gets orphaned - close_popup() itself is already
+	-- double-close-safe via pcall.
+	vim.api.nvim_create_autocmd("WinClosed", {
+		pattern = ("%d,%d"):format(list_win, detail_win),
+		once = true,
+		callback = close_popup,
+	})
+
+	for _, buf in ipairs({ list_buf, detail_buf }) do
+		for _, lhs in ipairs({ "q", "<esc>" }) do
+			vim.keymap.set("n", lhs, close_popup, { buffer = buf, nowait = true, silent = true })
+		end
+	end
+	vim.keymap.set("n", "<cr>", function()
+		local entry = report_entries[vim.api.nvim_win_get_cursor(list_win)[1]]
+		if not entry then
+			return
+		end
+		close_popup()
+		vim.api.nvim_set_current_buf(entry.bufnr)
+		vim.api.nvim_win_set_cursor(0, { entry.line, 0 })
+	end, { buffer = list_buf, nowait = true, desc = "Jump to request" })
+end
+
 ---Open the result pane (if needed) and switch straight to its Report tab.
+---Used internally as run_nodes()'s post-run auto-preview - <leader>RR opens
+---open_report_popup() above instead, for anything past a quick glance.
 local function open_report()
 	local winid = find_result_window()
 	if not winid then
@@ -455,11 +650,11 @@ local function open_report()
 	vim.api.nvim_set_current_win(winid)
 end
 
----Shared by run_all() and run_to_cursor() - both just differ in which
----subset of the buffer's request nodes they pass in here.
+---Shared by run_all() and run_to_cursor() - both just differ in how many
+---requests, from the top of the buffer, get run.
 ---@param bufnr integer
----@param nodes TSNode[]
-local function run_nodes(bufnr, nodes)
+---@param max_count number Stop after this many requests (math.huge for "all")
+local function run_nodes(bufnr, max_count)
 	if run_in_progress then
 		vim.notify("A run is already in progress - wait for it to finish first", vim.log.levels.WARN, { title = "rest.nvim" })
 		return
@@ -486,7 +681,28 @@ local function run_nodes(bufnr, nodes)
 				ctx:load_file(vim.b[bufnr]._rest_nvim_env_file)
 			end
 
-			for i, req_node in ipairs(nodes) do
+			-- Deliberately re-fetching get_all_request_nodes() fresh on
+			-- EVERY iteration, right before use, instead of once up front
+			-- and holding those TSNode references across the whole chain -
+			-- a chain of real HTTP requests can run for seconds, and
+			-- Neovim's incremental treesitter parser can reparse/invalidate
+			-- the buffer's tree at any point in that window for reasons
+			-- outside this loop's control. Using a node from an invalidated
+			-- tree is explicitly unsafe, and this matches a real repro: a
+			-- second-request script's node text came back truncated mid-
+			-- expression ("script_variable:2: Expected value but found
+			-- T_END"), a Lua compile error, only after the first request's
+			-- real network round trip had already elapsed. Re-fetching
+			-- immediately before each use keeps the staleness window as
+			-- close to zero as treesitter allows.
+			local i = 0
+			while i < max_count do
+				i = i + 1
+				local req_node = parser.get_all_request_nodes(bufnr)[i]
+				if not req_node then
+					break
+				end
+
 				local start_row = req_node:range()
 				local ok, req = pcall(parser.parse, req_node, bufnr, ctx)
 				if not ok or not req then
@@ -510,6 +726,7 @@ local function run_nodes(bufnr, nodes)
 						detail = "no client available",
 						bufnr = bufnr,
 						line = start_row + 1,
+						req = req,
 					})
 					break
 				end
@@ -527,13 +744,41 @@ local function run_nodes(bufnr, nodes)
 						detail = ("ERROR (%dms): %s"):format(elapsed_ms, res),
 						bufnr = bufnr,
 						line = start_row + 1,
+						req = req,
+						elapsed_ms = elapsed_ms,
 					})
 					break
 				end
 
-				vim.iter(req.handlers):each(function(f)
-					f(res)
+				-- Handlers are arbitrary user Lua (post-request scripts) -
+				-- own pcall so a bug/typo in one script produces a normal
+				-- FAILED report entry for that specific request instead of
+				-- aborting the whole run through the generic outer pcall,
+				-- which had no way to say which request actually broke.
+				local handlers_ok, handlers_err = pcall(function()
+					vim.iter(req.handlers):each(function(f)
+						f(res)
+					end)
 				end)
+				if not handlers_ok then
+					table.insert(report_entries, {
+						name = req.name or ("#" .. i),
+						method = req.method,
+						ok = false,
+						detail = ("%d %s (%dms) - post-request script error: %s"):format(
+							res.status.code,
+							res.status.text,
+							elapsed_ms,
+							handlers_err
+						),
+						bufnr = bufnr,
+						line = start_row + 1,
+						req = req,
+						res = res,
+						elapsed_ms = elapsed_ms,
+					})
+					break
+				end
 				jar.update_jar(req.url, res)
 
 				-- Report entry inserted BEFORE ui.update() - ui.update()
@@ -559,6 +804,9 @@ local function run_nodes(bufnr, nodes)
 					detail = ("%d %s (%dms)"):format(res.status.code, res.status.text, elapsed_ms),
 					bufnr = bufnr,
 					line = start_row + 1,
+					req = req,
+					res = res,
+					elapsed_ms = elapsed_ms,
 				})
 				ui.update({ response = res })
 			end
@@ -595,12 +843,11 @@ end
 local function run_all()
 	local parser = require("rest-nvim.parser")
 	local bufnr = vim.api.nvim_get_current_buf()
-	local nodes = parser.get_all_request_nodes(bufnr)
-	if #nodes == 0 then
+	if #parser.get_all_request_nodes(bufnr) == 0 then
 		vim.notify("No requests found in buffer", vim.log.levels.WARN, { title = "rest.nvim" })
 		return
 	end
-	run_nodes(bufnr, nodes)
+	run_nodes(bufnr, math.huge)
 end
 
 ---Debugger-style "run to cursor": runs every request from the top of the
@@ -621,23 +868,24 @@ local function run_to_cursor()
 	-- boundaries, so comparing node ranges FROM TWO SEPARATE PARSES (as a
 	-- past version of this did) could silently mismatch and cut the loop
 	-- short. Using containment against ONE parse's ranges instead removes
-	-- that gap entirely - there's nothing left to disagree with.
-	local nodes = {}
-	local found = false
-	for _, node in ipairs(parser.get_all_request_nodes(bufnr)) do
-		table.insert(nodes, node)
+	-- that gap entirely - there's nothing left to disagree with. Only the
+	-- index is kept (not the node itself) - run_nodes() re-fetches nodes
+	-- fresh right before each use rather than holding references across
+	-- the whole run; see its own comment for why.
+	local target_index
+	for i, node in ipairs(parser.get_all_request_nodes(bufnr)) do
 		local start_row, _, end_row = node:range()
 		if cursor_row >= start_row and cursor_row <= end_row then
-			found = true
+			target_index = i
 			break
 		end
 	end
 
-	if not found then
+	if not target_index then
 		vim.notify("No request under cursor", vim.log.levels.WARN, { title = "rest.nvim" })
 		return
 	end
-	run_nodes(bufnr, nodes)
+	run_nodes(bufnr, target_index)
 end
 
 return {
@@ -674,7 +922,7 @@ return {
 		{ "<leader>Rv", "<cmd>Rest env show<cr>",   desc = "[R]equest [V]iew Environment" },
 		{ "<leader>Ry", "<cmd>Rest curl yank<cr>",  desc = "[R]equest Cop[y] As cURL" },
 		{ "<leader>Ri", inspect,                    desc = "[R]equest [I]nspect" },
-		{ "<leader>RR", open_report,                desc = "[R]equest [R]eport" },
+		{ "<leader>RR", open_report_popup,          desc = "[R]equest [R]eport (detail)" },
 	},
 	config = function()
 		install_report_tab()
