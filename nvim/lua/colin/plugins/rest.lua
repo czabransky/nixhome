@@ -640,6 +640,17 @@ local function open_report_popup()
 			vim.keymap.set("n", lhs, close_popup, { buffer = buf, nowait = true, silent = true })
 		end
 	end
+	-- <Tab> toggles focus between the two panes - detail_buf is otherwise
+	-- only reachable via <C-w>w/mouse click, and search (/) and yank need
+	-- to actually be focused there to operate on its text (modifiable=false
+	-- only blocks writes, so both already work fine once focused - this is
+	-- just making "get there" discoverable).
+	vim.keymap.set("n", "<tab>", function()
+		vim.api.nvim_set_current_win(detail_win)
+	end, { buffer = list_buf, nowait = true, desc = "Focus detail pane" })
+	vim.keymap.set("n", "<tab>", function()
+		vim.api.nvim_set_current_win(list_win)
+	end, { buffer = detail_buf, nowait = true, desc = "Focus request list" })
 	vim.keymap.set("n", "<cr>", function()
 		local entry = report_entries[vim.api.nvim_win_get_cursor(list_win)[1]]
 		if not entry then
@@ -690,11 +701,13 @@ local function open_report()
 	vim.api.nvim_set_current_win(winid)
 end
 
----Shared by run_all() and run_to_cursor() - both just differ in how many
----requests, from the top of the buffer, get run.
+---Shared by run_all()/run_to_cursor()/run_single() - all three just differ
+---in which range of the buffer's request nodes (1-indexed, inclusive) get
+---run: 1..math.huge, 1..cursor, cursor..cursor respectively.
 ---@param bufnr integer
----@param max_count number Stop after this many requests (math.huge for "all")
-local function run_nodes(bufnr, max_count)
+---@param start_index number
+---@param end_index number
+local function run_nodes(bufnr, start_index, end_index)
 	if run_in_progress then
 		vim.notify("A run is already in progress - wait for it to finish first", vim.log.levels.WARN, { title = "rest.nvim" })
 		return
@@ -735,8 +748,8 @@ local function run_nodes(bufnr, max_count)
 			-- real network round trip had already elapsed. Re-fetching
 			-- immediately before each use keeps the staleness window as
 			-- close to zero as treesitter allows.
-			local i = 0
-			while i < max_count do
+			local i = start_index - 1
+			while i < end_index do
 				i = i + 1
 				local req_node = parser.get_all_request_nodes(bufnr)[i]
 				if not req_node then
@@ -880,6 +893,33 @@ local function run_nodes(bufnr, max_count)
 	end)
 end
 
+---1-indexed position, among get_all_request_nodes(bufnr), of the request
+---the cursor is currently inside - nil if it's not inside any of them.
+---
+---Deliberately NOT parser.get_request_node_by_cursor(): it reads from the
+---buffer's attached treesitter tree (vim.treesitter.get_node()) while
+---get_all_request_nodes() parses via ts_parser:parse(false) - "false" reuses
+---the cached tree rather than forcing invalidation. Right after an edit,
+---those two can briefly disagree on node boundaries, so comparing node
+---ranges FROM TWO SEPARATE PARSES (as a past version of this did) could
+---silently mismatch. Using containment against ONE parse's ranges removes
+---that gap entirely - there's nothing left to disagree with. Only the index
+---is returned (not the node itself) - run_nodes() re-fetches nodes fresh
+---right before each use rather than holding references across a run; see
+---its own comment for why.
+---@param bufnr integer
+---@return integer?
+local function cursor_request_index(bufnr)
+	local parser = require("rest-nvim.parser")
+	local cursor_row = vim.api.nvim_win_get_cursor(0)[1] - 1 -- 0-indexed, matches TSNode:range()
+	for i, node in ipairs(parser.get_all_request_nodes(bufnr)) do
+		local start_row, _, end_row = node:range()
+		if cursor_row >= start_row and cursor_row <= end_row then
+			return i
+		end
+	end
+end
+
 local function run_all()
 	local parser = require("rest-nvim.parser")
 	local bufnr = vim.api.nvim_get_current_buf()
@@ -887,7 +927,7 @@ local function run_all()
 		vim.notify("No requests found in buffer", vim.log.levels.WARN, { title = "rest.nvim" })
 		return
 	end
-	run_nodes(bufnr, math.huge)
+	run_nodes(bufnr, 1, math.huge)
 end
 
 ---Debugger-style "run to cursor": runs every request from the top of the
@@ -896,36 +936,28 @@ end
 ---up through the request actually being debugged, without also firing every
 ---request after it.
 local function run_to_cursor()
-	local parser = require("rest-nvim.parser")
 	local bufnr = vim.api.nvim_get_current_buf()
-	local cursor_row = vim.api.nvim_win_get_cursor(0)[1] - 1 -- 0-indexed, matches TSNode:range()
-
-	-- Deliberately NOT parser.get_request_node_by_cursor() here: it reads
-	-- from the buffer's attached treesitter tree (vim.treesitter.get_node())
-	-- while get_all_request_nodes() below parses via ts_parser:parse(false)
-	-- - "false" reuses the cached tree rather than forcing invalidation.
-	-- Right after an edit, those two can briefly disagree on node
-	-- boundaries, so comparing node ranges FROM TWO SEPARATE PARSES (as a
-	-- past version of this did) could silently mismatch and cut the loop
-	-- short. Using containment against ONE parse's ranges instead removes
-	-- that gap entirely - there's nothing left to disagree with. Only the
-	-- index is kept (not the node itself) - run_nodes() re-fetches nodes
-	-- fresh right before each use rather than holding references across
-	-- the whole run; see its own comment for why.
-	local target_index
-	for i, node in ipairs(parser.get_all_request_nodes(bufnr)) do
-		local start_row, _, end_row = node:range()
-		if cursor_row >= start_row and cursor_row <= end_row then
-			target_index = i
-			break
-		end
-	end
-
+	local target_index = cursor_request_index(bufnr)
 	if not target_index then
 		vim.notify("No request under cursor", vim.log.levels.WARN, { title = "rest.nvim" })
 		return
 	end
-	run_nodes(bufnr, target_index)
+	run_nodes(bufnr, 1, target_index)
+end
+
+---Same request rest.nvim's own `:Rest run` (no args) sends - just this one,
+---no chain-building from the top of the buffer - but routed through
+---run_nodes() so it gets recorded into report_entries too. Previously
+---<leader>Rs went straight to rest.nvim's command, so a single send never
+---showed up in the Report tab or <leader>RR's popup at all.
+local function run_single()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local target_index = cursor_request_index(bufnr)
+	if not target_index then
+		vim.notify("No request under cursor", vim.log.levels.WARN, { title = "rest.nvim" })
+		return
+	end
+	run_nodes(bufnr, target_index, target_index)
 end
 
 return {
@@ -953,7 +985,7 @@ return {
 		},
 	},
 	keys = {
-		{ "<leader>Rs", "<cmd>Rest run<cr>",        desc = "[R]equest [S]end" },
+		{ "<leader>Rs", run_single,                 desc = "[R]equest [S]end" },
 		{ "<leader>Ra", run_all,                    desc = "[R]equest Send [A]ll" },
 		{ "<leader>Rc", run_to_cursor,              desc = "[R]equest Run To [C]ursor" },
 		{ "<leader>Rl", "<cmd>Rest last<cr>",       desc = "[R]equest Rerun [L]ast" },
