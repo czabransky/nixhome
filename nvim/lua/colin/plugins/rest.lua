@@ -454,41 +454,73 @@ end
 ---popup's request list.
 ---@param entry table
 ---@return string[]
+---Appends a fenced code block to `lines` for `body` - "json" fenced if
+---try_pretty_json() actually changed it (i.e. jq parsed it as JSON),
+---otherwise a plain fence (HTML error pages, plain text, etc.).
+---@param lines string[]
+---@param body string
+local function append_body_block(lines, body)
+	local pretty = try_pretty_json(body)
+	table.insert(lines, pretty ~= body and "```json" or "```")
+	vim.list_extend(lines, vim.split(pretty, "\n"))
+	table.insert(lines, "```")
+end
+
+---@param header_lines string[]
+local function append_header_list(lines, header_lines)
+	if #header_lines == 0 then
+		return
+	end
+	table.insert(lines, "")
+	table.insert(lines, "**Headers**")
+	table.insert(lines, "")
+	for _, h in ipairs(header_lines) do
+		table.insert(lines, "- `" .. h .. "`")
+	end
+end
+
+---Markdown source for one report entry's detail - rendered by
+---render-markdown.nvim (detail_buf's filetype is set to "markdown" in
+---open_report_popup() below), same renderer used everywhere else in this
+---config, not a bespoke plain-text layout.
+---@param entry table
+---@return string[]
 local function render_entry_detail(entry)
-	local lines = { ("%s  %s"):format(entry.ok and "PASS" or "FAIL", entry.name) }
+	local lines = { ("# %s — %s"):format(entry.ok and "✅ PASS" or "❌ FAIL", entry.name), "", "## Request", "" }
 
 	if entry.req then
-		vim.list_extend(lines, { "", ("%s %s"):format(entry.req.method, entry.req.url) })
-		vim.list_extend(lines, format_headers(entry.req.headers))
+		table.insert(lines, ("- **Method:** `%s`"):format(entry.req.method))
+		table.insert(lines, ("- **URL:** `%s`"):format(entry.req.url))
+		append_header_list(lines, format_headers(entry.req.headers))
 		if entry.req.body and entry.req.body.data then
 			local data = entry.req.body.data
-			vim.list_extend(lines, { "" })
-			vim.list_extend(lines, vim.split(try_pretty_json(type(data) == "string" and data or vim.inspect(data)), "\n"))
+			vim.list_extend(lines, { "", "**Body**", "" })
+			append_body_block(lines, type(data) == "string" and data or vim.inspect(data))
 		end
 	else
-		vim.list_extend(lines, { "", "(request could not be resolved - see detail below)" })
+		table.insert(lines, "_(request could not be resolved - see below)_")
 	end
 
-	vim.list_extend(lines, { "", string.rep("─", 60), "" })
+	vim.list_extend(lines, { "", "## Response", "" })
 
 	if entry.res then
-		vim.list_extend(lines, {
-			("%s %d %s"):format(entry.res.status.version, entry.res.status.code, entry.res.status.text),
-			("Duration: %dms"):format(entry.elapsed_ms or 0),
-			("Size: %d bytes"):format(entry.res.body and #entry.res.body or 0),
-			"",
-		})
-		vim.list_extend(lines, format_headers(entry.res.headers))
+		table.insert(
+			lines,
+			("- **Status:** `%s %d %s`"):format(entry.res.status.version, entry.res.status.code, entry.res.status.text)
+		)
+		table.insert(lines, ("- **Duration:** %dms"):format(entry.elapsed_ms or 0))
+		table.insert(lines, ("- **Size:** %d bytes"):format(entry.res.body and #entry.res.body or 0))
+		append_header_list(lines, format_headers(entry.res.headers))
 		if entry.res.body and entry.res.body ~= "" then
-			vim.list_extend(lines, { "" })
-			vim.list_extend(lines, vim.split(try_pretty_json(entry.res.body), "\n"))
+			vim.list_extend(lines, { "", "**Body**", "" })
+			append_body_block(lines, entry.res.body)
 		end
 		if entry.res.statistics and next(entry.res.statistics) then
 			local stat_names = vim.tbl_keys(entry.res.statistics)
 			table.sort(stat_names)
-			vim.list_extend(lines, { "", "--- curl statistics ---" })
+			vim.list_extend(lines, { "", "**curl statistics**", "" })
 			for _, name in ipairs(stat_names) do
-				table.insert(lines, ("%s: %s"):format(name, entry.res.statistics[name]))
+				table.insert(lines, ("- **%s:** %s"):format(name, entry.res.statistics[name]))
 			end
 		end
 	else
@@ -525,7 +557,10 @@ local function open_report_popup()
 
 	local list_buf = vim.api.nvim_create_buf(false, true)
 	local detail_buf = vim.api.nvim_create_buf(false, true)
-	vim.bo[detail_buf].filetype = "http" -- same as inspect()'s popup - reasonable highlighting for the request half; the response half just rides along
+	-- render_entry_detail() below produces markdown, rendered by
+	-- render-markdown.nvim (plugins/render-markdown.lua) same as everywhere
+	-- else in this config - not a bespoke plain-text layout.
+	vim.bo[detail_buf].filetype = "markdown"
 
 	local list_lines = {}
 	for _, entry in ipairs(report_entries) do
@@ -563,6 +598,11 @@ local function open_report_popup()
 		title = " Detail ",
 	})
 	vim.wo[detail_win].wrap = true
+	-- render-markdown.nvim needs conceallevel >= 1 to hide any markup at
+	-- all; 3 (its own recommended minimum) for full effect - set on this
+	-- window specifically rather than relying on whatever the global
+	-- default happens to be.
+	vim.wo[detail_win].conceallevel = 3
 
 	local function render_detail(idx)
 		local entry = report_entries[idx]
