@@ -660,6 +660,60 @@ local function open_report_popup()
 		vim.api.nvim_set_current_buf(entry.bufnr)
 		vim.api.nvim_win_set_cursor(0, { entry.line, 0 })
 	end, { buffer = list_buf, nowait = true, desc = "Jump to request" })
+
+	-- <leader>Rj: run a jq filter against the selected entry's response
+	-- body, shown in its own small popup rather than replacing detail_buf -
+	-- CursorMoved already drives that pane from list_win's position, so
+	-- overwriting its content here would just get clobbered (or would
+	-- fight back) the moment either window's cursor moves again.
+	local function jq_filter()
+		local entry = report_entries[vim.api.nvim_win_get_cursor(list_win)[1]]
+		if not entry or not entry.res or not entry.res.body or entry.res.body == "" then
+			vim.notify("No response body to filter", vim.log.levels.WARN, { title = "rest.nvim" })
+			return
+		end
+		local filter = vim.fn.input({ prompt = "jq filter: ", default = "." })
+		if filter == "" then
+			return
+		end
+		local out = vim.fn.system({ "jq", filter }, entry.res.body)
+		if vim.v.shell_error ~= 0 then
+			vim.notify("jq: " .. out, vim.log.levels.ERROR, { title = "rest.nvim" })
+			return
+		end
+
+		local out_lines = vim.split(out, "\n", { trimempty = true })
+		local out_buf = vim.api.nvim_create_buf(false, true)
+		vim.api.nvim_buf_set_lines(out_buf, 0, -1, false, out_lines)
+		vim.bo[out_buf].modifiable = false
+		vim.bo[out_buf].filetype = "json"
+
+		local out_width = 40
+		for _, l in ipairs(out_lines) do
+			out_width = math.max(out_width, vim.fn.strdisplaywidth(l))
+		end
+		out_width = math.min(out_width + 2, math.floor(vim.o.columns * 0.7))
+		local out_height = math.min(#out_lines, math.floor(vim.o.lines * 0.6))
+
+		local out_win = vim.api.nvim_open_win(out_buf, true, {
+			relative = "editor",
+			row = math.floor((vim.o.lines - out_height) / 2),
+			col = math.floor((vim.o.columns - out_width) / 2),
+			width = out_width,
+			height = out_height,
+			border = "rounded",
+			style = "minimal",
+			title = (" jq: %s "):format(filter),
+		})
+		vim.wo[out_win].wrap = false
+		for _, lhs in ipairs({ "q", "<esc>" }) do
+			vim.keymap.set("n", lhs, function()
+				pcall(vim.api.nvim_win_close, out_win, true)
+			end, { buffer = out_buf, nowait = true, silent = true })
+		end
+	end
+	vim.keymap.set("n", "<leader>Rj", jq_filter, { buffer = list_buf, nowait = true, desc = "jq filter response" })
+	vim.keymap.set("n", "<leader>Rj", jq_filter, { buffer = detail_buf, nowait = true, desc = "jq filter response" })
 end
 
 ---Open the result pane (if needed) and switch straight to its Report tab.
