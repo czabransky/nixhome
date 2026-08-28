@@ -1,4 +1,4 @@
-function dpsql --description "Run a SQL query against a postgres docker container and view the result as a nu table. With no query argument, pick a saved or generated query from .dpsql/queries, or type one inline. Pass -U/--user and -d/--db to override the container's POSTGRES_USER/POSTGRES_DB."
+function dpsql --description "Run a SQL query against a postgres docker container and view the result as a nu table. With no query argument, pick a saved or generated query from .dpsql/queries, or type one inline. Pass -U/--user and -d/--db to override; otherwise falls back to the container's APP_USER/APP_DB (if set, for projects that bootstrap via a separate superuser), then POSTGRES_USER/POSTGRES_DB."
 	argparse 'U/user=' 'd/db=' -- $argv
 	or return 1
 
@@ -6,10 +6,12 @@ function dpsql --description "Run a SQL query against a postgres docker containe
 	test -z "$container"; and return 1
 
 	set -f pg_user $_flag_user
+	test -z "$pg_user"; and set -f pg_user (docker exec $container printenv APP_USER 2>/dev/null)
 	test -z "$pg_user"; and set -f pg_user (docker exec $container printenv POSTGRES_USER 2>/dev/null)
 	test -z "$pg_user"; and set -f pg_user postgres
 
 	set -f pg_db $_flag_db
+	test -z "$pg_db"; and set -f pg_db (docker exec $container printenv APP_DB 2>/dev/null)
 	test -z "$pg_db"; and set -f pg_db (docker exec $container printenv POSTGRES_DB 2>/dev/null)
 	test -z "$pg_db"; and set -f pg_db $pg_user
 

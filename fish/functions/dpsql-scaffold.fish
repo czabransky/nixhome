@@ -1,4 +1,4 @@
-function dpsql-scaffold --description "Write a `select * from <table>` query file into .dpsql/queries for every table in the target postgres db's public schema. Skips tables that already have a query file; pass -f/--force to overwrite. -U/--user and -d/--db override the container's POSTGRES_USER/POSTGRES_DB."
+function dpsql-scaffold --description "Write a `select * from <table>` query file into .dpsql/queries for every table in the target postgres db's public schema. Skips tables that already have a query file; pass -f/--force to overwrite. -U/--user and -d/--db override; otherwise falls back to the container's APP_USER/APP_DB (if set), then POSTGRES_USER/POSTGRES_DB."
 	argparse 'U/user=' 'd/db=' 'f/force' -- $argv
 	or return 1
 
@@ -6,10 +6,12 @@ function dpsql-scaffold --description "Write a `select * from <table>` query fil
 	test -z "$container"; and return 1
 
 	set -f pg_user $_flag_user
+	test -z "$pg_user"; and set -f pg_user (docker exec $container printenv APP_USER 2>/dev/null)
 	test -z "$pg_user"; and set -f pg_user (docker exec $container printenv POSTGRES_USER 2>/dev/null)
 	test -z "$pg_user"; and set -f pg_user postgres
 
 	set -f pg_db $_flag_db
+	test -z "$pg_db"; and set -f pg_db (docker exec $container printenv APP_DB 2>/dev/null)
 	test -z "$pg_db"; and set -f pg_db (docker exec $container printenv POSTGRES_DB 2>/dev/null)
 	test -z "$pg_db"; and set -f pg_db $pg_user
 
