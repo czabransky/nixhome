@@ -1014,6 +1014,111 @@ local function run_single()
 	run_nodes(bufnr, target_index, target_index)
 end
 
+---A request's display name - `# @name X` if present, else the last `###`
+---section-separator text above it (a plain description comment, e.g. "###
+---Basic liveness check - no auth required."), else just its raw (unresolved
+---- no Context, so no {{var}} expansion, but this is only ever a listing)
+---method + URL. Mirrors parser.parse()'s own name-resolution walk (see its
+---request_separator/comment handling) but stops at the raw text - no
+---Context/variable resolution needed for a picker listing.
+---@param section TSNode
+---@param bufnr integer
+---@return string name, string method, string url, integer line
+local function describe_request(section, bufnr)
+	local name
+	for child, _ in section:iter_children() do
+		local ctype = child:type()
+		if ctype == "request_separator" then
+			local value = child:field("value")[1]
+			if value then
+				name = vim.trim(vim.treesitter.get_node_text(value, bufnr))
+			end
+		elseif ctype == "comment" then
+			local name_field = child:field("name")[1]
+			if name_field and vim.treesitter.get_node_text(name_field, bufnr) == "name" then
+				local value = child:field("value")[1]
+				if value then
+					name = vim.trim(vim.treesitter.get_node_text(value, bufnr))
+				end
+			end
+		end
+	end
+	local req_node = section:field("request")[1]
+	local method_node = req_node:field("method")[1]
+	local url_node = req_node:field("url")[1]
+	local method = method_node and vim.treesitter.get_node_text(method_node, bufnr) or "?"
+	local url = url_node and vim.treesitter.get_node_text(url_node, bufnr) or ""
+	local start_row = section:range()
+	return name or url, method, url, start_row + 1
+end
+
+---<leader>Rf: fuzzy-find requests in the current .http buffer by name/
+---description, jump to the selected one - <leader>ss (LSP document symbols)
+---isn't an option here since rest.nvim ships no LSP server at all (no
+---documentSymbol, no textDocument/* of any kind - confirmed nothing "lsp"-
+---or "symbol"-shaped anywhere in its source), so there's nothing for it to
+---attach to on a .http buffer regardless of on_attach config.
+local function pick_requests()
+	local parser = require("rest-nvim.parser")
+	local bufnr = vim.api.nvim_get_current_buf()
+	local nodes = parser.get_all_request_nodes(bufnr)
+	if #nodes == 0 then
+		vim.notify("No requests found in buffer", vim.log.levels.WARN, { title = "rest.nvim" })
+		return
+	end
+
+	local items = {}
+	for _, section in ipairs(nodes) do
+		local name, method, url, line = describe_request(section, bufnr)
+		table.insert(items, { name = name, method = method, url = url, line = line })
+	end
+
+	local pickers = require("telescope.pickers")
+	local finders = require("telescope.finders")
+	local conf = require("telescope.config").values
+	local actions = require("telescope.actions")
+	local action_state = require("telescope.actions.state")
+
+	local function goto_selection(prompt_bufnr)
+		local selection = action_state.get_selected_entry()
+		actions.close(prompt_bufnr)
+		if selection then
+			vim.api.nvim_win_set_cursor(0, { selection.value.line, 0 })
+		end
+	end
+
+	pickers
+		.new({}, {
+			prompt_title = "Requests",
+			finder = finders.new_table({
+				results = items,
+				entry_maker = function(item)
+					return {
+						value = item,
+						display = ("%-6s %s"):format(item.method, item.name),
+						ordinal = item.method .. " " .. item.name .. " " .. item.url,
+						lnum = item.line,
+					}
+				end,
+			}),
+			sorter = conf.generic_sorter({}),
+			attach_mappings = function(prompt_bufnr, map)
+				actions.select_default:replace(function()
+					goto_selection(prompt_bufnr)
+				end)
+				-- Jump to it AND send it right away, same request
+				-- run_single() would target from that cursor position -
+				-- one keystroke from "found it" to "ran it".
+				map({ "n", "i" }, "<C-r>", function()
+					goto_selection(prompt_bufnr)
+					run_single()
+				end)
+				return true
+			end,
+		})
+		:find()
+end
+
 return {
 	"rest-nvim/rest.nvim",
 	ft = "http",
@@ -1025,6 +1130,7 @@ return {
 		-- plugin rather than configured here.
 		"j-hui/fidget.nvim",
 		"nvim-neotest/nvim-nio",
+		"nvim-telescope/telescope.nvim", -- pick_requests() (<leader>Rf)
 		{
 			"manoelcampos/xml2lua",
 			config = function(plugin)
@@ -1048,6 +1154,7 @@ return {
 		{ "<leader>Rv", "<cmd>Rest env show<cr>",   desc = "[R]equest [V]iew Environment" },
 		{ "<leader>Ry", "<cmd>Rest curl yank<cr>",  desc = "[R]equest Cop[y] As cURL" },
 		{ "<leader>Ri", inspect,                    desc = "[R]equest [I]nspect" },
+		{ "<leader>Rf", pick_requests,              desc = "[R]equest [F]ind" },
 		{ "<leader>RR", open_report_popup,          desc = "[R]equest [R]eport (detail)" },
 	},
 	config = function()
