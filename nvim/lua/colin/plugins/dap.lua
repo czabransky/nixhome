@@ -219,71 +219,98 @@ function M.core()
 			end
 
 			local function attach_to_process()
-				vim.ui.select({ "Node.js", ".NET" }, { prompt = "Attach to running process - language:" }, function(lang)
-					if not lang then
-						return
-					end
+				vim.ui.select({ "Node.js", "dotnet" }, { prompt = "Attach to running process - language:" },
+					function(lang)
+						if not lang then
+							return
+						end
 
-					if lang == ".NET" then
-						-- The compiled app always runs from bin/Debug|Release/<tfm>/ -
-						-- unlike "dotnet watch run"/dotnet-watch.dll/MSBuild.dll, which
-						-- never do - so this alone, combined with the leaf-only
-						-- filtering above, reliably isolates the real running app.
+						if lang == ".NET" then
+							-- The compiled app always runs from bin/Debug|Release/<tfm>/ -
+							-- unlike "dotnet watch run"/dotnet-watch.dll/MSBuild.dll, which
+							-- never do - so this alone, combined with the leaf-only
+							-- filtering above, reliably isolates the real running app.
+							pick_leaf_process(function(cmd)
+								return cmd:match("/bin/Debug/") ~= nil or cmd:match("/bin/Release/") ~= nil
+							end, "Attach to .NET process:", function(pid)
+								dap.run({
+									type = "coreclr",
+									request = "attach",
+									name = "Attach to process " .. pid,
+									processId = pid,
+								})
+							end)
+							return
+						end
+
+						local port_input = vim.fn.input(
+						"Inspector port to attach to (blank to pick a running process instead): ")
+						local attach_config = {
+							type = "pwa-node",
+							request = "attach",
+							cwd = vim.loop.cwd(),
+							-- Node's --watch (or nodemon, etc.) restarts the process
+							-- out from under an active attach session; without this
+							-- the session just dies on the first restart instead of
+							-- reconnecting to the new one.
+							restart = true,
+							skipFiles = { "<node_internals>/**" },
+							-- We're attaching to one already-running process, not
+							-- orchestrating a tree of them - don't try to also
+							-- auto-attach anything it spawns. (Doesn't silence
+							-- every child-process message: a process that spins up
+							-- its own worker_threads under --inspect - e.g.
+							-- BullMQ's queue workers - can still log a one-off
+							-- "connect ENOENT .../node-cdp-*.sock" from Node's own
+							-- internal worker-inspector handshake. Harmless -
+							-- confirmed the main attach session stays up and usable
+							-- either way - just noisy.)
+							autoAttachChildProcesses = false,
+						}
+						if port_input ~= "" then
+							attach_config.name = "Attach to port " .. port_input
+							attach_config.port = tonumber(port_input)
+							attach_config.address = "localhost"
+							dap.run(attach_config)
+							return
+						end
+						-- SIGUSR1-based runtime inspector activation (what a bare
+						-- attach-by-pid relies on for a process not already started
+						-- with --inspect) is POSIX-only - use the port prompt above
+						-- on Windows instead.
 						pick_leaf_process(function(cmd)
-							return cmd:match("/bin/Debug/") ~= nil or cmd:match("/bin/Release/") ~= nil
-						end, "Attach to .NET process:", function(pid)
-							dap.run({
-								type = "coreclr",
-								request = "attach",
-								name = "Attach to process " .. pid,
-								processId = pid,
-							})
+							return cmd:match("^%S*/node%s") ~= nil or cmd:match("^node%s") ~= nil or cmd == "node"
+						end, "Attach to Node process:", function(pid)
+							attach_config.name = "Attach to process " .. pid
+							attach_config.processId = pid
+							dap.run(attach_config)
 						end)
-						return
-					end
-
-					local port_input = vim.fn.input("Inspector port to attach to (blank to pick a running process instead): ")
-					local attach_config = {
-						type = "pwa-node",
-						request = "attach",
-						cwd = vim.loop.cwd(),
-						-- Node's --watch (or nodemon, etc.) restarts the process
-						-- out from under an active attach session; without this
-						-- the session just dies on the first restart instead of
-						-- reconnecting to the new one.
-						restart = true,
-						skipFiles = { "<node_internals>/**" },
-						-- We're attaching to one already-running process, not
-						-- orchestrating a tree of them - don't try to also
-						-- auto-attach anything it spawns. (Doesn't silence
-						-- every child-process message: a process that spins up
-						-- its own worker_threads under --inspect - e.g.
-						-- BullMQ's queue workers - can still log a one-off
-						-- "connect ENOENT .../node-cdp-*.sock" from Node's own
-						-- internal worker-inspector handshake. Harmless -
-						-- confirmed the main attach session stays up and usable
-						-- either way - just noisy.)
-						autoAttachChildProcesses = false,
-					}
-					if port_input ~= "" then
-						attach_config.name = "Attach to port " .. port_input
-						attach_config.port = tonumber(port_input)
-						attach_config.address = "localhost"
-						dap.run(attach_config)
-						return
-					end
-					-- SIGUSR1-based runtime inspector activation (what a bare
-					-- attach-by-pid relies on for a process not already started
-					-- with --inspect) is POSIX-only - use the port prompt above
-					-- on Windows instead.
-					pick_leaf_process(function(cmd)
-						return cmd:match("^%S*/node%s") ~= nil or cmd:match("^node%s") ~= nil or cmd == "node"
-					end, "Attach to Node process:", function(pid)
-						attach_config.name = "Attach to process " .. pid
-						attach_config.processId = pid
-						dap.run(attach_config)
 					end)
-				end)
+			end
+
+			-- dap.terminate() is not safe to point at attach sessions as-is:
+			-- whenever the adapter reports supportsTerminateRequest, it sends
+			-- a real DAP "terminate" - and confirmed directly against
+			-- netcoredbg (attach to a plain running process, send
+			-- terminate): it kills the debuggee outright, launch or attach,
+			-- no distinction. Even the disconnect fallback nvim-dap uses
+			-- when supportsTerminateRequest is false defaults its own args
+			-- to `{ terminateDebuggee = true }`. vscode-js-debug happens not
+			-- to honor that flag on attach (confirmed the same way: process
+			-- kept running straight through a disconnect{terminateDebuggee =
+			-- true}), so JS was accidentally safe - .NET was not. An attach
+			-- session never asked the debugger to own the process's
+			-- lifecycle, so <leader>dt should always just detach for one,
+			-- consistently across both, and only reach for terminate (which
+			-- is correct there - nvim-dap started that process, it should
+			-- clean it up) on a launch session.
+			local function terminate_session()
+				local current = dap.session()
+				if current and current.config and current.config.request == "attach" then
+					dap.disconnect({ terminateDebuggee = false })
+				else
+					dap.terminate()
+				end
 			end
 
 			vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "[D]ebug [C]ontinue" })
@@ -317,7 +344,7 @@ function M.core()
 			vim.keymap.set("n", "<leader>do", dap.step_over, { desc = "[D]ebug Step [O]ver" })
 			vim.keymap.set("n", "<leader>di", dap.step_into, { desc = "[D]ebug Step [I]nto" })
 			vim.keymap.set("n", "<leader>dO", dap.step_out, { desc = "[D]ebug Step [O]ut" })
-			vim.keymap.set("n", "<leader>dt", dap.terminate, { desc = "[D]ebug [T]erminate" })
+			vim.keymap.set("n", "<leader>dt", terminate_session, { desc = "[D]ebug [T]erminate" })
 			vim.keymap.set("n", "<leader>dr", dap.repl.toggle, { desc = "[D]ebug [R]EPL Toggle" })
 			vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "[D]ebug [U]I Toggle" })
 			vim.keymap.set("n", "<leader>da", attach_to_process, { desc = "[D]ebug [A]ttach to Running Process" })

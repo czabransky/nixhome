@@ -8,6 +8,7 @@
   # https://search.nixos.org/packages
   home.packages = [
     pkgs.bat
+    pkgs.bws
     pkgs.colima
     pkgs.curl
     pkgs.delta

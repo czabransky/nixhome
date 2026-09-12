@@ -89,6 +89,7 @@ return {
 			builtin.find_files({
 				prompt_title = "Search Files",
 				hidden = true,
+				no_ignore = true,
 				find_command = {
 					"rg",
 					"--files",
@@ -101,6 +102,8 @@ return {
 					"!__pycache__/",
 					"-g",
 					"!venv/",
+					"-g",
+					"!node_modules/",
 				},
 			})
 		end
