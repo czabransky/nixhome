@@ -34,3 +34,7 @@ bind \cp 'cd ..; commandline -f repaint'
 bind \co _fzf_search_docker_ps
 bind -M insert \co _fzf_search_docker_ps
 
+# Bind Ctrl+W to open a link selected via fzf from ~/Links.md
+bind \cw links
+bind -M insert \cw links
+
