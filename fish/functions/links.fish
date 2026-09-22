@@ -8,7 +8,7 @@ function links --description "Pick a link from ~/Links.md via fzf and open it in
 	set -f selection (
 		string match -rv '^\s*(#.*)?$' <$links_file | \
 		_fzf_wrapper \
-			--delimiter=\t \
+			--delimiter='\s*\|\s*' \
 			--with-nth=1 \
 			--prompt='Links> ' \
 			--preview='echo {2}' \
@@ -17,6 +17,6 @@ function links --description "Pick a link from ~/Links.md via fzf and open it in
 
 	test -z "$selection"; and return 0
 
-	set -f url (string split --field=2 -- \t $selection)
-	open $url
+	set -f url (string split --field=2 -- '|' $selection)
+	open (string trim -- $url)
 end
