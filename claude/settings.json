@@ -126,5 +126,55 @@
       "Bash(gcloud * delete*)"
     ],
     "defaultMode": "manual"
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": false,
+    "excludedCommands": [
+      "docker",
+      "docker-compose",
+      "lazydocker",
+      "colima",
+      "nix",
+      "gh"
+    ],
+    "filesystem": {
+      "allowWrite": [
+        "~/.npm",
+        "~/.cache",
+        "~/Library/pnpm",
+        "~/.local/share/pnpm",
+        "~/.nuget"
+      ],
+      "denyRead": [
+        "~/.ssh",
+        "~/.aws",
+        "~/.gnupg",
+        "~/.kube",
+        "~/.docker/config.json",
+        "~/.config/gh",
+        "~/.config/gh-work",
+        "~/.config/gcloud",
+        "~/.netrc",
+        "~/.pgpass",
+        "~/.git-credentials",
+        "~/.claude.json",
+        "~/.claude-work/.claude.json",
+        "~/.config/nixhome-local"
+      ]
+    },
+    "network": {
+      "allowLocalBinding": true,
+      "allowedDomains": [
+        "github.com",
+        "*.github.com",
+        "*.githubusercontent.com",
+        "registry.npmjs.org",
+        "*.npmjs.org",
+        "cache.nixos.org",
+        "api.nuget.org"
+      ]
+    }
   }
 }
