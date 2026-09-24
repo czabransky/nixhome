@@ -10,8 +10,6 @@ cask "dbeaver-community"
 cask "excalidrawz"
 # Clear font for cli tools
 cask "font-fira-code-nerd-font"
-# Cross-platform Git credential storage for multiple hosting providers
-cask "git-credential-manager"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
 # Open-source keystroke visualiser

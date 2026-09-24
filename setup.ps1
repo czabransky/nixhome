@@ -102,6 +102,7 @@ cp -Recurse $RepoDir/nvim $HOME/.config/nvim
 # Configure Claude Code
 [System.IO.Directory]::CreateDirectory("$HOME/.claude")
 cp $RepoDir/claude/settings.json $HOME/.claude/settings.json
+cp $RepoDir/claude/CLAUDE.md $HOME/.claude/CLAUDE.md
 
 # Layer this repo's git/delta config on top of whatever's already in
 # ~/.gitconfig (user.name, credential helpers, etc.) without touching it

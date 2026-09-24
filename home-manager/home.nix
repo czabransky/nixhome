@@ -73,12 +73,14 @@ in
       recursive = true;
     };
     ".claude/settings.json".source = ~/nixhome/claude/settings.json;
+    ".claude/CLAUDE.md".source = ~/nixhome/claude/CLAUDE.md;
     ".homebrew/Brewfile".source = ~/nixhome/homebrew/Brewfile;
   }
   // lib.optionalAttrs (work != null) {
     # Work profile: same Claude settings, separate login/MCP/memory, selected
     # per-directory by direnv (see direnv/work.envrc).
     ".claude-work/settings.json".source = ~/nixhome/claude/settings.json;
+    ".claude-work/CLAUDE.md".source = ~/nixhome/claude/CLAUDE.md;
     "${workRepo}/.envrc".source = ~/nixhome/direnv/work.envrc;
     "${workWorktrees}/.envrc".source = ~/nixhome/direnv/work.envrc;
     # Git reads this alongside ~/.gitconfig; worktrees keep their gitdir under

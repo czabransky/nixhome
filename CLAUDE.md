@@ -7,7 +7,8 @@ setup for Windows. See `README.md` for the full picture.
 
 `home.nix` uses `home.file."<path>" = { source = ~/nixhome/<dir>; recursive = true; }`
 for `.vimrc`, `.config/fish`, `.config/starship.toml`, `.config/yazi`,
-`.config/herdr/config.toml`, `.config/nvim`, `.claude/settings.json`, and
+`.config/herdr/config.toml`, `.config/nvim`, `.claude/settings.json`,
+`.claude/CLAUDE.md` (plus `.claude-work/` copies of both), and
 `.homebrew/Brewfile`. This makes home-manager symlink each file **individually**
 into the Nix store at `home-manager switch` time — it is a build-time snapshot,
 **not** a live/directory symlink back into this repo.
