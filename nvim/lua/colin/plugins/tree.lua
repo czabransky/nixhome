@@ -33,9 +33,22 @@ function M.nvimtree()
 						-- to docked. False here means it's never registered
 						-- at all, so the tree stays open in either mode.
 						quit_on_focus_loss = false,
-						open_win_config = {
-							width = 100,
-						},
+						-- Function form (rather than a fixed table) so row/col
+						-- are recomputed from the current screen size each
+						-- open, centering the float instead of the plugin's
+						-- default pinned-top-left (row = 1, col = 1).
+						open_win_config = function()
+							local width = 100
+							local height = math.floor(vim.o.lines * 0.7)
+							return {
+								relative = "editor",
+								border = "rounded",
+								width = width,
+								height = height,
+								row = math.floor((vim.o.lines - height) / 2),
+								col = math.floor((vim.o.columns - width) / 2),
+							}
+						end,
 					},
 					width = 50,
 				},
@@ -72,7 +85,7 @@ function M.nvimtree()
 			-- float.enable here and re-opening switches between floating
 			-- and docked - no plugin support for this beyond that.
 			local tree_config = require("nvim-tree.config")
-			vim.keymap.set("n", "<leader>el", function()
+			vim.keymap.set("n", "<leader>ef", function()
 				local was_open = api.tree.is_visible()
 				tree_config.g.view.float.enable = not tree_config.g.view.float.enable
 				tree_config.g.actions.open_file.quit_on_open = tree_config.g.view.float.enable
@@ -80,8 +93,25 @@ function M.nvimtree()
 					api.tree.close()
 					api.tree.find_file({ open = true, focus = true })
 				end
-				vim.notify("nvim-tree: " .. (tree_config.g.view.float.enable and "floating" or "docked"))
 			end, { desc = "Explorer Toggle Float/Docked" })
+
+			-- Absolute rather than a toggle, mirroring <C-w>H / <C-w>L (send
+			-- window to far left/right). Only affects docked mode - floating
+			-- windows are centered via view.float.open_win_config above
+			-- regardless of this setting.
+			local function dock_side(side)
+				return function()
+					tree_config.g.view.side = side
+					if api.tree.is_visible() and not tree_config.g.view.float.enable then
+						api.tree.close()
+						api.tree.find_file({ open = true, focus = true })
+					end
+				end
+			end
+			vim.keymap.set("n", "<leader>eH", dock_side("left"), { desc = "Explorer Dock Left" })
+			vim.keymap.set("n", "<leader>e<Left>", dock_side("left"), { desc = "Explorer Dock Left" })
+			vim.keymap.set("n", "<leader>eL", dock_side("right"), { desc = "Explorer Dock Right" })
+			vim.keymap.set("n", "<leader>e<Right>", dock_side("right"), { desc = "Explorer Dock Right" })
 			setup_netrw(0)
 
 			-- Docked nvim-tree windows ARE captured by :mksession (floating

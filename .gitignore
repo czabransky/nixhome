@@ -7,3 +7,6 @@ Session.vim
 # Environment Files
 .env
 
+# Generated Files
+nvim.log
+
