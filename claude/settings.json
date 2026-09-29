@@ -3,6 +3,10 @@
   "autoMode": {
     "classifyAllShell": true
   },
+  "env": {
+    "DOTNET_SYSTEM_NET_DISABLEIPV6": "1",
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1"
+  },
   "permissions": {
     "allow": [
       "Bash(git log*)",

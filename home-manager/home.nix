@@ -74,6 +74,10 @@ in
     };
     ".claude/settings.json".source = ~/nixhome/claude/settings.json;
     ".claude/CLAUDE.md".source = ~/nixhome/claude/CLAUDE.md;
+    ".claude/skills" = {
+      source = ~/nixhome/claude/skills;
+      recursive = true;
+    };
     ".homebrew/Brewfile".source = ~/nixhome/homebrew/Brewfile;
   }
   // lib.optionalAttrs (work != null) {
@@ -81,6 +85,10 @@ in
     # per-directory by direnv (see direnv/work.envrc).
     ".claude-work/settings.json".source = ~/nixhome/claude/settings.json;
     ".claude-work/CLAUDE.md".source = ~/nixhome/claude/CLAUDE.md;
+    ".claude-work/skills" = {
+      source = ~/nixhome/claude/skills;
+      recursive = true;
+    };
     "${workRepo}/.envrc".source = ~/nixhome/direnv/work.envrc;
     "${workWorktrees}/.envrc".source = ~/nixhome/direnv/work.envrc;
     # Git reads this alongside ~/.gitconfig; worktrees keep their gitdir under
