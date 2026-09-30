@@ -15,6 +15,7 @@ local ensure_installed = {
 	"vim",
 	"vimdoc",
 	"xml",
+	"yaml",
 }
 
 local function under_max_filesize(bufnr)
