@@ -6,6 +6,11 @@ vim.keymap.set("n", "<leader>cw", function()
 	vim.wo.wrap = not vim.wo.wrap
 end, { desc = "[C]ode Toggle [W]rap" })
 
+-- Stock ZQ (:q!) only closes the current window, not the whole session -
+-- noticeable with dapui's multiple docked splits, which took several
+-- presses to fully quit. One press, every window, no save, no prompt.
+vim.keymap.set("n", "ZQ", ":qa!<CR>", { silent = true, desc = "Quit All (No Save)" })
+
 vim.keymap.set("n", "<esc>", function()
 	for _, win in pairs(vim.api.nvim_list_wins()) do
 		if vim.api.nvim_win_get_config(win).relative == "win" then
