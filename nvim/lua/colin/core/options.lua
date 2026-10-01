@@ -117,6 +117,7 @@ local function opt_overrides()
 	for key, value in pairs(options) do
 		vim.opt[key] = value
 	end
+	vim.opt.fillchars:append({ eob = " " })
 	vim.g.have_nerd_font = true
 	vim.g.netrw_browse_split = 0
 	vim.g.netrw_banner = 1

@@ -40,6 +40,29 @@ local function getWords()
 	end
 end
 
+local function dap_status()
+	local ok, dap = pcall(require, "dap")
+	if not ok then
+		return ""
+	end
+	local session = dap.session()
+	if not session then
+		return ""
+	end
+	if session.stopped_thread_id then
+		return "⏸ PAUSED"
+	end
+	return "▶ RUNNING"
+end
+
+local function dap_status_color()
+	local ok, dap = pcall(require, "dap")
+	if ok and dap.session() and dap.session().stopped_thread_id then
+		return { fg = "#333333", bg = "#ffdf1b" }
+	end
+	return { fg = "#333333", bg = "#a7c080" }
+end
+
 -- adapted from https://www.reddit.com/r/neovim/comments/xy0tu1/cmdheight0_recording_macros_message/
 local function show_macro_recording()
 	local recording_register = vim.fn.reg_recording()
@@ -60,12 +83,18 @@ return {
 				icons_enabled = true,
 				component_separators = " ",
 				section_separators = { left = "", right = "" },
+				globalstatus = true,
 			},
 			sections = {
 				lualine_a = {
 					{ "mode", fmt = trunc(80, 1, nil, true) },
 				},
 				lualine_b = {
+					{
+						dap_status,
+						color = dap_status_color,
+						separator = { left = "", right = "" },
+					},
 					{ "branch", icon = "󰘬" },
 					{
 						"diff",

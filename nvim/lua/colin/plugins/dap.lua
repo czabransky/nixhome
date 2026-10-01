@@ -17,16 +17,50 @@ function M.core()
 			local dap = require("dap")
 			local dapui = require("dapui")
 
-			dapui.setup()
+			dapui.setup({
+				expand_lines = true,
+				controls = { enabled = false },
+				floating = { border = "rounded" },
+				render = {
+					max_type_length = 60,
+					max_value_lines = 200,
+				},
+				layouts = {
+					{
+						elements = {
+							{ id = "scopes", size = 1.0 }
+						},
+						size = 15,
+						position = "bottom",
+					},
+				},
+			})
 			require("nvim-dap-virtual-text").setup()
+
+			-- The scopes buffer is reused for both the docked sidebar and the
+			-- <leader>dl float, so FileType only fires once (whichever comes
+			-- first) - win_gettype "popup" (Neovim's term for any floating
+			-- window) is what actually distinguishes the float on each open.
+			-- WinEnter, not BufWinEnter: dapui's open_float creates the
+			-- window with enter=false and only switches focus to it
+			-- afterward via nvim_set_current_win, so BufWinEnter fires while
+			-- win_gettype(0) still reports the previous (non-popup) window.
+			vim.api.nvim_create_autocmd("WinEnter", {
+				callback = function()
+					if vim.bo.filetype == "dapui_scopes" and vim.fn.win_gettype(0) == "popup" then
+						vim.wo.number = true
+						vim.wo.relativenumber = true
+					end
+				end,
+			})
 
 			-- Sign column icons for breakpoints and the current execution line.
 			-- nvim-dap references these sign names but never defines them itself.
 			vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "CursorLine" })
 			local dap_signs = {
-				DapBreakpoint = { text = "", texthl = "DiagnosticError" },
+				DapBreakpoint = { text = "🔴", texthl = "DiagnosticError" },
 				DapBreakpointCondition = { text = "", texthl = "DiagnosticWarn" },
-				DapBreakpointRejected = { text = "", texthl = "DiagnosticError" },
+				DapBreakpointRejected = { text = "⭕", texthl = "DiagnosticError" },
 				DapLogPoint = { text = "", texthl = "DiagnosticInfo" },
 				DapStopped = { text = "", texthl = "DiagnosticWarn", linehl = "DapStoppedLine", numhl = "DiagnosticWarn" },
 			}
@@ -225,7 +259,7 @@ function M.core()
 							return
 						end
 
-						if lang == ".NET" then
+						if lang == "dotnet" then
 							-- The compiled app always runs from bin/Debug|Release/<tfm>/ -
 							-- unlike "dotnet watch run"/dotnet-watch.dll/MSBuild.dll, which
 							-- never do - so this alone, combined with the leaf-only
@@ -244,7 +278,7 @@ function M.core()
 						end
 
 						local port_input = vim.fn.input(
-						"Inspector port to attach to (blank to pick a running process instead): ")
+							"Inspector port to attach to (blank to pick a running process instead): ")
 						local attach_config = {
 							type = "pwa-node",
 							request = "attach",
@@ -330,8 +364,14 @@ function M.core()
 					enter = true,
 				})
 			end, { desc = "[D]ebug [L]ocals Popup" })
-			vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "[D]ebug Toggle [B]reakpoint" })
-			vim.keymap.set("n", "<leader>dB", set_conditional_breakpoint, { desc = "[D]ebug Conditional [B]reakpoint" })
+			vim.keymap.set("n", "<leader>ds", function()
+				dapui.float_element("stacks", {
+					width = math.floor(vim.o.columns * 0.7),
+					height = math.floor(vim.o.lines * 0.8),
+					position = "center",
+					enter = true,
+				})
+			end, { desc = "[D]ebug [S]tack Popup" })
 			vim.keymap.set("n", "<leader>dk", dap.toggle_breakpoint, { desc = "[D]ebug Toggle Brea[k]point" })
 			vim.keymap.set("n", "<leader>dK", set_conditional_breakpoint, { desc = "[D]ebug Conditional Brea[k]point" })
 			vim.keymap.set("n", "<leader>dC", dap.clear_breakpoints, { desc = "[D]ebug [C]lear All Breakpoints" })
@@ -348,6 +388,12 @@ function M.core()
 			vim.keymap.set("n", "<leader>dr", dap.repl.toggle, { desc = "[D]ebug [R]EPL Toggle" })
 			vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "[D]ebug [U]I Toggle" })
 			vim.keymap.set("n", "<leader>da", attach_to_process, { desc = "[D]ebug [A]ttach to Running Process" })
+			vim.keymap.set({ "n", "v" }, "<leader>dw", function()
+				dapui.eval(nil, { enter = true })
+			end, { desc = "[D]ebug Add to [W]atches" })
+			vim.keymap.set({ "n", "v" }, "Q", function()
+				dapui.eval()
+			end, { desc = "[D]ebug Hover Eval" })
 		end,
 	}
 end
