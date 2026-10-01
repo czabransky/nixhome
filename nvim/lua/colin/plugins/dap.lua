@@ -233,10 +233,34 @@ function M.core()
 				return leaves
 			end
 
+			-- Picker popups clip from the right, so a bare absolute path
+			-- (dotnet's exe path, the project's bin/Debug/<tfm>/*.dll) hides
+			-- exactly the part that tells two same-named processes apart.
+			-- Collapse every path token down to its last few segments so the
+			-- identifying tail is what's visible instead of a shared prefix.
+			local function shorten_path(path, keep)
+				if not path:match("^/") then
+					return path
+				end
+				local parts = {}
+				for part in path:gmatch("[^/]+") do
+					table.insert(parts, part)
+				end
+				if #parts <= keep then
+					return path
+				end
+				local tail = {}
+				for i = #parts - keep + 1, #parts do
+					table.insert(tail, parts[i])
+				end
+				return ".../" .. table.concat(tail, "/")
+			end
+
 			local function process_label(proc)
-				local exe = proc.command:match("^%S+") or proc.command
-				local basename = exe:match("([^/\\]+)$") or exe
-				return string.format("%s (pid %d) - %s", basename, proc.pid, proc.command)
+				local shortened = proc.command:gsub("%S+", function(token)
+					return shorten_path(token, 2)
+				end)
+				return string.format("(pid %d) %s", proc.pid, shortened)
 			end
 
 			local function pick_leaf_process(cmd_matches, prompt, on_pick)
