@@ -100,6 +100,22 @@
       "Bash(wget * | bash)",
       "Bash(wget * | sh)",
 
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push * --force*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)",
+      "Bash(git branch -D*)",
+      "Bash(git push * --delete*)",
+      "Bash(git filter-branch*)",
+      "Bash(git reflog expire*)",
+      "Bash(git gc --prune=now*)",
+      "Bash(git stash clear*)",
+
+      "Bash(gh repo delete*)",
+      "Bash(gh release delete*)",
+      "Bash(gh auth token*)",
+
       "Edit(//etc/**)"
     ],
     "ask": [
@@ -128,7 +144,14 @@
       "Bash(docker volume rm*)",
       "Bash(aws s3 rm*)",
       "Bash(aws ec2 terminate-instances*)",
-      "Bash(gcloud * delete*)"
+      "Bash(gcloud * delete*)",
+
+      "Bash(gh secret set*)",
+      "Bash(gh secret delete*)",
+      "Bash(gh auth logout*)",
+      "Bash(gh pr merge*)",
+      "Bash(gh workflow delete*)",
+      "Bash(gh workflow disable*)"
     ],
     "defaultMode": "plan"
   },
@@ -141,8 +164,7 @@
       "docker-compose",
       "lazydocker",
       "colima",
-      "nix",
-      "gh"
+      "nix"
     ],
     "filesystem": {
       "allowWrite": [
@@ -150,7 +172,10 @@
         "~/.cache",
         "~/Library/pnpm",
         "~/.local/share/pnpm",
-        "~/.nuget"
+        "~/.nuget",
+        "~/.config/gh",
+        "~/.local/share/gh",
+        "~/.local/state/gh"
       ],
       "denyRead": [
         "~/.ssh",
@@ -179,7 +204,8 @@
         "*.npmjs.org",
         "cache.nixos.org",
         "api.nuget.org"
-      ]
+      ],
+      "allowMachLookup": ["com.apple.SecurityServer"]
     }
   }
 }
