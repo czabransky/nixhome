@@ -7,6 +7,11 @@ function M.core()
 			"rcarriga/nvim-dap-ui",
 			"nvim-neotest/nvim-nio",
 			"theHamsta/nvim-dap-virtual-text",
+			-- attach_to_process's process picker uses telescope directly
+			-- (not vim.ui.select) so it can show a details previewer -
+			-- telescope-ui-select's global vim.ui.select override has no
+			-- per-call hook for that.
+			"nvim-telescope/telescope.nvim",
 			-- Actual setup() lives in plugins/fidget.lua (shared with
 			-- rest.nvim) - just needed here so it's loaded by the time the
 			-- coreclr adapter below reaches for fidget.progress.
@@ -205,10 +210,16 @@ function M.core()
 			-- actually worth attaching to.
 			local function debuggable_leaf_processes(cmd_matches)
 				local by_pid = {}
-				for _, line in ipairs(vim.fn.systemlist({ "ps", "-eo", "pid,ppid,command" })) do
-					local pid, ppid, command = line:match("^%s*(%d+)%s+(%d+)%s+(.*)$")
+				for _, line in ipairs(vim.fn.systemlist({ "ps", "-eo", "pid,ppid,user,etime,command" })) do
+					local pid, ppid, user, etime, command = line:match("^%s*(%d+)%s+(%d+)%s+(%S+)%s+(%S+)%s+(.*)$")
 					if pid then
-						by_pid[tonumber(pid)] = { pid = tonumber(pid), ppid = tonumber(ppid), command = command }
+						by_pid[tonumber(pid)] = {
+							pid = tonumber(pid),
+							ppid = tonumber(ppid),
+							user = user,
+							etime = etime,
+							command = command,
+						}
 					end
 				end
 				local matched = {}
@@ -263,17 +274,75 @@ function M.core()
 				return string.format("(pid %d) %s", proc.pid, shortened)
 			end
 
+			-- A plain vim.ui.select routes through telescope-ui-select's
+			-- global config (telescope.lua), which has no per-call hook for
+			-- a previewer - so this builds its own telescope picker instead,
+			-- scoped to just this one picker, to show full process detail
+			-- alongside the (necessarily shortened, see process_label)
+			-- results list.
 			local function pick_leaf_process(cmd_matches, prompt, on_pick)
 				local candidates = debuggable_leaf_processes(cmd_matches)
 				if #candidates == 0 then
 					vim.notify("No matching running process found", vim.log.levels.WARN)
 					return
 				end
-				vim.ui.select(candidates, { prompt = prompt, format_item = process_label }, function(choice)
-					if choice then
-						on_pick(choice.pid)
-					end
-				end)
+
+				local pickers = require("telescope.pickers")
+				local finders = require("telescope.finders")
+				local conf = require("telescope.config").values
+				local previewers = require("telescope.previewers")
+				local actions = require("telescope.actions")
+				local action_state = require("telescope.actions.state")
+
+				pickers.new({}, {
+					prompt_title = prompt,
+					-- "vertical" stacks results above the preview behind a
+					-- horizontal divider, instead of telescope's default
+					-- side-by-side columns - the full command/pid/ppid/
+					-- user/elapsed-time detail needs the width more than the
+					-- results list does.
+					layout_strategy = "vertical",
+					layout_config = { width = 0.8, height = 0.7, preview_height = 0.5 },
+					finder = finders.new_table({
+						results = candidates,
+						entry_maker = function(proc)
+							return {
+								value = proc,
+								display = process_label(proc),
+								ordinal = process_label(proc),
+							}
+						end,
+					}),
+					sorter = conf.generic_sorter({}),
+					previewer = previewers.new_buffer_previewer({
+						title = "Process Details",
+						define_preview = function(self, entry)
+							local proc = entry.value
+							local lines = {
+								"PID:     " .. proc.pid,
+								"PPID:    " .. proc.ppid,
+								"User:    " .. (proc.user or "?"),
+								"Elapsed: " .. (proc.etime or "?"),
+								"",
+								"Command:",
+							}
+							for token in proc.command:gmatch("%S+") do
+								table.insert(lines, "  " .. token)
+							end
+							vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
+						end,
+					}),
+					attach_mappings = function(prompt_bufnr)
+						actions.select_default:replace(function()
+							local entry = action_state.get_selected_entry()
+							actions.close(prompt_bufnr)
+							if entry then
+								on_pick(entry.value.pid)
+							end
+						end)
+						return true
+					end,
+				}):find()
 			end
 
 			local function attach_to_process()
