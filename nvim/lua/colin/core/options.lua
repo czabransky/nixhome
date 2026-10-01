@@ -113,6 +113,7 @@ local function opt_overrides()
 		conceallevel = 1,
 		inccommand = "split",
 		timeoutlen = 500,
+		cmdheight = 0,
 	}
 	for key, value in pairs(options) do
 		vim.opt[key] = value
