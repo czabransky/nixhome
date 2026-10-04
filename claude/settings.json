@@ -23,7 +23,6 @@
       "Bash(git shortlog*)",
       "Bash(git stash list*)",
       "Bash(git config --get*)",
-
       "Bash(gh pr view*)",
       "Bash(gh issue view*)",
       "Bash(gh repo view*)",
@@ -53,7 +52,6 @@
       "Read(**/.netrc)",
       "Read(**/.pgpass)",
       "Read(**/.git-credentials)",
-
       "Read(~/.ssh/**)",
       "Read(~/.aws/**)",
       "Read(~/.gnupg/**)",
@@ -71,7 +69,6 @@
       "Read(~/Library/Keychains/**)",
       "Read(~/.claude/.credentials.json)",
       "Read(~/.claude.json)",
-
       "Edit(~/.ssh/**)",
       "Edit(~/.aws/**)",
       "Edit(~/.gnupg/**)",
@@ -86,7 +83,6 @@
       "Edit(~/Library/Keychains/**)",
       "Edit(~/.claude/.credentials.json)",
       "Edit(~/.claude.json)",
-
       "Bash(rm -rf /)",
       "Bash(rm -rf /*)",
       "Bash(rm -rf ~)",
@@ -99,7 +95,6 @@
       "Bash(curl * | sh)",
       "Bash(wget * | bash)",
       "Bash(wget * | sh)",
-
       "Bash(git push --force*)",
       "Bash(git push -f*)",
       "Bash(git push * --force*)",
@@ -111,11 +106,9 @@
       "Bash(git reflog expire*)",
       "Bash(git gc --prune=now*)",
       "Bash(git stash clear*)",
-
       "Bash(gh repo delete*)",
       "Bash(gh release delete*)",
       "Bash(gh auth token*)",
-
       "Edit(//etc/**)"
     ],
     "ask": [
@@ -145,7 +138,6 @@
       "Bash(aws s3 rm*)",
       "Bash(aws ec2 terminate-instances*)",
       "Bash(gcloud * delete*)",
-
       "Bash(gh secret set*)",
       "Bash(gh secret delete*)",
       "Bash(gh auth logout*)",
@@ -205,7 +197,20 @@
         "cache.nixos.org",
         "api.nuget.org"
       ],
-      "allowMachLookup": ["com.apple.SecurityServer"]
+      "allowMachLookup": [
+        "com.apple.SecurityServer"
+      ]
     }
+  },
+  "extraKnownMarketplaces": {
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "ponytail@ponytail": true
   }
 }
