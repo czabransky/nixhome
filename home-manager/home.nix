@@ -45,6 +45,7 @@ in
     pkgs.ripgrep
     pkgs.starship
     pkgs.tree-sitter
+    pkgs.television
     pkgs.unzip
     pkgs.yazi
     pkgs.zoxide
