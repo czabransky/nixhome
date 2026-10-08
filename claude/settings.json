@@ -1,5 +1,7 @@
 {
   "model": "claude-opus-5-5",
+  "enableWorkflows": false,
+  "workflowSizeGuideline": "medium",
   "autoMode": {
     "classifyAllShell": true
   },
