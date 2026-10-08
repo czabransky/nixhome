@@ -9,3 +9,10 @@ focus_pane_right = ["prefix+l", "prefix+right"]
 open_worktree = "prefix+shift+o"
 switch_tab = ""
 switch_workspace = "prefix+1..9"
+
+[[keys.command]]
+key = "prefix+space"
+type = "popup"
+command = "python3 ~/.config/herdr/pane-picker.py"
+width = "70%"
+height = "60%"

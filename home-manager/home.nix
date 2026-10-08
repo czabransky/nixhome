@@ -66,6 +66,7 @@ in
       recursive = true;
     };
     ".config/herdr/config.toml".source = ~/nixhome/herdr/config.toml;
+    ".config/herdr/pane-picker.py".source = ~/nixhome/herdr/pane-picker.py;
     ".config/nvim" = {
       source = ~/nixhome/nvim;
       recursive = true;
