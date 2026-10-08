@@ -29,6 +29,7 @@ in
     pkgs.fd
     pkgs.file
     pkgs.fish
+    pkgs.ffmpeg
     pkgs.fzf
     pkgs.gh
     pkgs.git
