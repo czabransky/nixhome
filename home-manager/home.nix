@@ -168,4 +168,21 @@ in
     NVIM_APPNAME = "nvim";
   };
 
+  launchd.agents.colima = {
+    enable = true;
+    config = {
+      ProgramArguments = [
+        "${pkgs.colima}/bin/colima"
+        "start"
+        "--foreground"
+      ];
+      RunAtLoad = true;
+      # Restart on crash; a manual `colima stop` exits 0 and stays stopped.
+      KeepAlive.SuccessfulExit = false;
+      EnvironmentVariables.PATH = "${config.home.profileDirectory}/bin:/usr/bin:/bin:/usr/sbin:/sbin";
+      StandardOutPath = "${config.home.homeDirectory}/Library/Logs/colima.log";
+      StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/colima.log";
+    };
+  };
+
 }
