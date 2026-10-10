@@ -33,6 +33,7 @@ in
     pkgs.fzf
     pkgs.gh
     pkgs.git
+    pkgs.glow
     pkgs.jq
     pkgs.lazydocker
     pkgs.lazygit

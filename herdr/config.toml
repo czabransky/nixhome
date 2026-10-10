@@ -16,3 +16,10 @@ type = "popup"
 command = "python3 ~/.config/herdr/pane-picker.py"
 width = "70%"
 height = "60%"
+
+[[keys.command]]
+key = "prefix+w"
+type = "popup"
+command = "python3 ~/.config/herdr/pane-picker.py --workspaces"
+width = "80%"
+height = "60%"
