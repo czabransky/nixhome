@@ -82,6 +82,10 @@ in
       source = ~/nixhome/claude/skills;
       recursive = true;
     };
+    ".claude/commands" = {
+      source = ~/nixhome/claude/commands;
+      recursive = true;
+    };
     ".homebrew/Brewfile".source = ~/nixhome/homebrew/Brewfile;
   }
   // lib.optionalAttrs (work != null) {
@@ -91,6 +95,10 @@ in
     ".claude-work/CLAUDE.md".source = ~/nixhome/claude/CLAUDE.md;
     ".claude-work/skills" = {
       source = ~/nixhome/claude/skills;
+      recursive = true;
+    };
+    ".claude-work/commands" = {
+      source = ~/nixhome/claude/commands;
       recursive = true;
     };
     "${workRepo}/.envrc".source = ~/nixhome/direnv/work.envrc;
