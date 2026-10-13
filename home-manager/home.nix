@@ -87,6 +87,7 @@ in
       recursive = true;
     };
     ".homebrew/Brewfile".source = ~/nixhome/homebrew/Brewfile;
+    ".config/nixhome-local/clean-claude-tmp.sh".source = ~/nixhome/scripts/clean-claude-tmp.sh;
   }
   // lib.optionalAttrs (work != null) {
     # Work profile: same Claude settings, separate login/MCP/memory, selected
