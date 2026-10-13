@@ -21,6 +21,10 @@ project is the current working directory unless told otherwise.
 Read the codebase before asking the user anything answerable by reading it:
 
 - Look for `docs/architecture/` and any existing current/future diagram.
+- Look for an architecture model rendered by a command (for example
+  `architecture/<system>/model.yaml` with a `changes/` folder). Read its
+  standing decisions and any open change files: they're constraints the
+  candidates must respect or explicitly supersede.
 - Look for README sections describing architecture.
 - Identify frameworks, libraries, and architectural patterns already in use.
 - Find the most similar existing feature/component as precedent.
@@ -59,7 +63,9 @@ options. Iterate once if the user pushes back on the options presented.
 ## Step 7: Hand off
 
 Close with a short decision summary and an explicit fork — do neither of
-these yourself:
+these yourself. If the project records decisions in a format of its own
+(such as `decisions:` entries listing what's fixed and what's left to the
+implementer), write the summary in that shape so it can be pasted in:
 
 - "Want me to update the architecture diagram to reflect this?" → the user
   can invoke `cz-architecture-diagram`.

@@ -12,7 +12,11 @@ break it. Never propose new architecture options (that's
 ## Step 1: Read the artifact under review
 
 Identify and fully read what's being critiqued: an architecture diagram
-file, a design doc, pasted text, or a PR description.
+file, a design doc, pasted text, or a PR description. When the diagrams are
+rendered from a model (for example `architecture/<system>/model.yaml` and
+its change files), read the model, the change and its generated brief
+rather than the SVGs: they hold the decisions, flows and stored data the
+pictures leave out.
 
 ## Step 2: Verify claims against the codebase
 
@@ -34,6 +38,10 @@ Go through each of these explicitly rather than giving free-form opinion:
 - Simpler alternatives not considered.
 - Reversibility.
 - Hidden coupling.
+- When critiquing diagrams: does each view answer one question, is any view
+  redundant with another, and is anything missing (a scenario with no flow,
+  a long-lived thing with no lifecycle, stored data with no owner or
+  retention)?
 
 ## Step 4: Report findings by severity
 
