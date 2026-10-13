@@ -195,4 +195,17 @@ in
     };
   };
 
+  launchd.agents.clean-claude-tmp = {
+    enable = true;
+    config = {
+      ProgramArguments = [
+        "/bin/sh"
+        "${config.home.homeDirectory}/.config/nixhome-local/clean-claude-tmp.sh"
+      ];
+      StartCalendarInterval = [ { Hour = 9; Minute = 0; } ];
+      StandardOutPath = "${config.home.homeDirectory}/Library/Logs/clean-claude-tmp.log";
+      StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/clean-claude-tmp.log";
+    };
+  };
+
 }
