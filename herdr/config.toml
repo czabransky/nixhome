@@ -13,6 +13,7 @@ switch_workspace = "prefix+1..9"
 [[keys.command]]
 key = "prefix+space"
 type = "popup"
+description = "pick pane"
 command = "python3 ~/.config/herdr/pane-picker.py"
 width = "70%"
 height = "60%"
@@ -20,6 +21,37 @@ height = "60%"
 [[keys.command]]
 key = "prefix+w"
 type = "popup"
+description = "pick workspace pane"
 command = "python3 ~/.config/herdr/pane-picker.py --workspaces"
 width = "80%"
 height = "60%"
+
+[[keys.command]]
+key = "prefix+shift+b"
+type = "shell"
+description = "move pane to new tab"
+command = "herdr pane move $(herdr pane current | jq -r .result.pane.pane_id) --new-tab --focus"
+
+[[keys.command]]
+key = "prefix+shift+h"
+type = "shell"
+description = "swap pane left"
+command = "herdr pane swap --direction left"
+
+[[keys.command]]
+key = "prefix+shift+j"
+type = "shell"
+description = "swap pane down"
+command = "herdr pane swap --direction down"
+
+[[keys.command]]
+key = "prefix+shift+k"
+type = "shell"
+description = "swap pane up"
+command = "herdr pane swap --direction up"
+
+[[keys.command]]
+key = "prefix+shift+l"
+type = "shell"
+description = "swap pane right"
+command = "herdr pane swap --direction right"
