@@ -59,6 +59,7 @@ Applies to all text you produce: replies, UI strings, error messages, commit mes
 - Available tools: `rg`, `fd`, `bat`, `eza`, `jq`, `delta`, `lazygit`, `gh`.
 - Dotfiles are managed by home-manager from `~/nixhome`. Edit the source there, never deployed copies under `~/.config` or `~/.claude`.
 - I run nix/home-manager commands myself. Tell me when a switch is needed.
+- Don't try to delete `/private/tmp/claude*` folders. `rm` on them is blocked, and an automatic routine cleans them up.
 
 ## Privacy
 
