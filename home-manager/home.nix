@@ -12,7 +12,7 @@ let
 in
 {
   home.username = "colin";
-  home.homeDirectory = "/Users/colin";
+  home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/colin" else "/home/colin";
   home.stateVersion = "26.05";
 
   # The home.packages option allows you to install Nix packages.
