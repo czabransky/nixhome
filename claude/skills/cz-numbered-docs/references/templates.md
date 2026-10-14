@@ -1,6 +1,33 @@
 # Templates
 
 Skeletons for the numbered-docs format. Replace `NN` with the project's width (`00` or `000`).
+In a scoped layout, every scope uses the overview and topic templates with 2-digit numbers, and
+`docs/` below means `<root>/<scope>/`.
+
+## Contents
+
+- [Index (scoped only, `<root>/index.md`)](#index-scoped-only-rootindexmd)
+- [Overview (`docs/00-overview.md`)](#overview-docs00-overviewmd)
+- [Topic doc](#topic-doc)
+- [Roadmap (`docs/99-roadmap.md`)](#roadmap-docs99-roadmapmd)
+- [Agent file (CLAUDE.md)](#agent-file-claudemd)
+- [Nested agent file (scoped only, `apps/<app>/CLAUDE.md`)](#nested-agent-file-scoped-only-appsappclaudemd)
+- [Link check (flat)](#link-check-flat)
+- [Link check (scoped)](#link-check-scoped)
+
+## Index (scoped only, `<root>/index.md`)
+
+```markdown
+# <Docs title>
+
+How <project> is built and run, as it is now. Each scope is a numbered sequence of docs in
+reading order, starting with its overview.
+
+- [Platform](platform/00-overview.md): setup, environments, deployment and what spans the apps.
+- [Backend](backend/00-overview.md): <one line on what it covers and who reads it>.
+
+<Links to what the docs don't hold: the roadmap, product or feature pages, the glossary.>
+```
 
 ## Overview (`docs/00-overview.md`)
 
@@ -75,6 +102,9 @@ Headings are nouns, never questions. Link related docs by relative path.
 
 ## Roadmap (`docs/99-roadmap.md`)
 
+Skip this doc when the project keeps its roadmap elsewhere; the overview's "Keeping the docs
+current" rules then send deferred work to that home instead of `99`.
+
 ```markdown
 # Roadmap
 
@@ -127,18 +157,45 @@ All paths are under `docs/`.
 - A new topic gets the next free number in its band and a row in `docs/00-overview.md`.
 ```
 
-## Link check
+## Nested agent file (scoped only, `apps/<app>/CLAUDE.md`)
+
+```markdown
+# <App>
+
+Before changing code here, read `<root>/<scope>/00-overview.md` and the docs it points you to.
+For anything that spans apps (setup, environments, deployment, secrets), read
+`<root>/platform/`.
+
+## Commands
+
+    <app-specific build, run and test commands>
+
+## Always-on rules
+
+- <Rule>. (<scope>/NN)
+```
+
+In the root agent file, a scoped "Read before you touch" row names the scope or the doc:
+`| Changing a migration | backend/40-database, platform/90-deployment |`.
+
+## Link check (flat)
 
 Run from the repository root; adjust the agent file name and the number width.
 
 ```python
 import glob, os, re
+
+
+def prose(text):
+    """The text without code blocks and code spans, whose links are examples."""
+    return re.sub(r'`[^`\n]*`', '', re.sub(r'```.*?```', '', text, flags=re.S))
+
 files = glob.glob('docs/*.md') + ['README.md', 'CLAUDE.md']
 bad = 0
 for f in files:
     if not os.path.exists(f):
         continue
-    for m in re.finditer(r'\]\(([^)#\s]+)(#[^)]*)?\)', open(f).read()):
+    for m in re.finditer(r'\]\(([^)#\s]+)(#[^)]*)?\)', prose(open(f).read())):
         target = m.group(1)
         if target.startswith('http'):
             continue
@@ -152,5 +209,54 @@ for f in sorted(glob.glob('docs/*.md')):
     b = os.path.basename(f)
     if not b.endswith('-overview.md') and b not in overview:
         print('not in overview', b); bad += 1
+print('problems:', bad)
+```
+
+## Link check (scoped)
+
+Run from the repository root; set `ROOT` to the docs root.
+
+```python
+import glob, os, re
+
+
+def prose(text):
+    """The text without code blocks and code spans, whose links are examples."""
+    return re.sub(r'`[^`\n]*`', '', re.sub(r'```.*?```', '', text, flags=re.S))
+
+ROOT = 'docs'
+skip = ('node_modules', '.git', '.next')
+agent_files = [f for f in glob.glob('**/CLAUDE.md', recursive=True)
+               if not any(s in f.split(os.sep) for s in skip)]
+docs = glob.glob(f'{ROOT}/**/*.md', recursive=True)
+bad = 0
+for f in docs + agent_files + ['README.md']:
+    if not os.path.exists(f):
+        continue
+    for m in re.finditer(r'\]\(([^)#\s]+)(#[^)]*)?\)', prose(open(f).read())):
+        target = m.group(1)
+        if target.startswith(('http', '/')):
+            continue
+        if not os.path.exists(os.path.join(os.path.dirname(f), target)):
+            print('broken', f, target); bad += 1
+scopes = sorted(d for d in os.listdir(ROOT)
+                if os.path.isdir(os.path.join(ROOT, d)) and not d.startswith('.'))
+index = open(f'{ROOT}/index.md').read() if os.path.exists(f'{ROOT}/index.md') else ''
+for scope in scopes:
+    overview = glob.glob(f'{ROOT}/{scope}/00-*.md')
+    if not overview:
+        print('no overview in', scope); bad += 1
+        continue
+    if f'{scope}/00-' not in index:
+        print('index.md misses scope', scope); bad += 1
+    text = open(overview[0]).read()
+    for f in sorted(glob.glob(f'{ROOT}/{scope}/*.md')):
+        b = os.path.basename(f)
+        if not b.startswith('00-') and b not in text:
+            print('not in overview', f); bad += 1
+for f in agent_files:
+    for scope, num in re.findall(r'\b([a-z][a-z0-9-]*)/(\d{2})\b', open(f).read()):
+        if scope in scopes and not glob.glob(f'{ROOT}/{scope}/{num}-*.md'):
+            print(f, 'names missing doc', f'{scope}/{num}'); bad += 1
 print('problems:', bad)
 ```

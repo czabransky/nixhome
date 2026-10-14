@@ -4,6 +4,37 @@ Adapted from Wikipedia's "Signs of AI writing" (WP:AISIGNS), plus UI copy tells.
 what to look for, then before → after. The rewrites assume the concrete detail is known from the
 code or the user; without it, cut the sentence instead of inventing specifics.
 
+## Contents
+
+- [Content](#content)
+  - [Inflated significance](#inflated-significance)
+  - [Editorializing -ing clauses](#editorializing--ing-clauses)
+  - [Promotional language](#promotional-language)
+  - [Vague attribution](#vague-attribution)
+  - [Challenges-and-outlook endings](#challenges-and-outlook-endings)
+- [Language](#language)
+  - [AI vocabulary](#ai-vocabulary)
+  - [Copula avoidance](#copula-avoidance)
+  - [Negative parallelism](#negative-parallelism)
+  - [Rule of three](#rule-of-three)
+  - [Synonym cycling](#synonym-cycling)
+- [Style and formatting](#style-and-formatting)
+  - [Em dashes](#em-dashes)
+  - [Title Case](#title-case)
+  - [Bold and inline-header lists](#bold-and-inline-header-lists)
+  - [Emoji as formatting](#emoji-as-formatting)
+  - [Heading misuse](#heading-misuse)
+  - [Curly quotes](#curly-quotes)
+  - [Chatbot markup leftovers](#chatbot-markup-leftovers)
+- [Communication aimed at the reader](#communication-aimed-at-the-reader)
+  - [Openers and closers](#openers-and-closers)
+  - [Boilerplate hedges](#boilerplate-hedges)
+  - [Recaps](#recaps)
+  - [Placeholders](#placeholders)
+  - [Procedural summaries](#procedural-summaries)
+- [UI copy](#ui-copy)
+- [Not AI patterns](#not-ai-patterns)
+
 ## Content
 
 ### Inflated significance
