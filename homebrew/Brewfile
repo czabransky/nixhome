@@ -24,6 +24,8 @@ cask "rectangle"
 cask "rider"
 # Team communication and collaboration software
 cask "slack"
+# Voice to text app
+cask "voiceink"
 # Rust based IDE
 cask "zed"
 # Gecko based web browser
