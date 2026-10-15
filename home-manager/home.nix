@@ -86,6 +86,10 @@ in
       source = ~/nixhome/claude/commands;
       recursive = true;
     };
+    ".claude/hooks/rm-isolated.sh" = {
+      source = ~/nixhome/claude/hooks/rm-isolated.sh;
+      executable = true;
+    };
     ".homebrew/Brewfile".source = ~/nixhome/homebrew/Brewfile;
     ".config/nixhome-local/clean-claude-tmp.sh".source = ~/nixhome/scripts/clean-claude-tmp.sh;
   }
@@ -164,14 +168,7 @@ in
     ];
   };
 
-  programs.fish = {
-    enable = true;
-    interactiveShellInit = ''
-      		if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-      		  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
-      		fi
-      	  '';
-  };
+  programs.fish.enable = true;
 
   home.sessionVariables = {
     EDITOR = "nvim";
