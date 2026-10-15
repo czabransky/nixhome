@@ -9,6 +9,14 @@
     "DOTNET_SYSTEM_NET_DISABLEIPV6": "1",
     "DOTNET_CLI_TELEMETRY_OPTOUT": "1"
   },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "~/.claude/hooks/rm-isolated.sh" }]
+      }
+    ]
+  },
   "permissions": {
     "allow": [
       "Bash(git log*)",
@@ -59,7 +67,6 @@
       "Read(~/.gnupg/**)",
       "Read(~/.docker/config.json)",
       "Read(~/.kube/**)",
-      "Read(~/.config/gh/**)",
       "Read(~/.config/gcloud/**)",
       "Read(~/.config/gcloud/legacy_credentials/**)",
       "Read(~/.netrc)",
@@ -76,7 +83,6 @@
       "Edit(~/.gnupg/**)",
       "Edit(~/.docker/config.json)",
       "Edit(~/.kube/**)",
-      "Edit(~/.config/gh/**)",
       "Edit(~/.config/gcloud/**)",
       "Edit(~/.netrc)",
       "Edit(~/.npmrc)",
@@ -153,12 +159,16 @@
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
     "allowUnsandboxedCommands": false,
+    "enableWeakerNetworkIsolation": true,
     "excludedCommands": [
       "docker",
       "docker-compose",
       "lazydocker",
       "colima",
-      "nix"
+      "nix",
+      "gh *",
+      "git push *",
+      "git -C * push *"
     ],
     "filesystem": {
       "allowWrite": [
@@ -189,14 +199,16 @@
     "network": {
       "allowLocalBinding": true,
       "allowedDomains": [
+        "localhost",
+        "127.0.0.1",
+        "api.anthropic.com",
         "github.com",
         "*.github.com",
         "*.githubusercontent.com",
         "registry.npmjs.org",
         "*.npmjs.org",
         "cache.nixos.org",
-        "api.nuget.org",
-        "api.anthropic.com"
+        "api.nuget.org"
       ],
       "allowMachLookup": [
         "com.apple.SecurityServer"
