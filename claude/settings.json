@@ -208,7 +208,8 @@
         "registry.npmjs.org",
         "*.npmjs.org",
         "cache.nixos.org",
-        "api.nuget.org"
+        "api.nuget.org",
+        "cdn.jsdelivr.net"
       ],
       "allowMachLookup": [
         "com.apple.SecurityServer"
