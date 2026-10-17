@@ -62,6 +62,44 @@ fi
 sed -i 's/colin/'"$USERNAME"'/g' "$REPO_DIR/home-manager/flake.nix"
 sed -i 's/colin/'"$USERNAME"'/g' "$REPO_DIR/home-manager/home.nix"
 
+# Git names and emails stay out of this repo (see the .config/git/config entry
+# in home.nix). Only ask for the ones not set yet.
+IDENTITY="$HOME/.config/git/identity"
+WORK_FILE="$HOME/.config/nixhome-local/work.nix"
+mkdir -p "$(dirname "$IDENTITY")" "$(dirname "$WORK_FILE")"
+has_git_key() { grep -qsE "^[[:space:]]*$1[[:space:]]*=" "$2"; }
+
+for key in name email; do
+	if ! has_git_key "$key" "$IDENTITY" && ! has_git_key "$key" "$HOME/.gitconfig"; then
+		printf 'Personal git %s: ' "$key"
+		read -r value
+		[ -n "$value" ] && printf '[user]\n\t%s = %s\n' "$key" "$value" >>"$IDENTITY"
+	fi
+done
+
+if [ ! -f "$WORK_FILE" ]; then
+	printf 'Work git email (leave blank if this is not a work machine): '
+	read -r work_email
+	if [ -n "$work_email" ]; then
+		printf 'Work git name (optional): '
+		read -r work_git_name
+		printf 'Work folder under ~/code [work]: '
+		read -r work_name
+		printf 'Work GitHub username (optional): '
+		read -r work_github
+		{
+			printf '{\n  name = "%s";\n  email = "%s";\n' "${work_name:-work}" "$work_email"
+			[ -n "$work_git_name" ] && printf '  gitName = "%s";\n' "$work_git_name"
+			[ -n "$work_github" ] && printf '  githubUser = "%s";\n' "$work_github"
+			printf '}\n'
+		} >"$WORK_FILE"
+	fi
+fi
+
+if [ -f "$WORK_FILE" ] && has_git_key email "$HOME/.gitconfig"; then
+	echo "warning: the user.email in ~/.gitconfig overrides your work email; move it to $IDENTITY"
+fi
+
 echo "running home-manager switch"
 home-manager --impure switch -b backup
 

@@ -40,6 +40,14 @@ The docs are numbered in reading order: 00–09 orient you, 10–29 cover cross-
 30–79 cover features, and 90–99 cover operations and what's left to do. Each describes the
 system as it is today.
 
+## Contents
+
+- [Start here](#start-here)
+- [Cross-cutting concerns](#cross-cutting-concerns)
+- [Features](#features)
+- [Operations and roadmap](#operations-and-roadmap)
+- [Keeping the docs current](#keeping-the-docs-current)
+
 ## Start here
 
 | Doc | What it covers |
@@ -70,6 +78,7 @@ system as it is today.
 - A new required setting → the configuration doc (and CI, if CI checks settings).
 - Anything deliberately deferred → 99.
 - A new topic gets the next free number in its band and a row here.
+- A heading added, renamed or removed → that doc's contents list.
 ```
 
 ## Topic doc
@@ -79,6 +88,13 @@ system as it is today.
 
 <Open with the problem the topic solves or the constraint that shapes it, in one or two
 sentences — not a definition.>
+
+## Contents
+
+- [How it works](#how-it-works)
+- [Rules](#rules)
+- [Limits](#limits)
+- [Key files](#key-files)
 
 ## How it works
 
@@ -98,7 +114,9 @@ isn't obvious. Current guard-rail reasoning from ADRs lands here.>
 - `path/to/File` — what it is.
 ```
 
-Headings are nouns, never questions. Link related docs by relative path.
+Headings are nouns, never questions. The contents list matches the headings below it: `##`
+headings at the top level, `###` headings nested under their section. Link related docs by
+relative path.
 
 ## Roadmap (`docs/99-roadmap.md`)
 
@@ -110,6 +128,12 @@ current" rules then send deferred work to that home instead of `99`.
 
 What's left before <milestone>, then the known gaps and deliberately deferred work, each with a
 note on why. Add to it whenever a change defers something; remove an item when it's done.
+
+## Contents
+
+- [Before <milestone>](#before-milestone)
+- [Known gaps and deferred work](#known-gaps-and-deferred-work)
+  - [<Area>](#area)
 
 ## Before <milestone>
 
@@ -155,6 +179,7 @@ All paths are under `docs/`.
 - Update the topic doc in the same change, written as the current state — no history.
 - Anything deliberately deferred → `docs/99-roadmap.md`.
 - A new topic gets the next free number in its band and a row in `docs/00-overview.md`.
+- A heading added, renamed or removed → that doc's contents list.
 ```
 
 ## Nested agent file (scoped only, `apps/<app>/CLAUDE.md`)
@@ -190,6 +215,17 @@ def prose(text):
     """The text without code blocks and code spans, whose links are examples."""
     return re.sub(r'`[^`\n]*`', '', re.sub(r'```.*?```', '', text, flags=re.S))
 
+
+def contents_ok(text):
+    """The Contents list links every ## and ### heading, in order, by its GitHub anchor."""
+    body = re.sub(r'```.*?```', '', text, flags=re.S)
+    section = re.search(r'^## Contents\n(.*?)^## ', body, flags=re.S | re.M)
+    if not section:
+        return False
+    headings = [h for h in re.findall(r'^#{2,3} (.+)$', body, flags=re.M) if h != 'Contents']
+    anchors = [re.sub(r'[^\w\- ]', '', h.lower()).replace(' ', '-') for h in headings]
+    return re.findall(r'\]\(#([^)]+)\)', section.group(1)) == anchors
+
 files = glob.glob('docs/*.md') + ['README.md', 'CLAUDE.md']
 bad = 0
 for f in files:
@@ -209,6 +245,8 @@ for f in sorted(glob.glob('docs/*.md')):
     b = os.path.basename(f)
     if not b.endswith('-overview.md') and b not in overview:
         print('not in overview', b); bad += 1
+    if not contents_ok(open(f).read()):
+        print('contents out of date', b); bad += 1
 print('problems:', bad)
 ```
 
@@ -223,6 +261,17 @@ import glob, os, re
 def prose(text):
     """The text without code blocks and code spans, whose links are examples."""
     return re.sub(r'`[^`\n]*`', '', re.sub(r'```.*?```', '', text, flags=re.S))
+
+
+def contents_ok(text):
+    """The Contents list links every ## and ### heading, in order, by its GitHub anchor."""
+    body = re.sub(r'```.*?```', '', text, flags=re.S)
+    section = re.search(r'^## Contents\n(.*?)^## ', body, flags=re.S | re.M)
+    if not section:
+        return False
+    headings = [h for h in re.findall(r'^#{2,3} (.+)$', body, flags=re.M) if h != 'Contents']
+    anchors = [re.sub(r'[^\w\- ]', '', h.lower()).replace(' ', '-') for h in headings]
+    return re.findall(r'\]\(#([^)]+)\)', section.group(1)) == anchors
 
 ROOT = 'docs'
 skip = ('node_modules', '.git', '.next')
@@ -254,6 +303,8 @@ for scope in scopes:
         b = os.path.basename(f)
         if not b.startswith('00-') and b not in text:
             print('not in overview', f); bad += 1
+        if not contents_ok(open(f).read()):
+            print('contents out of date', f); bad += 1
 for f in agent_files:
     for scope, num in re.findall(r'\b([a-z][a-z0-9-]*)/(\d{2})\b', open(f).read()):
         if scope in scopes and not glob.glob(f'{ROOT}/{scope}/{num}-*.md'):

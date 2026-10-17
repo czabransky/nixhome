@@ -20,6 +20,9 @@ lists) into numbered, current-state topic docs, indexed by an overview and a sho
   rule with its reason ("X isn't in the cache: it needs an atomic claim every instance sees").
 - **Numbers are reading order.** Low numbers orient a newcomer; higher bands go deeper. Gaps
   between numbers keep them stable when docs are added.
+- **Contents at the top.** Every numbered doc lists its `##` and `###` headings right after the
+  opening paragraph, so the first lines of a file (`head -100`, or a partial read) show what it
+  covers and which section to read.
 
 ## Step 1: Inventory
 
@@ -107,7 +110,9 @@ Work on a branch. Don't stage the user's unrelated uncommitted changes.
 
 1. `git mv` existing docs to their numbered names and commit that alone, so history follows them.
 2. Write each topic doc as a first version, using the shape in `references/templates.md`:
-   what it does → how it works → rules when changing it → key files. Link related docs by
+   what it does → contents → how it works → rules when changing it → key files. The contents
+   list links each `##` and `###` heading by its GitHub anchor, nested to match, in every
+   numbered doc including the overview and roadmap. Link related docs by
    relative path: `[14-tenancy](14-tenancy.md)` within a scope,
    `[platform/20-secrets](../platform/20-secrets.md)` across scopes.
 3. **Verify claims against the code as you write.** Old docs drift: file paths move, behaviors
@@ -144,8 +149,9 @@ Work on a branch. Don't stage the user's unrelated uncommitted changes.
 
 - Grep for old file names and ADR ids: nothing left outside git history.
 - Check links: every relative `.md` link in the docs, the README and the agent files resolves,
-  every doc number named in an agent file exists, and every doc appears in its overview. Short
-  scripts for both layouts are in `references/templates.md`.
+  every doc number named in an agent file exists, every doc appears in its overview, and every
+  doc's contents list matches its headings. Short scripts for both layouts are in
+  `references/templates.md`.
 - Build, and run tests that read the touched files (architecture tests often cite docs in
   comments; a solution file edit needs a build). Run any rebrand/codegen script that rewrites
   docs in dry-run mode. When the docs render on a site, build the site.
@@ -162,8 +168,8 @@ asked.
 ## Adding a doc later
 
 In a project already in this format: take the next free number in the right band of the right
-scope (never renumber existing docs unless asked), use the topic template, add a row to that
-scope's overview, and add a row to the matching agent file's "Read" table if the doc has a clear
-trigger. A new scope gets its own `00-overview.md`, a line in `<root>/index.md`, and a nested
-agent file if it's an app. If a band is full, tell the user rather than spilling into another
-band.
+scope (never renumber existing docs unless asked), use the topic template with its contents
+list, add a row to that scope's overview, and add a row to the matching agent file's "Read"
+table if the doc has a clear trigger. A new scope gets its own `00-overview.md`, a line in
+`<root>/index.md`, and a nested agent file if it's an app. If a band is full, tell the user
+rather than spilling into another band.

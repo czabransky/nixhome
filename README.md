@@ -53,7 +53,7 @@ komorebic start --whkd --bar -c "$Env:USERPROFILE/.config/komorebi/komorebi.port
 
 ## Git, Delta & Lazygit
 
-Git's pager/diff/merge settings and delta's theme live in one place, [`git/config-nix`](./git/config-nix), layered on top of whatever's already in `~/.gitconfig` via `include.path` — so existing `user.name`, `user.email`, and credential-helper settings are left untouched. The setup scripts wire this up automatically:
+Git's pager/diff/merge settings and delta's theme live in one place, [`git/config-nix`](./git/config-nix), layered on top of whatever's already in `~/.gitconfig` via `include.path` — so existing `user.name`, `user.email`, and credential-helper settings are left untouched. Git names and emails stay out of this repo: when they aren't set yet, `setup.sh` asks for a personal name and email (written to `~/.config/git/identity`) and an optional work email and name (written to `~/.config/nixhome-local/work.nix`, which turns on the work profile). The setup scripts wire this up automatically:
 
 - macOS/Linux: `setup.sh` adds the `include.path` entry; `home.nix` installs `delta` and writes lazygit's config via `programs.lazygit.settings`.
 - Windows: `setup.ps1` adds the same `include.path` entry and copies [`git/lazygit-config.yml`](./git/lazygit-config.yml) into place.

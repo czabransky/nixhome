@@ -2,9 +2,9 @@
 let
   # Machine-local work identity, kept out of this repo. When present it enables
   # the work profile. Shape:
-  #   { name = "acme"; email = "me@acme.com"; githubUser = "me-acme"; }
+  #   { name = "acme"; email = "me@acme.com"; gitName = "Me"; githubUser = "me-acme"; }
   # `name` is the directory under ~/code (and ~/.herdr/worktrees) that is work.
-  # `githubUser` is optional.
+  # `gitName` and `githubUser` are optional.
   workFile = ~/.config/nixhome-local/work.nix;
   work = if builtins.pathExists workFile then import workFile else null;
   workRepo = "code/${work.name}";
@@ -92,6 +92,17 @@ in
     };
     ".homebrew/Brewfile".source = ~/nixhome/homebrew/Brewfile;
     ".config/nixhome-local/clean-claude-tmp.sh".source = ~/nixhome/scripts/clean-claude-tmp.sh;
+    # Git reads this before ~/.gitconfig, so a user.email there would override
+    # the work one; the email lives in the machine-local ~/.config/git/identity
+    # (written by setup.sh) instead. Worktrees keep their gitdir under the main
+    # repo's .git, so they match the work includeIf too.
+    ".config/git/config".text = ''
+      [include]
+      	path = ~/.config/git/identity
+    '' + lib.optionalString (work != null) ''
+      [includeIf "gitdir:~/${workRepo}/"]
+      	path = ~/.config/git/work
+    '';
   }
   // lib.optionalAttrs (work != null) {
     # Work profile: same Claude settings, separate login/MCP/memory, selected
@@ -108,15 +119,11 @@ in
     };
     "${workRepo}/.envrc".source = ~/nixhome/direnv/work.envrc;
     "${workWorktrees}/.envrc".source = ~/nixhome/direnv/work.envrc;
-    # Git reads this alongside ~/.gitconfig; worktrees keep their gitdir under
-    # the main repo's .git, so they match too.
-    ".config/git/config".text = ''
-      [includeIf "gitdir:~/${workRepo}/"]
-      	path = ~/.config/git/work
-    '';
     ".config/git/work".text = ''
       [user]
       	email = ${work.email}
+    '' + lib.optionalString (work ? gitName) ''
+      	name = ${work.gitName}
     '' + lib.optionalString (work ? githubUser) ''
       [credential "https://github.com"]
       	username = ${work.githubUser}
