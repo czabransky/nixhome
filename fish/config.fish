@@ -1,8 +1,8 @@
 # Disable fish greeting
 set -U fish_greeting
 
-fish_add_path --path $HOME/.local/bin
-fish_add_path --path $HOME/.nix-profile/bin
+fish_add_path --path --move $HOME/.local/bin
+fish_add_path --path --move $HOME/.nix-profile/bin
 set -qU XDG_CONFIG_HOME; or set XDG_CONFIG_HOME $HOME/.config
 set -qU XDG_DATA_HOME; or set XDG_DATA_HOME $HOME/.local/share
 set -qU XDG_CACHE_HOME; or set XDG_CACHE_HOME $HOME/.cache
