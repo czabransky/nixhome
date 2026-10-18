@@ -12,6 +12,8 @@ cask "excalidrawz"
 cask "font-fira-code-nerd-font"
 # Chromium-based browser for playwright MCP
 cask "google-chrome"
+# Local model for voice to speech dictation and input
+cask "hex"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
 # Open-source keystroke visualiser
