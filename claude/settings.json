@@ -205,12 +205,16 @@
         "api.nuget.org",
         "cache.nixos.org",
         "cdn.jsdelivr.net",
-        "cdn.playwright.dev"
+        "cdn.playwright.dev",
         "files.pythonhosted.org",
         "github.com",
         "localhost",
+        "playwright.azureedge.net",
+        "playwright.download.prss.microsoft.com",
+        "productionresultssa*.blob.core.windows.net",
         "pypi.org",
         "registry.npmjs.org",
+        "storage.googleapis.com"
       ],
       "allowMachLookup": [
         "com.apple.SecurityServer"
