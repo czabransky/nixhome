@@ -197,17 +197,20 @@
     "network": {
       "allowLocalBinding": true,
       "allowedDomains": [
-        "localhost",
-        "127.0.0.1",
-        "api.anthropic.com",
-        "github.com",
         "*.github.com",
         "*.githubusercontent.com",
-        "registry.npmjs.org",
         "*.npmjs.org",
-        "cache.nixos.org",
+        "127.0.0.1",
+        "api.anthropic.com",
         "api.nuget.org",
-        "cdn.jsdelivr.net"
+        "cache.nixos.org",
+        "cdn.jsdelivr.net",
+        "cdn.playwright.dev"
+        "files.pythonhosted.org",
+        "github.com",
+        "localhost",
+        "pypi.org",
+        "registry.npmjs.org",
       ],
       "allowMachLookup": [
         "com.apple.SecurityServer"
