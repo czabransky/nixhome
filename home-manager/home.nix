@@ -42,6 +42,7 @@ in
     pkgs.nixfmt
     pkgs.nodejs_22
     pkgs.nushell
+    pkgs.openssh
     pkgs.pnpm
     pkgs.postgresql_16
     pkgs.ripgrep
