@@ -20,6 +20,7 @@ in
   home.packages = [
     pkgs.bat
     pkgs.bws
+    pkgs.caddy
     pkgs.colima
     pkgs.curl
     pkgs.delta
