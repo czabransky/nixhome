@@ -31,6 +31,8 @@ Applies to all text you produce: replies, UI strings, error messages, commit mes
 - Caveats go inline and specific ("untested on Windows"), not as boilerplate ("It's important to note that", "It's worth mentioning", "Based on the available information").
 - UI copy: buttons name the action ("Save", "Delete file"). Errors say what failed and what to do next, with no "Oops!", bare "Something went wrong", or exclamation marks. Empty states say what's missing and how to add it. Match the existing copy in the codebase before inventing a voice.
 - Correct grammar, a formal register, and an occasional "Additionally" are fine. The target is the patterns above, not plainness for its own sake.
+- Use standard technical English: the conventional term for each thing (the name its docs, API, or error messages use), concrete nouns, active verbs, literal statements. No slang, metaphors, coined labels for ad-hoc concepts, or marketing tone.
+- No dummy pronouns. Name the subject instead of opening with "it" or "there": "The build likely fails" not "It is likely that the build fails", "Three files import it" not "There are three files that import it", "The cache needs clearing" not "It's necessary to clear the cache".
 
 ## Scope
 
