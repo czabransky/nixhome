@@ -15,6 +15,11 @@
         "matcher": "Bash",
         "hooks": [{ "type": "command", "command": "~/.claude/hooks/rm-isolated.sh" }]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [{ "type": "command", "command": "~/.claude/hooks/vault-log-check.sh" }]
+      }
     ]
   },
   "permissions": {
@@ -41,7 +46,9 @@
       "Bash(npm ls*)",
       "Bash(npm outdated*)",
       "Bash(brew list*)",
-      "Bash(brew info*)"
+      "Bash(brew info*)",
+      "Read(~/code/work/vault/900. Machine/**)",
+      "Edit(~/code/work/vault/900. Machine/**)"
     ],
     "deny": [
       "Read(**/.env)",
@@ -178,7 +185,8 @@
         "~/.nuget",
         "~/.config/gh",
         "~/.local/share/gh",
-        "~/.local/state/gh"
+        "~/.local/state/gh",
+        "~/code/work/vault/900. Machine"
       ],
       "denyRead": [
         "~/.ssh",

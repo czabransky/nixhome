@@ -68,3 +68,9 @@ Applies to all text you produce: replies, UI strings, error messages, commit mes
 
 - Don't paste code or internal details into external services (web search, gists, public artifacts) without asking.
 - Use the git identity already configured; never change git config.
+
+## Activity log
+
+- The vault at `~/code/work/vault` keeps a daily log of agent sessions in `900. Machine/Log/YYYY-MM-DD.md`. Before ending a session that changed files, investigated something, or suggested next steps, append an entry following `900. Machine/Log/AGENTS.md`.
+- Write every follow-up you suggested that I didn't act on as a `- [ ]` line. A follow-up that needs more than a line of context gets a handoff note in `900. Machine/Handoffs/`, linked from the follow-up.
+- Add new entries at the end. In earlier entries, only tick a follow-up (`- [ ]` → `- [x]`) once it's done or no longer needed, and say so in your entry. Outside `900. Machine/`, edit the vault only when I ask.
