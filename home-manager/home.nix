@@ -105,6 +105,10 @@ in
       source = ~/nixhome/claude/hooks/vault-log-check.sh;
       executable = true;
     };
+    ".claude/hooks/suggested-commands.sh" = {
+      source = ~/nixhome/claude/hooks/suggested-commands.sh;
+      executable = true;
+    };
     ".homebrew/Brewfile".source = ~/nixhome/homebrew/Brewfile;
     ".config/nixhome-local/clean-claude-tmp.sh".source = ~/nixhome/scripts/clean-claude-tmp.sh;
     # Git reads this before ~/.gitconfig, so a user.email there would override

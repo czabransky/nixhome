@@ -27,6 +27,14 @@ width = "80%"
 height = "60%"
 
 [[keys.command]]
+key = "prefix+y"
+type = "popup"
+description = "pick command Claude suggested"
+command = "fish -c 'claude_cmds --pane'"
+width = "70%"
+height = "50%"
+
+[[keys.command]]
 key = "prefix+shift+b"
 type = "shell"
 description = "move pane to new tab"

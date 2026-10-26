@@ -19,6 +19,9 @@
     "Stop": [
       {
         "hooks": [{ "type": "command", "command": "~/.claude/hooks/vault-log-check.sh" }]
+      },
+      {
+        "hooks": [{ "type": "command", "command": "~/.claude/hooks/suggested-commands.sh" }]
       }
     ]
   },

@@ -61,6 +61,7 @@ Applies to all text you produce: replies, UI strings, error messages, commit mes
 - Available tools: `rg`, `fd`, `bat`, `eza`, `jq`, `delta`, `lazygit`, `gh`.
 - Dotfiles are managed by home-manager from `~/nixhome`. Edit the source there, never deployed copies under `~/.config` or `~/.claude`.
 - I run nix/home-manager commands myself. Tell me when a switch is needed.
+- When you ask me to run a command (one the sandbox blocks, or one I run myself), put it in its own fenced block with `run` after the language: `` ```fish run ``. A hook collects these blocks into a picker. Leave the tag off examples and commands you run yourself.
 - Deleting a directory: run `rm -r`/`rm -rf` as a command of its own (no pipes, `&&`, `||` or `;`) with every path written out in full, never through a variable, glob or `$(...)`.
 - Don't try to delete `/private/tmp/claude*` folders. `rm` on them is blocked, and an automatic routine cleans them up.
 

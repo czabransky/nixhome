@@ -38,3 +38,7 @@ bind -M insert \co _fzf_search_docker_ps
 bind \cw links
 bind -M insert \cw links
 
+# Bind Ctrl+Alt+C to insert a command Claude asked me to run, selected via fzf
+bind ctrl-alt-c claude_cmds
+bind -M insert ctrl-alt-c claude_cmds
+
