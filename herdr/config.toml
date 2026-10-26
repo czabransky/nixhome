@@ -2,10 +2,10 @@ onboarding = false
 
 [keys]
 prefix = "ctrl+b"
-focus_pane_left = ["prefix+h", "prefix+left"]
-focus_pane_down = ["prefix+j", "prefix+down"]
-focus_pane_up = ["prefix+k", "prefix+up"]
-focus_pane_right = ["prefix+l", "prefix+right"]
+focus_pane_left = ["prefix+h", "prefix+left", "alt+left"]
+focus_pane_down = ["prefix+j", "prefix+down", "alt+down"]
+focus_pane_up = ["prefix+k", "prefix+up", "alt+up"]
+focus_pane_right = ["prefix+l", "prefix+right", "alt+right"]
 open_worktree = "prefix+shift+o"
 switch_tab = ""
 switch_workspace = "prefix+1..9"
