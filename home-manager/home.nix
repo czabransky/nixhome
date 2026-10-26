@@ -18,6 +18,7 @@ in
   # The home.packages option allows you to install Nix packages.
   # https://search.nixos.org/packages
   home.packages = [
+    pkgs.awscli2
     pkgs.bat
     pkgs.bws
     pkgs.caddy
@@ -26,15 +27,18 @@ in
     pkgs.delta
     pkgs.docker
     pkgs.docker-compose
+    pkgs.doctl
     pkgs.eza
     pkgs.fd
     pkgs.file
     pkgs.fish
     pkgs.ffmpeg
+    pkgs.flarectl
     pkgs.fzf
     pkgs.gh
     pkgs.git
     pkgs.glow
+    pkgs.just
     pkgs.jq
     pkgs.lazydocker
     pkgs.lazygit
@@ -47,6 +51,7 @@ in
     pkgs.pnpm
     pkgs.postgresql_16
     pkgs.ripgrep
+    pkgs.sshs
     pkgs.starship
     pkgs.tree-sitter
     pkgs.television
