@@ -39,7 +39,28 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "tend": "tend"
+      }
+    },
+    "tend": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793028960,
+        "narHash": "sha256-MXIm28po7Wz4CrPLtSzgdpIEtlYWkW0yxoi2RBL01SE=",
+        "owner": "czabransky",
+        "repo": "tend",
+        "rev": "ca176d52b23b525eaabbec661069feb8d36755e1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "czabransky",
+        "repo": "tend",
+        "type": "github"
       }
     }
   },

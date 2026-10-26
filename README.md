@@ -63,3 +63,7 @@ Git's pager/diff/merge settings and delta's theme live in one place, [`git/confi
 
 > [!NOTE]
 > lazygit's delta pager is **not supported in lazygit on Windows** — it's configured there anyway for consistency, but silently ignored (no errors). lazygit may support pagers on Windows if [this PR is addressed](https://github.com/creack/pty/pull/155).
+
+## Background Dev Jobs (`tend`)
+
+macOS only. [`tend`](https://github.com/czabransky/tend) runs dev commands like `pnpm dev`, `dotnet run` or `docker compose up` as launchd jobs. It's a flake input in `home-manager/flake.nix`, and `home.nix` installs its package on macOS. To pick up new commits to tend, run `nix flake update tend` in `home-manager/`, then switch.

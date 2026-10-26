@@ -7,15 +7,20 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    tend = {
+      url = "github:czabransky/tend";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
+  outputs = { nixpkgs, home-manager, tend, ... }:
     let
       system = builtins.currentSystem;
       pkgs = nixpkgs.legacyPackages.${system};
     in {
       homeConfigurations."colin" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
+        extraSpecialArgs = { inherit tend; };
 
         modules = [ 
           { nixpkgs.config.allowUnfree = true; }

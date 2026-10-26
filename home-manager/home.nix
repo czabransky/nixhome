@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, tend, ... }:
 let
   # Machine-local work identity, kept out of this repo. When present it enables
   # the work profile. Shape:
@@ -53,6 +53,10 @@ in
     pkgs.unzip
     pkgs.yazi
     pkgs.zoxide
+  ]
+  # Background dev jobs on launchd (github:czabransky/tend); macOS only.
+  ++ lib.optionals pkgs.stdenv.isDarwin [
+    tend.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   # Home Manager is pretty good at managing dotfiles.
