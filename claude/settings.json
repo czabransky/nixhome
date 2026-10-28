@@ -162,7 +162,7 @@
       "Bash(gh workflow delete*)",
       "Bash(gh workflow disable*)"
     ],
-    "defaultMode": "plan"
+    "defaultMode": "auto"
   },
   "sandbox": {
     "enabled": true,
