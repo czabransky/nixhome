@@ -143,6 +143,12 @@ in
       	email = ${work.email}
     '' + lib.optionalString (work ? gitName) ''
       	name = ${work.gitName}
+    '' + lib.optionalString (work ? signingKey) ''
+      	signingkey = ${work.signingKey}
+      [gpg]
+      	format = ssh
+      [commit]
+      	gpgsign = true
     '' + lib.optionalString (work ? githubUser) ''
       [credential "https://github.com"]
       	username = ${work.githubUser}
