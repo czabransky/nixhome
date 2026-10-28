@@ -27,7 +27,7 @@ function claude_cmds --description "Pick commands Claude asked me to run and ins
 	set -f result (
 		cat $files | jq -sj '
 			to_entries | sort_by([.value.ts, .key]) | reverse | map(.value)
-			| reduce .[] as $c ([]; if any(.[]; .cmd == $c.cmd) then . else . + [$c] end)
+			| reduce .[] as $c ([]; if any(.[]; .ts == $c.ts and .cmd == $c.cmd) then . else . + [$c] end)
 			| . as $l | range(length) as $i | $l[$i] as $c
 			| (([$l[:$i + 1][].ts] | unique | length) % 2 | if . == 1 then "36" else "35" end) as $color
 			| ($c.ts | sub("[.][0-9]+Z$"; "Z") | fromdateiso8601 | strflocaltime("%a %H:%M")) as $time

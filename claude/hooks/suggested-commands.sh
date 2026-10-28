@@ -13,6 +13,29 @@ mkdir -p "$dir"
 find "$dir" -name '*.jsonl' -mtime +7 -delete
 
 out="$dir/$session.jsonl"
+
+# Split a multi-line block into one record per line when every line (ignoring
+# blank lines and comments) parses as a complete fish command; otherwise keep
+# the block whole, e.g. for loops, line continuations or pipes across lines.
+split_block() {
+  while IFS= read -r rec; do
+    cmd=$(jq -r .cmd <<<"$rec")
+    split=0
+    if [[ $cmd == *$'\n'* ]]; then
+      split=1
+      while IFS= read -r line; do
+        [[ $line =~ ^[[:space:]]*(#|$) ]] && continue
+        fish --no-execute -c "$line" 2>/dev/null || { split=0; break; }
+      done <<<"$cmd"
+    fi
+    if [ $split = 1 ]; then
+      jq -c '. as $r | .cmd | split("\n")[] | select(test("^\\s*(#|$)") | not) | $r + {cmd: .}' <<<"$rec"
+    else
+      echo "$rec"
+    fi
+  done
+}
+
 # Stop can fire before the final message is flushed to the transcript, so
 # read it a moment later in the background.
 (
@@ -21,7 +44,8 @@ out="$dir/$session.jsonl"
     | .message.content[]? | select(.type == "text") | .text
     | capture("(?:^|\n)(?<indent>[ \t]*)```[^\n]*\\brun[ \t]*\n(?<body>[\\s\\S]*?)\n[ \t]*```"; "g")
     | .indent as $indent
-    | {ts: $ts, cwd: $cwd, cmd: (.body | split("\n") | map(ltrimstr($indent)) | join("\n"))}' "$transcript" >"$out.tmp"
+    | {ts: $ts, cwd: $cwd, cmd: (.body | split("\n") | map(ltrimstr($indent)) | join("\n"))}' "$transcript" |
+    split_block >"$out.tmp"
 
   if [ -s "$out.tmp" ]; then
     mv "$out.tmp" "$out"
