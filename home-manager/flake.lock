@@ -50,11 +50,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793028960,
-        "narHash": "sha256-MXIm28po7Wz4CrPLtSzgdpIEtlYWkW0yxoi2RBL01SE=",
+        "lastModified": 1793280899,
+        "narHash": "sha256-CaZVPOKea+P8VCHCrWMkG9tcQo8NURsWz519FleU+KA=",
         "owner": "czabransky",
         "repo": "tend",
-        "rev": "ca176d52b23b525eaabbec661069feb8d36755e1",
+        "rev": "a4fcf2c172ccdac035b3b589fbf0d3f378b2dcda",
         "type": "github"
       },
       "original": {

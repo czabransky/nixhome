@@ -38,6 +38,7 @@ in
     pkgs.gh
     pkgs.git
     pkgs.glow
+    pkgs.go
     pkgs.just
     pkgs.jq
     pkgs.lazydocker
