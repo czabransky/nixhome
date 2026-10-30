@@ -60,10 +60,12 @@ function claude_cmds --description "Pick commands Claude asked me to run and ins
 		set -a cmds (string split --fields 4 \x1f -- $item | string collect)
 	end
 	set -f cmd (string join ' && ' -- $cmds | string collect)
+	# Copied commands may be pasted into bash or zsh, which lack fish's `; and` / `; or`.
+	set -f copied (string replace -a '; and ' ' && ' -- $cmd | string replace -a '; or ' ' || ' | string collect)
 
 	if not set -q _flag_pane
 		if test "$result[1]" = ctrl-y
-			printf '%s' $cmd | fish_clipboard_copy
+			printf '%s' $copied | fish_clipboard_copy
 		else
 			commandline -r -- $cmd
 		end
@@ -73,7 +75,7 @@ function claude_cmds --description "Pick commands Claude asked me to run and ins
 
 	# A newline sent to a pane acts as Enter, so multi-line commands are copied instead.
 	if test "$result[1]" = ctrl-y; or test (count (string split \n -- $cmd)) -gt 1
-		printf '%s' $cmd | fish_clipboard_copy
+		printf '%s' $copied | fish_clipboard_copy
 		return 0
 	end
 
