@@ -102,10 +102,6 @@ in
       source = ~/nixhome/claude/hooks/rm-isolated.sh;
       executable = true;
     };
-    ".claude/hooks/vault-log-check.sh" = {
-      source = ~/nixhome/claude/hooks/vault-log-check.sh;
-      executable = true;
-    };
     ".claude/hooks/suggested-commands.sh" = {
       source = ~/nixhome/claude/hooks/suggested-commands.sh;
       executable = true;
